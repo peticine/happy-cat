@@ -2,6 +2,17 @@
 
 Feline CKD awareness, clinical age journey, and sign screening for pet parents.
 
+## Static assets
+
+| Folder | What goes here | Used in prod as |
+|--------|----------------|-----------------|
+| `images/` | Logos, stage art, any PNG/JPG/SVG | `https://your-site/images/filename.png` |
+| `assets/` | Vite build output only (`age-journey.js`, `age-journey.css`) | Do not put hand-made images here |
+
+After adding or replacing files in `images/`, commit and push to `peticine/happy-cat`. Vercel serves the repo root, so paths like `./images/healthy-cat-logo.png` work in production.
+
+`npm run build:age` clears `assets/` before rebuilding — it will not touch `images/`.
+
 ## Run locally
 
 ```bash
