@@ -121,68 +121,67 @@ const AGE_CAROUSEL_STAGES = [
     id: "young",
     label: "Kitten",
     ages: "0–2 yrs",
-    title: "Habits set the ceiling",
-    habits: ["Wet or high-moisture food", "Vaccines on schedule", "Baseline vet visit by 6 months"],
-    symptoms: ["Slow growth", "Frequent vomiting", "Low energy vs littermates"],
-    note: "Problems now shape lifelong kidney and weight trajectories.",
+    title: "Foundation years",
+    image: "./assets/stage-young.png?v=hc29",
+    imageAlt: "Curious kitten illustration",
+    issues: ["Early nutrition affects kidney health for life", "Congenital issues may show up now", "Growth problems can signal metabolic issues"],
+    symptoms: ["Slow growth or lag vs littermates", "Frequent vomiting or diarrhea", "Lethargy or unusual sleeping patterns"],
+    note: "What happens now shapes lifelong organ function. Early problems often catch up in senior years.",
   },
   {
     id: "prime",
     label: "Prime",
     ages: "3–6 yrs",
-    title: "Looks healthy, but organs already shifting",
-    habits: ["Annual bloodwork + urinalysis", "Fresh water or a fountain", "Lean body weight"],
-    symptoms: ["Extra water bowl refills", "Larger litter clumps", "Weight creeping up"],
-    note: "Kidney filtration can decline silently while your cat acts totally normal.",
+    title: "Silent organ shifts",
+    image: "./assets/stage-prime.png?v=hc29",
+    imageAlt: "Alert young cat illustration",
+    issues: ["Kidney filtration declining silently", "Early metabolic imbalances brewing", "Thyroid changes beginning"],
+    symptoms: ["Drinking more than usual", "Larger or more frequent litter box visits", "Subtle weight gain despite good appetite"],
+    note: "Cats look and act completely healthy. Blood work is the only way to catch what's changing inside.",
   },
   {
     id: "mature",
     label: "Mature",
     ages: "7–10 yrs",
-    title: "Reserve spends faster",
-    habits: ["Twice-yearly screening", "Phosphorus-aware diet if needed", "Dental care (mouth bacteria affect kidneys)"],
-    symptoms: ["Drinking more often", "Ribs easier to feel", "Picky appetite"],
-    note: "About 1 in 3 cats show early organ changes in this window, often before obvious illness.",
+    title: "The turning point",
+    image: "./assets/stage-mature.png?v=hc29",
+    imageAlt: "Mature cat illustration",
+    issues: ["1 in 3 cats shows organ decline now", "Kidney disease becomes common", "Dental disease accelerates systemic problems"],
+    symptoms: ["Drinking significantly more", "Weight loss despite eating", "Pickiness about food or water"],
+    note: "This age window is critical. Early detection makes the difference between 6 months and 6 years.",
   },
   {
     id: "senior",
     label: "Senior",
     ages: "11–14 yrs",
-    title: "Small changes, big meaning",
-    habits: ["Renal diet if advised", "Blood pressure checks", "Weekly weight log"],
-    symptoms: ["More vomiting", "Hiding or less playful", "Urinating more volume"],
-    note: "Cats compensate until they can't. Screening catches the pattern early.",
+    title: "Compensation fails",
+    image: "./assets/stage-senior.png?v=hc29",
+    imageAlt: "Senior cat stretching illustration",
+    issues: ["Kidney function severely compromised", "Chronic conditions often diagnosed now", "Cats stop hiding illness symptoms"],
+    symptoms: ["Increased vomiting", "Noticeable weight loss", "Behavior changes — less playful, more hiding"],
+    note: "By now, damage is often advanced. But knowing exactly what changed helps your vet intervene fast.",
   },
   {
     id: "geriatric",
     label: "Geriatric",
     ages: "15+ yrs",
-    title: "Comfort and clarity",
-    habits: ["Gentle hydration support", "Easy-access litter boxes", "Appetite and weight tracking"],
-    symptoms: ["Sudden weight drop", "Not eating 24+ hours", "Weakness or wobbly gait"],
-    note: "Even late in life, knowing what's changed helps your vet act fast.",
+    title: "Quality of life",
+    image: "./assets/stage-geriatric.png?v=hc29",
+    imageAlt: "Relaxed senior cat illustration",
+    issues: ["Multiple organ systems failing together", "Even minor changes signal bigger problems", "Rapid decline possible"],
+    symptoms: ["Sudden weight drop", "Refusing food for 24+ hours", "Weakness, wobbly gait, or disorientation"],
+    note: "At this stage, knowing what's changed helps you and your vet make comfort-first decisions quickly.",
   },
 ];
 
-function catSvgForStage(stageId) {
-  const svgs = {
-    young: `<svg class="age-cat-svg" viewBox="0 0 200 160" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><ellipse cx="100" cy="118" rx="42" ry="28" stroke="currentColor" stroke-width="2"/><circle cx="100" cy="78" r="26" stroke="currentColor" stroke-width="2"/><path d="M82 58 76 38 92 52M118 58l6-20 10 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="92" cy="76" r="3" fill="currentColor"/><circle cx="108" cy="76" r="3" fill="currentColor"/><path d="M128 108c10 4 18 2 22-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
-    prime: `<svg class="age-cat-svg" viewBox="0 0 200 160" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><ellipse cx="96" cy="120" rx="52" ry="30" stroke="currentColor" stroke-width="2"/><circle cx="98" cy="72" r="28" stroke="currentColor" stroke-width="2"/><path d="M78 50 72 28 88 44M118 50l8-20 12 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="88" cy="70" r="3" fill="currentColor"/><circle cx="108" cy="70" r="3" fill="currentColor"/><path d="M140 96c14 6 24 4 30-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
-    mature: `<svg class="age-cat-svg" viewBox="0 0 200 160" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><ellipse cx="94" cy="122" rx="54" ry="28" stroke="currentColor" stroke-width="2"/><circle cx="96" cy="74" r="27" stroke="currentColor" stroke-width="2"/><path d="M78 52 74 32 90 46M114 52l6-18 10 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="86" cy="72" r="3" fill="currentColor"/><circle cx="106" cy="72" r="3" fill="currentColor"/><path d="M58 118c-8 6-14 4-16-2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
-    senior: `<svg class="age-cat-svg" viewBox="0 0 200 160" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><ellipse cx="92" cy="124" rx="50" ry="26" stroke="currentColor" stroke-width="2"/><circle cx="94" cy="78" r="25" stroke="currentColor" stroke-width="2"/><path d="M78 56 76 38 90 50M110 56l4-16 8 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="86" cy="76" r="3" fill="currentColor"/><circle cx="102" cy="76" r="3" fill="currentColor"/><path d="M132 104c8 8 16 10 24 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
-    geriatric: `<svg class="age-cat-svg" viewBox="0 0 200 160" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M48 112c20-10 44-8 62 4 12 8 26 10 38 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><ellipse cx="88" cy="108" rx="46" ry="22" stroke="currentColor" stroke-width="2"/><circle cx="72" cy="92" r="22" stroke="currentColor" stroke-width="2"/><path d="M58 78 54 62 66 72M82 76l4-14 8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="66" cy="90" r="2.5" fill="currentColor"/><path d="M130 98c10 6 18 4 22-2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
-  };
-  return svgs[stageId] || svgs.prime;
-}
-
 function renderLifeStageCard(stage) {
-  const habits = stage.habits.map((item) => `<li>${item}</li>`).join("");
+  const issues = stage.issues.map((item) => `<li>${item}</li>`).join("");
   const symptoms = stage.symptoms.map((item) => `<li>${item}</li>`).join("");
 
   return `
     <article class="life-stage-card age-carousel-card" data-stage="${stage.id}" id="stage-${stage.id}" aria-labelledby="stage-title-${stage.id}">
       <div class="life-stage-visual age-carousel-visual">
-        <div class="life-stage-image age-cat-art">${catSvgForStage(stage.id)}</div>
+        <img class="age-stage-photo" src="${stage.image}" alt="${stage.imageAlt}" loading="lazy" width="360" height="360" />
         <span class="age-carousel-badge" data-here-badge hidden>Your cat</span>
       </div>
       <div class="life-stage-content age-carousel-content">
@@ -190,11 +189,11 @@ function renderLifeStageCard(stage) {
         <h3 id="stage-title-${stage.id}">${stage.title}</h3>
         <div class="age-carousel-columns">
           <div class="age-carousel-col">
-            <span class="age-carousel-col-label">Healthy habits</span>
-            <ul class="age-carousel-list">${habits}</ul>
+            <span class="age-carousel-col-label">Health issues at this age</span>
+            <ul class="age-carousel-list">${issues}</ul>
           </div>
           <div class="age-carousel-col age-carousel-col--watch">
-            <span class="age-carousel-col-label">Symptoms cats hide</span>
+            <span class="age-carousel-col-label">Watch for these signs</span>
             <ul class="age-carousel-list">${symptoms}</ul>
           </div>
         </div>
@@ -389,6 +388,7 @@ function initAgeGate() {
 // ---- Healthy Cat screening --------------------------------------------------
 const HEALTHY_CAT_NEWSLETTER_EMAIL = "hello@healthycat.in";
 const HEALTHY_CAT_WHATSAPP_URL = "https://chat.whatsapp.com/placeholder-healthycat-community";
+const SCREENING_API_BASE = "https://digi-clinic-tau.vercel.app";
 
 const SCREENING_QUESTIONS = [
   {
@@ -654,6 +654,7 @@ let quizState = {
   age: null,
   answers: {},
   whatsappNumber: null,
+  screeningResult: null,
 };
 
 function resetQuizState() {
@@ -662,8 +663,36 @@ function resetQuizState() {
     age: catAge != null ? catAge : null,
     answers: {},
     whatsappNumber: null,
+    screeningResult: null,
   };
   setFlowProgramLabel();
+}
+
+function buildScreeningQueryParams(phone) {
+  const params = new URLSearchParams({
+    catAge: String(quizState.age),
+    phone,
+  });
+
+  SCREENING_QUESTIONS.forEach((q) => {
+    const answer = quizState.answers[q.id];
+    if (answer?.id) params.set(q.id, answer.id);
+  });
+
+  return params;
+}
+
+async function fetchScreeningResult(phone) {
+  const params = buildScreeningQueryParams(phone);
+  const response = await fetch(`${SCREENING_API_BASE}/screening?${params.toString()}`);
+
+  if (!response.ok) {
+    const error = new Error("Screening request failed");
+    error.status = response.status;
+    throw error;
+  }
+
+  return response.json();
 }
 
 function answerLabel(qId) {
@@ -671,22 +700,25 @@ function answerLabel(qId) {
   return a ? a.label : "Not answered";
 }
 
-function renderScoreResult() {
-  const score = scoreQuiz();
-  const tier = resolveTier(score, quizState.age);
+function renderScoreResult(result) {
+  const riskLevel = result?.risk_level || "low";
+  const tier = RISK_TIERS[riskLevel] || RISK_TIERS.low;
+  const headline = result?.risk_label || tier.headline;
+  const detail = result?.message || tier.detail;
+  const action = result?.recommendation || tier.action;
 
   return `
-    <div class="quiz-result score-result score-result-${tier.id}">
-      <div class="score-meter" role="img" aria-label="Screening result: ${tier.label}">
-        <span class="score-meter-seg seg-low ${tier.id === "low" ? "is-active" : ""}">${RISK_TIERS.low.label}</span>
-        <span class="score-meter-seg seg-medium ${tier.id === "medium" ? "is-active" : ""}">${RISK_TIERS.medium.label}</span>
-        <span class="score-meter-seg seg-high ${tier.id === "high" ? "is-active" : ""}">${RISK_TIERS.high.label}</span>
+    <div class="quiz-result score-result score-result-${riskLevel}">
+      <div class="score-meter" role="img" aria-label="Screening result: ${headline}">
+        <span class="score-meter-seg seg-low ${riskLevel === "low" ? "is-active" : ""}">${RISK_TIERS.low.label}</span>
+        <span class="score-meter-seg seg-medium ${riskLevel === "medium" ? "is-active" : ""}">${RISK_TIERS.medium.label}</span>
+        <span class="score-meter-seg seg-high ${riskLevel === "high" ? "is-active" : ""}">${RISK_TIERS.high.label}</span>
       </div>
 
-      <h2 class="quiz-title score-headline" id="assflow-title">${tier.headline}</h2>
-      <p class="score-detail">${tier.detail}</p>
+      <h2 class="quiz-title score-headline" id="assflow-title">${headline}</h2>
+      <p class="score-detail">${detail}</p>
 
-      <p class="score-next">${tier.action}</p>
+      <p class="score-next">${action}</p>
 
       <button type="button" class="btn btn-block" data-flow-done>Done</button>
       <p class="score-reassure">Not a diagnosis. Your vet makes every treatment decision.</p>
@@ -929,7 +961,7 @@ function renderResultStep() {
       ${renderWhatsAppGate(tier)}
     </div>
   `;
-  bindWhatsAppGateHandlers(() => renderScoreResult());
+  bindWhatsAppGateHandlers();
 }
 
 function renderGateResultPreview(tier) {
@@ -981,13 +1013,14 @@ function renderWhatsAppGate(tier) {
   `;
 }
 
-function bindWhatsAppGateHandlers(onSuccess) {
+function bindWhatsAppGateHandlers() {
   const form = assflowMain.querySelector("#whatsapp-gate-form");
   if (!form) return;
 
-  form.addEventListener("submit", (event) => {
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const input = form.querySelector("#whatsapp-number-input");
+    const submitBtn = form.querySelector('button[type="submit"]');
     const number = input?.value?.trim();
 
     if (!number || number.length !== 10 || !/^\d+$/.test(number)) {
@@ -1003,14 +1036,52 @@ function bindWhatsAppGateHandlers(onSuccess) {
       cat_age: quizState.age,
     });
 
-    // Replace gate with results
-    assflowMain.innerHTML = `
-      <div class="flow-step flow-step-result">
-        ${onSuccess()}
-      </div>
-    `;
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Loading your result…";
+    }
 
-    bindAgingResultHandlers();
+    try {
+      const result = await fetchScreeningResult(number);
+      quizState.screeningResult = result;
+
+      track("screening_score_computed", {
+        screening_id: result.screening_id || null,
+        score: result.total_score,
+        risk_level: result.risk_level,
+        recommended_action: result.recommendation,
+        next_action: result.next_action || null,
+        cat_age: result.cat_age ?? quizState.age,
+        age_band: result.age_band || ageBandLabel(quizState.age),
+        answers: SCREENING_QUESTIONS.reduce((acc, q) => {
+          acc[q.id] = quizState.answers[q.id]?.id || null;
+          return acc;
+        }, {}),
+        source: "api",
+      });
+
+      assflowMain.innerHTML = `
+        <div class="flow-step flow-step-result">
+          ${renderScoreResult(result)}
+        </div>
+      `;
+
+      bindAgingResultHandlers();
+    } catch (err) {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Show my result";
+      }
+
+      let errorEl = form.querySelector(".whatsapp-gate-error");
+      if (!errorEl) {
+        errorEl = document.createElement("p");
+        errorEl.className = "whatsapp-gate-error flow-error";
+        form.appendChild(errorEl);
+      }
+      errorEl.hidden = false;
+      errorEl.textContent = "We couldn't load your result. Please try again.";
+    }
   });
 }
 

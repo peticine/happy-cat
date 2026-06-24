@@ -249,13 +249,12 @@ html.has-pet .journey-gate {
 .brand-mark {
   display: grid;
   place-items: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 14px;
-  background: #fff;
-  border: 1px solid rgba(21, 89, 183, 0.12);
-  box-shadow: 0 10px 26px rgba(21, 89, 183, 0.14);
-  overflow: hidden;
+  width: auto;
+  height: auto;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  overflow: visible;
 }
 
 .brand-logo {
@@ -298,8 +297,8 @@ html.has-pet .journey-gate {
 }
 
 .assflow-brand .brand-mark {
-  width: 32px;
-  height: 32px;
+  width: auto;
+  height: auto;
 }
 
 .assflow-brand .brand-word-bottom {
@@ -2719,12 +2718,12 @@ html.assflow-open .site-shell {
 }
 
 .life-stage-card {
-  flex: 0 0 min(92vw, 700px);
+  flex: 0 0 min(92vw, 760px);
   scroll-snap-align: center;
   display: grid;
-  grid-template-columns: 1fr 1.1fr;
+  grid-template-columns: 1.05fr 0.95fr;
   gap: 0;
-  min-height: 500px;
+  min-height: 520px;
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
   background: var(--surface);
@@ -2987,10 +2986,26 @@ html.assflow-open .site-shell {
 
 .age-carousel-visual {
   position: relative;
-  min-height: 160px;
+  min-height: 300px;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 36px 28px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.72) 0%, var(--surface-muted) 100%);
+}
+
+.age-stage-photo {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: min(100%, 260px);
+  max-height: 280px;
+  min-height: 0;
+  object-fit: contain;
+  object-position: center;
+  opacity: 1;
+  filter: none;
 }
 
 .age-cat-art {
@@ -3002,19 +3017,15 @@ html.assflow-open .site-shell {
   opacity: 1;
 }
 
-.age-cat-svg {
-  width: min(200px, 70%);
-  height: auto;
-  color: var(--stage-color);
-}
-
 .age-carousel-badge {
   position: absolute;
   top: 14px;
   right: 14px;
+  z-index: 1;
   padding: 6px 12px;
   border-radius: var(--radius-pill);
-  background: var(--stage-color);
+  background: rgba(16, 42, 77, 0.78);
+  backdrop-filter: blur(8px);
   color: #fff;
   font-size: 0.6875rem;
   font-weight: 700;
@@ -3134,8 +3145,18 @@ html.assflow-open .site-shell {
     gap: 14px;
   }
 
+  .age-carousel-visual {
+    min-height: 260px;
+    padding: 28px 20px;
+  }
+
+  .age-stage-photo {
+    max-width: min(100%, 220px);
+    max-height: 240px;
+  }
+
   .life-stage-photo {
-    min-height: 140px;
+    min-height: 180px;
   }
 
   .life-stage-content {
