@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en" class="has-pet has-pet-cat">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Healthy Cat | Free cat health screening</title>
+    <meta
+      name="description"
+      content="Free 2-minute cat health screening. About 1 in 3 cats develop chronic disease that's found late. Five questions catch what cats hide."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" />
+    <link rel="stylesheet" href="./styles.css?v=hc20" />
+  </head>
+  <body data-pet="cat">
+    <div class="site-shell is-visible" id="site-shell">
+      <header class="site-header" id="top">
+        <div class="header-inner">
+          <a class="brand" href="#top" aria-label="Healthy Cat home">
+            <span class="brand-mark" aria-hidden="true"><img class="brand-logo" src="./assets/healthy-cat-logo.png" alt="" width="48" height="56" /></span>
+            <span class="brand-word">
+              <span class="brand-word-top">Healthy</span>
+              <span class="brand-word-bottom">Cat</span>
+            </span>
+          </a>
+          <nav class="site-nav" aria-label="Primary">
+            <a href="#why">Our story</a>
+            <a href="#journey">Why screen</a>
+            <a href="#how">How it works</a>
+            <a href="#vets">Feline Specialists</a>
+            <a href="#faq">FAQ</a>
+          </nav>
+          <div class="header-actions">
+            <button type="button" class="btn btn-sm btn-get-started" id="header-cta">Start free screening</button>
+            <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false">
+              <span></span>
+              <span></span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <main>
+        <section class="hero hero-clinic">
+          <svg class="cat-decor cat-decor--hero" viewBox="0 0 200 160" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M28 118c8-28 32-42 58-38 18 3 32 14 38 28 4 10 2 22-8 28-14 8-34 12-52 8-22-5-40-18-36-26z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            <path d="M86 48 92 28l10 14M118 52l8-18 10 16" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M148 92c12 6 22 4 28-2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            <circle cx="98" cy="58" r="2" fill="currentColor"/>
+            <path d="M42 124c-10 8-18 6-22-2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+          <div class="wrap hero-grid">
+            <div class="hero-copy">
+              <div class="trust-pills">
+                <span class="trust-pill-rating">Free · no card</span>
+                <span>2-minute screening</span>
+              </div>
+              <h1 class="hero-title">Is your cat healthy, or just hiding it?</h1>
+              <p class="hero-lead">Cats mask illness but show symptoms. 1 in 3 develop chronic disease, often found too late. Five questions, two minutes, free.</p>
+              <div class="hero-cta site-cta">
+                <button type="button" class="btn btn-get-started btn-hero-primary" id="hero-symptom-check">Start free screening</button>
+                <p class="hero-micro">Tap to start on your phone · takes ~2 min</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="proof-bar" aria-label="Quick facts">
+          <div class="wrap proof-bar-grid">
+            <div class="proof-stat"><span class="proof-num">2 min</span><span class="proof-label">to complete</span></div>
+            <div class="proof-stat"><span class="proof-num">5</span><span class="proof-label">questions</span></div>
+            <div class="proof-stat"><span class="proof-num">₹0</span><span class="proof-label">always free</span></div>
+            <div class="proof-stat"><span class="proof-num">24 hr</span><span class="proof-label">specialist callback*</span></div>
+          </div>
+          <p class="proof-bar-foot">*If your result needs follow-up. Not a diagnosis. Your vet still decides.</p>
+        </section>
+
+        <section class="why-section clinic-section" id="why">
+          <div class="wrap why-grid">
+            <div class="why-copy">
+              <p class="eyebrow">Why we're doing this</p>
+              <h2>We lost our cat to chronic disease. Found too late.</h2>
+              <p class="why-lead">She seemed completely fine. Extra water, a bit of weight loss. We told ourselves it was nothing. By the time we understood, her kidneys were already far gone.</p>
+              <p>Cats hide illness until they can't. Chronic disease doesn't announce itself. It shows up in small habits and symptoms that are easy to dismiss. We built Healthy Cat so other parents catch what we missed earlier, with plain language and a specialist call when it matters.</p>
+              <p class="why-signoff">This is for her, and for yours.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="age-carousel life-journey" id="journey" aria-label="Why screening matters across a cat's life">
+          <div class="wrap">
+            <div class="section-head section-head-center">
+              <p class="eyebrow">Why screening matters</p>
+              <h2>From kitten to senior: age, habits, and hidden symptoms</h2>
+              <p class="life-journey-lead" id="life-journey-lead">Swipe through each life stage. The same five screening questions catch what changes at every age.</p>
+            </div>
+
+            <div class="life-journey-shell">
+              <div class="life-journey-rail" aria-hidden="true">
+                <span class="life-journey-rail-fill" id="life-journey-rail-fill"></span>
+              </div>
+              <div class="life-journey-nav-wrap">
+                <div class="life-journey-nav" id="life-journey-nav" role="tablist" aria-label="Cat life stages"></div>
+              </div>
+              <div class="life-journey-scroller" id="life-journey-scroller" tabindex="0">
+                <div class="life-journey-track" id="life-journey-track"></div>
+              </div>
+              <p class="life-journey-hint">Swipe or tap a stage</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="how clinic-section" id="how">
+          <svg class="cat-decor cat-decor--how" viewBox="0 0 180 120" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M24 78c6-18 24-28 44-24 14 3 24 12 28 24 2 8 0 16-8 20-10 6-24 8-36 4-16-4-28-14-28-24z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+            <path d="M52 42 56 28l8 10M74 44l6-12 8 10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+            <path d="M108 72c8 4 14 3 18-2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+          </svg>
+          <div class="wrap">
+            <div class="section-head section-head-center">
+              <p class="eyebrow">How it works</p>
+              <h2>Three steps. That's it.</h2>
+            </div>
+            <div class="steps-grid reveal">
+              <article class="step-card">
+                <span class="step-num">1</span>
+                <h3>Answer questions</h3>
+                <p>Five quick questions on water, litter box, weight, appetite, and vomiting. About two minutes.</p>
+                <span class="step-meta">Free · all ages</span>
+              </article>
+              <article class="step-card">
+                <span class="step-num">2</span>
+                <h3>See your result</h3>
+                <p>Looking good, worth checking, or act soon. Plain language, not scary.</p>
+                <span class="step-meta">Instant on screen</span>
+              </article>
+              <article class="step-card">
+                <span class="step-num">3</span>
+                <h3>Specialist calls if needed</h3>
+                <p>If follow-up makes sense, a feline specialist calls within 24 hours to explain what it means.</p>
+                <span class="step-meta">Not a diagnosis</span>
+              </article>
+            </div>
+            <div class="how-cta site-cta">
+              <button type="button" class="btn btn-get-started">Start free screening</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="result-preview-section" id="preview">
+          <div class="wrap">
+            <div class="result-preview-card">
+              <div class="result-preview-copy">
+                <p class="eyebrow">What you'll get</p>
+                <h2>Your result in plain English</h2>
+                <p>No medical jargon. One of three clear reads, plus a specialist call if follow-up makes sense.</p>
+              </div>
+              <div class="result-preview-demo" aria-hidden="true">
+                <p class="result-preview-demo-label">Example result</p>
+                <div class="result-preview-meter">
+                  <span class="result-preview-seg seg-low">Looking good</span>
+                  <span class="result-preview-seg seg-medium is-active">Worth a look</span>
+                  <span class="result-preview-seg seg-high">Let's check</span>
+                </div>
+                <p class="result-preview-demo-caption">Worth a look</p>
+                <p class="result-preview-demo-note">+ feline specialist call if needed</p>
+              </div>
+            </div>
+            <div class="result-preview-cta site-cta">
+              <button type="button" class="btn btn-get-started">Start free screening</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="vets clinic-section clinic-section-muted" id="vets">
+          <div class="wrap">
+            <div class="section-head section-head-center">
+              <p class="eyebrow">Feline specialists</p>
+              <h2>Built with feline vets. Your vet decides.</h2>
+              <p class="section-lead section-lead-center">
+                We don't replace the clinic you trust. Specialists shaped the questions and guidance so what you bring to your vet is worth their time.
+              </p>
+            </div>
+            <div class="vets-grid vets-grid--two reveal">
+              <article class="vet-card">
+                <span class="vet-avatar" aria-hidden="true">SK</span>
+                <h3>Dr. Shantanu Kalambi</h3>
+                <p class="vet-cred">Feline specialist · 20 yrs</p>
+              </article>
+              <article class="vet-card">
+                <span class="vet-avatar" aria-hidden="true">AK</span>
+                <h3>Dr. Ankita Kawale</h3>
+                <p class="vet-cred">Feline specialist · 8 yrs</p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="faq clinic-section" id="faq">
+          <div class="wrap faq-wrap">
+            <div class="section-head section-head-center">
+              <p class="eyebrow">Questions</p>
+              <h2>Before you start.</h2>
+            </div>
+            <div class="faq-list">
+              <details class="faq-item">
+                <summary>Is the screening really free?</summary>
+                <p>Yes. The screening and specialist follow-up are free. No card, no account.</p>
+              </details>
+              <details class="faq-item">
+                <summary>Does this replace my vet?</summary>
+                <p>Never. Diagnosis and treatment belong with the vet who knows your cat. We help you show up prepared, with the right questions, not a second opinion from the internet.</p>
+              </details>
+              <details class="faq-item">
+                <summary>My cat seems totally healthy. Why screen?</summary>
+                <p>That's the best time. Cats hide illness. The same five questions work at any age. They catch early changes before they become emergencies.</p>
+              </details>
+              <details class="faq-item">
+                <summary>Will a feline specialist call me?</summary>
+                <p>Only if your result suggests follow-up. Then a feline specialist calls within 24 hours to explain what it means and what to ask your vet. Low-risk results don't need a call.</p>
+              </details>
+              <details class="faq-item">
+                <summary>Are the questions different for kittens vs seniors?</summary>
+                <p>No. Every cat gets the same five questions: water, urination, weight, appetite, and vomiting. Age helps us interpret the result, not change the check.</p>
+              </details>
+            </div>
+          </div>
+        </section>
+
+        <section class="final-cta clinic-band" id="start">
+          <svg class="cat-decor cat-decor--final" viewBox="0 0 220 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M30 62c8-12 22-18 38-14 12 3 20 12 22 24 1 6-2 12-10 14-8 2-18 0-26-4-12-6-20-14-24-20z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+            <path d="M58 38 62 24l8 10M82 40l6-12 8 10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+            <path d="M120 58c14 8 28 6 36-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+            <path d="M148 54c6-8 14-10 22-6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+          </svg>
+          <div class="wrap final-cta-inner site-cta">
+            <h2>Two minutes on your phone.</h2>
+            <p class="final-cta-body">Five questions, your result, specialist call if needed.</p>
+            <button type="button" class="btn btn-get-started">Start free screening</button>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <div class="wrap footer-grid">
+          <div class="footer-brand">
+            <span class="brand" aria-label="Healthy Cat">
+              <span class="brand-mark" aria-hidden="true"><img class="brand-logo" src="./assets/healthy-cat-logo.png" alt="" width="48" height="56" /></span>
+              <span class="brand-word">
+                <span class="brand-word-top">Healthy</span>
+                <span class="brand-word-bottom">Cat</span>
+              </span>
+            </span>
+            <p class="footer-tagline">Free cat health screening. Know when to see your vet, with a specialist call if you need one.</p>
+          </div>
+          <nav class="footer-nav">
+            <div>
+              <span>Explore</span>
+              <a href="#why">Our story</a>
+              <a href="#journey">Why screen</a>
+              <a href="#how">How it works</a>
+              <a href="#vets">Feline Specialists</a>
+            </div>
+            <div>
+              <span>Support</span>
+              <a href="#faq">FAQ</a>
+              <a href="mailto:hello@healthycat.in">Contact</a>
+            </div>
+          </nav>
+        </div>
+        <div class="wrap footer-bottom">
+          <p>&copy; 2026 Healthy Cat. Not intended to diagnose, treat, cure, or prevent disease.</p>
+          <div class="footer-legal">
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <div class="sticky-cta" id="sticky-cta" aria-hidden="true">
+      <div class="sticky-cta-inner site-cta">
+        <p class="sticky-cta-text">Free · 2 min · five questions</p>
+        <button type="button" class="btn btn-sm btn-get-started">Start free screening</button>
+      </div>
+    </div>
+
+    <div class="assflow assflow-clinic" id="assflow" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="assflow-title">
+      <header class="assflow-header">
+        <button type="button" class="assflow-back" id="assflow-back" aria-label="Go back" hidden>←</button>
+        <div class="assflow-brand-wrap">
+          <span class="brand assflow-brand" aria-label="Healthy Cat">
+            <span class="brand-mark" aria-hidden="true"><img class="brand-logo" src="./assets/healthy-cat-logo.png" alt="" width="48" height="56" /></span>
+            <span class="brand-word">
+              <span class="brand-word-top">Healthy</span>
+              <span class="brand-word-bottom">Cat</span>
+            </span>
+          </span>
+          <span class="assflow-program-label" id="assflow-program-label">Healthy Cat screening · ~2 min</span>
+        </div>
+        <button type="button" class="assflow-exit" id="assflow-exit" aria-label="Close screening">Close</button>
+      </header>
+      <div class="assflow-progress" aria-hidden="true">
+        <span class="assflow-progress-fill" id="assflow-progress-fill"></span>
+      </div>
+      <main class="assflow-main" id="assflow-main" aria-live="polite"></main>
+      <footer class="assflow-footer" id="assflow-footer">
+        <button type="button" class="btn btn-block" id="assflow-continue" disabled>Next</button>
+      </footer>
+    </div>
+
+    <script src="./quiz-visuals.js?v=hc18"></script>
+    <script src="./script.js?v=hc18"></script>
+  </body>
+</html>
