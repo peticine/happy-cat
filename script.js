@@ -21,7 +21,7 @@ let catAgeProfile = null;
 
 // ---- Analytics --------------------------------------------------------------
 // Vendor-agnostic event layer. Pushes to window.dataLayer (GA4 / GTM style),
-// dispatches a DOM CustomEvent ("healthy-cat:track") so any tool can subscribe,
+// dispatches a DOM CustomEvent ("felicare:track") so any tool can subscribe,
 // and logs in debug. Swap the body for your provider (Segment, PostHog, etc.).
 const FUNNEL_EVENTS = [];
 
@@ -36,15 +36,15 @@ function track(event, props = {}) {
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push(payload);
     if (typeof window.gtag === "function") window.gtag("event", event, props);
-    window.dispatchEvent(new CustomEvent("healthy-cat:track", { detail: payload }));
+    window.dispatchEvent(new CustomEvent("felicare:track", { detail: payload }));
     if (window.location.search.includes("debugAnalytics")) {
-      console.debug("[healthy-cat:track]", event, props);
+      console.debug("[felicare:track]", event, props);
     }
   } catch (err) {
     /* analytics must never break the app */
   }
 }
-window.healthyCatTrack = track;
+window.feliCareTrack = track;
 window.peticineTrack = track;
 
 function ctaLocation(el) {
@@ -132,11 +132,19 @@ const AGE_CAROUSEL_STAGES = [
     id: "prime",
     label: "Prime",
     ages: "3–6 yrs",
-    title: "Silent organ shifts",
+    title: "The healthiest years — keep them that way",
     image: "./images/stage-prime.png?v=hc30",
     imageAlt: "Alert young cat illustration",
-    issues: ["Kidney filtration declining silently", "Early metabolic imbalances brewing", "Thyroid changes beginning"],
-    symptoms: ["Drinking more than usual", "Larger or more frequent litter box visits", "Subtle weight gain despite good appetite"],
+    issues: [
+      "Weight creeps up slowly, often unnoticed",
+      "Tartar and gum disease start building",
+      "The ideal time to set baseline bloodwork",
+    ],
+    symptoms: [
+      "Straining or frequent trips to the litter box",
+      "Bad breath, or dropping food while eating",
+      "A softening waistline, or jumping up less",
+    ],
     note: "Cats look and act completely healthy. Blood work is the only way to catch what's changing inside.",
   },
   {
@@ -189,7 +197,7 @@ function renderLifeStageCard(stage) {
         <h3 id="stage-title-${stage.id}">${stage.title}</h3>
         <div class="age-carousel-columns">
           <div class="age-carousel-col">
-            <span class="age-carousel-col-label">Health issues at this age</span>
+            <span class="age-carousel-col-label">What's actually happening</span>
             <ul class="age-carousel-list">${issues}</ul>
           </div>
           <div class="age-carousel-col age-carousel-col--watch">
@@ -385,16 +393,16 @@ function initAgeGate() {
   }
 }
 
-// ---- Healthy Cat screening --------------------------------------------------
-const HEALTHY_CAT_NEWSLETTER_EMAIL = "hello@healthycat.in";
-const HEALTHY_CAT_WHATSAPP_URL = "https://chat.whatsapp.com/placeholder-healthycat-community";
+// ---- FeliCare screening --------------------------------------------------
+const FELICARE_NEWSLETTER_EMAIL = "hello@felicare.in";
+const FELICARE_WHATSAPP_URL = "https://chat.whatsapp.com/placeholder-felicare-community";
 const SCREENING_API_BASE = "https://digi-clinic-tau.vercel.app";
 
 const SCREENING_QUESTIONS = [
   {
     id: "water",
-    title: "Water Intake",
-    lead: "Have you noticed any of these recently?",
+    title: "Drinking habits",
+    lead: "Have you noticed any changes in your cat's water drinking?",
     storyId: "mochi",
     options: [
       { id: "empty_bowl", label: "Emptying the water bowl more often", shortLabel: "Emptying bowl more", points: 2 },
@@ -406,21 +414,46 @@ const SCREENING_QUESTIONS = [
   },
   {
     id: "urination",
-    title: "Urination",
-    lead: "Have you noticed any of these in the litter box?",
+    title: "Litter box",
+    lead: "How has your cat's urination changed?",
     storyId: "mochi",
     options: [
-      { id: "larger", label: "Larger urine clumps than before", shortLabel: "Larger clumps", points: 2 },
-      { id: "more", label: "More urine clumps than before", shortLabel: "More clumps", points: 2 },
-      { id: "both", label: "Both larger and more frequent clumps", shortLabel: "Larger + more", points: 3 },
-      { id: "none", label: "No noticeable change", shortLabel: "No change", points: 0 },
-      { id: "unsure", label: "Not sure", shortLabel: "Not sure", points: 1 },
+      {
+        id: "larger",
+        shortLabel: "Bigger clumps",
+        label: "Bigger clumps — more pee than before",
+        points: 2,
+      },
+      {
+        id: "more",
+        shortLabel: "More clumps",
+        label: "More clumps — going more often",
+        points: 2,
+      },
+      {
+        id: "both",
+        shortLabel: "Bigger and more",
+        label: "Bigger and more — both, really",
+        points: 3,
+      },
+      {
+        id: "same",
+        shortLabel: "About the same",
+        label: "About the same — looks normal to me",
+        points: 0,
+      },
+      {
+        id: "unsure",
+        shortLabel: "Haven't noticed",
+        label: "Haven't noticed — not something I track",
+        points: 1,
+      },
     ],
   },
   {
     id: "weight",
-    title: "Weight Loss",
-    lead: "Does your cat look thinner than before?",
+    title: "Weight",
+    lead: "How has your cat's weight changed?",
     storyId: "theo",
     options: [
       { id: "ribs", label: "Ribs/spine are more noticeable", shortLabel: "Ribs/spine show", points: 3 },
@@ -433,7 +466,7 @@ const SCREENING_QUESTIONS = [
   {
     id: "appetite",
     title: "Appetite",
-    lead: "Compared to a few months ago, your cat is:",
+    lead: "How has your cat's appetite changed?",
     storyId: "pepper",
     options: [
       { id: "leaving", label: "Leaving food behind more often", shortLabel: "Leaving food", points: 2 },
@@ -446,7 +479,7 @@ const SCREENING_QUESTIONS = [
   {
     id: "vomiting",
     title: "Vomiting",
-    lead: "How often has your cat vomited in the last month?",
+    lead: "How often has your cat vomited in the past week?",
     storyId: "theo",
     options: [
       { id: "four_plus", label: "4+ times", shortLabel: "4+ times", points: 3 },
@@ -529,7 +562,7 @@ function renderFlowTrustStrip() {
   return `
     <p class="flow-trust-strip">
       <span class="flow-trust-dot" aria-hidden="true"></span>
-      28,000+ cat parents · Healthy Cat screening · not a diagnosis
+      28,000+ cat parents screened · not a diagnosis
     </p>`;
 }
 
@@ -549,17 +582,17 @@ function getResultStep() {
   return getFlowStepCount() + 1;
 }
 
-function formatFlowStepLabel(stepNumber, suffix = "Screening") {
-  return `${stepNumber} of ${getFlowStepCount()} · ${suffix}`;
+function formatFlowStepLabel(stepNumber, suffix = "Questions") {
+  return `Step ${stepNumber} of ${getFlowStepCount()} · ${suffix}`;
 }
 
 function getFlowStepSuffix() {
-  return "Screening";
+  return "Questions";
 }
 
 function setFlowProgramLabel() {
   if (!assflowProgramLabel) return;
-  assflowProgramLabel.textContent = "Healthy Cat screening · ~2 min";
+  assflowProgramLabel.textContent = "Cat health screening";
 }
 
 function ageRiskPoints(years) {
@@ -794,7 +827,7 @@ function renderAgeStep() {
     <div class="flow-step">
       <p class="flow-step-label">${formatFlowStepLabel(1, "About your cat")}</p>
       <h1 class="flow-title" id="assflow-title">How old is your cat?</h1>
-      <p class="flow-lead">Same five screening questions for every age. This just helps us interpret your result.</p>
+      <p class="flow-lead">Age helps us interpret your answers. The same five questions apply at every life stage.</p>
       <div class="flow-age">
         <label class="flow-age-label" for="flow-age-input">Age in years</label>
         <input
@@ -824,7 +857,7 @@ function renderAgeStep() {
     const valid = years >= 1 && years <= 25;
     if (valid && readout) {
       readout.hidden = false;
-      readout.innerHTML = `That's about <strong>${catToHumanAge(years)}</strong> in human years, <span class="flow-age-band">${ageBandLabel(years)}</span>. Next: the same five questions every cat gets.`;
+      readout.innerHTML = `About <strong>${catToHumanAge(years)}</strong> in human years — <span class="flow-age-band">${ageBandLabel(years)}</span> stage.`;
     } else if (readout) {
       readout.hidden = true;
     }
@@ -879,8 +912,8 @@ function renderQuestionStep(qIndex) {
       <p class="flow-step-label">${formatFlowStepLabel(qIndex + 2, getFlowStepSuffix())}</p>
       <h1 class="flow-title" id="assflow-title">${q.title}</h1>
       <p class="flow-lead">${q.lead}</p>
-      <p class="flow-visual-hint">Pick the scene that looks most like your cat. One glance is enough.</p>
-      <fieldset class="flow-fieldset flow-fieldset-visual${q.options.length > 4 ? " flow-fieldset-visual-wide" : ""}">
+      <p class="flow-visual-hint">Tap the image that best matches what you've seen.</p>
+      <fieldset class="flow-fieldset flow-fieldset-visual flow-fieldset-visual-photo${q.options.length > 4 ? " flow-fieldset-visual-wide" : ""}">
         <legend class="visually-hidden">${q.title}</legend>
         <div class="flow-visual-grid">
         ${q.options
@@ -890,7 +923,7 @@ function renderQuestionStep(qIndex) {
             const gap = opt.gap ? "true" : "false";
             const caption = opt.shortLabel || opt.label;
             return `
-          <label class="flow-visual-card">
+          <label class="flow-visual-card flow-visual-card--photo">
             <input
               type="radio"
               name="answer"
@@ -899,10 +932,10 @@ function renderQuestionStep(qIndex) {
               data-label="${opt.label.replace(/"/g, "&quot;")}"
               data-tip-key="${tipKey}"
               data-gap="${gap}"
+              aria-label="${opt.label.replace(/"/g, "&quot;")}"
               ${saved && saved.id === opt.id ? "checked" : ""}
             />
             ${renderQuizVisual(q.id, opt.id, caption)}
-            <span class="flow-visual-caption">${caption}</span>
           </label>`;
           })
           .join("")}
@@ -1167,7 +1200,7 @@ const observer = new IntersectionObserver(
 
 document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
 
-window.healthyCatOpenFlow = openFlow;
+window.feliCareOpenFlow = openFlow;
 window.peticineOpenFlow = openFlow;
 
 track("page_viewed", {

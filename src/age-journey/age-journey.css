@@ -1,22 +1,25 @@
-/* Hims-inspired · clean telehealth onboarding */
+/* Clinical onboarding — calm, editorial */
 
 .aj-root {
-  --aj-art-stroke: #000000;
-  --aj-art-fill: #5d48db;
+  --aj-art-stroke: #102a4d;
+  --aj-art-fill: #1559b7;
+  --aj-ink: #102a4d;
+  --aj-muted: #7890ad;
+  --aj-line: #d8e4f5;
   position: relative;
   width: min(480px, 100%);
   margin: 0 auto;
-  color: var(--aj-ink, #000000);
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--aj-ink);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-/* ─── Abstract backdrop (fixed on gate) ─── */
 .aj-art-backdrop {
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 0;
   overflow: hidden;
+  opacity: 0.45;
 }
 
 .aj-art-bg-svg {
@@ -25,23 +28,22 @@
   color: var(--aj-art-stroke);
 }
 
-/* ─── Step art panel ─── */
 .aj-art-step {
-  margin: 0 0 36px;
-  padding: 28px 0 24px;
-  border-top: 1px solid var(--aj-line, #e8e6e3);
-  border-bottom: 1px solid var(--aj-line, #e8e6e3);
+  margin: 0 0 28px;
+  padding: 20px 0;
+  border-top: 1px solid var(--aj-line);
+  border-bottom: 1px solid var(--aj-line);
   color: var(--aj-art-stroke);
+  opacity: 0.7;
 }
 
 .aj-art-step-svg {
   display: block;
   width: 100%;
   height: auto;
-  max-height: 120px;
+  max-height: 72px;
 }
 
-/* ─── Header ─── */
 .aj-top {
   position: relative;
   z-index: 1;
@@ -49,14 +51,13 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 24px;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 }
 
 .aj-logo {
-  font-size: 1.125rem;
+  font-size: 1.0625rem;
   font-weight: 500;
   letter-spacing: -0.02em;
-  text-transform: none;
   color: var(--aj-ink);
   text-decoration: none;
 }
@@ -67,27 +68,26 @@
 
 .aj-step-num {
   display: block;
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   font-weight: 500;
-  letter-spacing: 0.08em;
-  color: var(--aj-muted, #6b6b6b);
+  letter-spacing: 0;
+  color: var(--aj-muted);
 }
 
 .aj-step-name {
   display: block;
   margin-top: 2px;
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
   color: var(--aj-ink);
 }
 
-/* ─── Progress ─── */
 .aj-progress-track {
   position: relative;
   z-index: 1;
-  height: 1px;
+  height: 2px;
   margin-bottom: 0;
   background: var(--aj-line);
 }
@@ -99,12 +99,11 @@
   transition: width 0.25s ease;
 }
 
-/* ─── Content ─── */
 .aj-body {
   position: relative;
   z-index: 1;
   min-height: 320px;
-  padding-top: 36px;
+  padding-top: 32px;
 }
 
 .aj-page {
@@ -113,55 +112,54 @@
 }
 
 .aj-eyebrow {
-  margin: 0 0 16px;
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  margin: 0 0 12px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
   color: var(--aj-muted);
 }
 
 .aj-title {
-  margin: 0 0 12px;
-  font-size: clamp(1.75rem, 5vw, 2.125rem);
-  font-weight: 400;
-  letter-spacing: -0.02em;
-  line-height: 1.12;
+  margin: 0 0 10px;
+  font-size: clamp(1.625rem, 5vw, 2rem);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 1.18;
   color: var(--aj-ink);
 }
 
 .aj-title-sm {
-  font-size: clamp(1.375rem, 4vw, 1.625rem);
-  line-height: 1.22;
+  font-size: clamp(1.25rem, 4vw, 1.5rem);
+  line-height: 1.28;
 }
 
 .aj-sub {
-  margin: 0 0 32px;
-  max-width: 38ch;
+  margin: 0 0 28px;
+  max-width: 40ch;
   font-size: 0.9375rem;
   font-weight: 400;
-  line-height: 1.65;
+  line-height: 1.6;
   color: var(--aj-muted);
 }
 
 .aj-tag {
   display: inline-block;
-  margin-bottom: 16px;
-  padding: 6px 0;
+  margin-bottom: 14px;
+  padding: 4px 0;
   border-bottom: 1px solid var(--aj-ink);
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
   color: var(--aj-ink);
 }
 
 .aj-tag-alert {
-  border-color: #8b6914;
-  color: #8b6914;
+  border-color: #b45309;
+  color: #92400e;
 }
 
-/* ─── Form ─── */
 .aj-form {
   display: flex;
   flex-direction: column;
@@ -175,10 +173,10 @@
 }
 
 .aj-label {
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
   color: var(--aj-muted);
 }
 
@@ -190,7 +188,7 @@
   border-bottom: 1px solid var(--aj-line);
   border-radius: 0;
   background: transparent;
-  font-family: var(--font);
+  font-family: inherit;
   font-size: 1.0625rem;
   font-weight: 400;
   color: var(--aj-ink);
@@ -221,8 +219,8 @@
   border: none;
   height: auto;
   padding: 0;
-  font-size: 2rem;
-  font-weight: 300;
+  font-size: 1.75rem;
+  font-weight: 400;
   letter-spacing: -0.03em;
   font-variant-numeric: tabular-nums;
 }
@@ -236,29 +234,28 @@
 }
 
 .aj-input-unit {
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  letter-spacing: 0;
+  text-transform: none;
   color: var(--aj-muted);
   padding-bottom: 6px;
 }
 
-/* ─── Button ─── */
 .aj-btn {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 56px;
+  height: 52px;
   margin-top: 12px;
-  padding: 0 32px;
-  border: 2px solid var(--aj-ink);
+  padding: 0 28px;
+  border: 1px solid var(--aj-ink);
   border-radius: 52px;
   background: var(--aj-ink);
   color: #ffffff;
   font-family: inherit;
-  font-size: 1rem;
+  font-size: 0.9375rem;
   font-weight: 500;
   letter-spacing: 0;
   text-transform: none;
@@ -273,7 +270,7 @@
 }
 
 .aj-btn:disabled {
-  opacity: 0.3;
+  opacity: 0.35;
   cursor: not-allowed;
 }
 
@@ -284,10 +281,10 @@
   padding: 8px 0;
   border: none;
   background: none;
-  font-family: var(--font);
-  font-size: 0.75rem;
+  font-family: inherit;
+  font-size: 0.8125rem;
   font-weight: 500;
-  letter-spacing: 0.06em;
+  letter-spacing: 0;
   color: var(--aj-muted);
   text-align: center;
   cursor: pointer;
@@ -301,8 +298,8 @@
 .aj-foot {
   position: relative;
   z-index: 1;
-  margin-top: 32px;
-  padding-top: 24px;
+  margin-top: 28px;
+  padding-top: 20px;
   border-top: 1px solid var(--aj-line);
 }
 
@@ -311,9 +308,8 @@
   text-align: left;
 }
 
-/* ─── Stats (age reveal) ─── */
 .aj-stat-block {
-  padding: 24px 0;
+  padding: 20px 0;
   border-bottom: 1px solid var(--aj-line);
 }
 
@@ -323,18 +319,18 @@
 
 .aj-stat-label {
   display: block;
-  margin-bottom: 10px;
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  margin-bottom: 8px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
   color: var(--aj-muted);
 }
 
 .aj-stat-value {
   margin: 0;
-  font-size: 1.5rem;
-  font-weight: 300;
+  font-size: 1.375rem;
+  font-weight: 400;
   letter-spacing: -0.02em;
   line-height: 1.3;
   color: var(--aj-ink);
@@ -343,26 +339,25 @@
 .aj-stat-value em {
   font-style: normal;
   font-weight: 500;
-  border-bottom: 1px solid var(--aj-art-fill, #c4a574);
+  color: var(--aj-art-fill);
 }
 
 .aj-stat-meta {
-  margin: 8px 0 0;
+  margin: 6px 0 0;
   font-size: 0.8125rem;
   color: var(--aj-muted);
 }
 
-/* ─── Lists ─── */
 .aj-section {
-  margin: 32px 0 36px;
+  margin: 28px 0 32px;
 }
 
 .aj-section-title {
-  margin: 0 0 16px;
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  margin: 0 0 12px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
   color: var(--aj-muted);
 }
 
@@ -375,11 +370,11 @@
 .aj-list li {
   display: flex;
   align-items: baseline;
-  gap: 16px;
-  padding: 16px 0;
+  gap: 14px;
+  padding: 14px 0;
   font-size: 0.9375rem;
   font-weight: 400;
-  line-height: 1.45;
+  line-height: 1.5;
   color: var(--aj-ink);
   border-bottom: 1px solid var(--aj-line);
 }
@@ -390,10 +385,10 @@
 
 .aj-list-num {
   flex-shrink: 0;
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   font-weight: 500;
-  letter-spacing: 0.06em;
-  color: var(--aj-art-fill, #c4a574);
+  letter-spacing: 0;
+  color: var(--aj-muted);
 }
 
 .aj-list-compact li {
@@ -401,9 +396,8 @@
   color: var(--aj-muted);
 }
 
-/* ─── Options ─── */
 .aj-options {
-  margin-bottom: 32px;
+  margin-bottom: 28px;
 }
 
 .aj-option {
@@ -412,11 +406,11 @@
   justify-content: space-between;
   gap: 16px;
   width: 100%;
-  padding: 18px 0;
+  padding: 16px 0;
   border: none;
   border-bottom: 1px solid var(--aj-line);
   background: transparent;
-  font-family: var(--font);
+  font-family: inherit;
   font-size: 0.9375rem;
   font-weight: 400;
   color: var(--aj-ink);
@@ -435,29 +429,34 @@
 
 .aj-option.is-on {
   color: var(--aj-ink);
+  font-weight: 500;
 }
 
 .aj-option-mark {
   flex-shrink: 0;
-  font-size: 0.625rem;
-  letter-spacing: 0;
-  color: var(--aj-art-fill, #c4a574);
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--aj-line);
+  border-radius: 50%;
+  background: var(--surface, #fff);
+  transition: border-color 0.15s ease, background 0.15s ease;
 }
 
 .aj-option.is-on .aj-option-mark {
-  color: var(--aj-ink);
+  border-color: var(--aj-art-fill);
+  background: var(--aj-art-fill);
+  box-shadow: inset 0 0 0 3px #fff;
 }
 
-/* ─── Bullets ─── */
 .aj-bullets {
-  margin: 0 0 32px;
+  margin: 0 0 28px;
   padding: 0;
   list-style: none;
 }
 
 .aj-bullets li {
   position: relative;
-  padding: 12px 0 12px 20px;
+  padding: 10px 0 10px 18px;
   font-size: 0.9375rem;
   line-height: 1.5;
   color: var(--aj-muted);
@@ -471,17 +470,17 @@
   top: 1.15em;
   width: 6px;
   height: 1px;
-  background: var(--aj-art-fill, #c4a574);
+  background: var(--aj-art-fill);
 }
 
 @media (max-width: 480px) {
   .aj-art-step {
-    margin-bottom: 28px;
-    padding: 20px 0;
+    margin-bottom: 24px;
+    padding: 16px 0;
   }
 
   .aj-body {
-    padding-top: 28px;
+    padding-top: 24px;
   }
 }
 

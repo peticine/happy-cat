@@ -10,7 +10,7 @@ import {
 } from "./ageProfile.js";
 import "./age-journey.css";
 
-const STEP_LABELS = ["Meet them", "Their age", "Risk screen", "Results", "Consult"];
+const STEP_LABELS = ["About your cat", "Age context", "Signs", "Assessment", "Next steps"];
 
 const page = {
   initial: { opacity: 0, y: 8 },
@@ -106,9 +106,9 @@ export default function AgeJourney() {
       case 0:
         return (
           <>
-            <p className="aj-eyebrow">Start here</p>
+            <p className="aj-eyebrow">Step 1</p>
             <h1 className="aj-title">How old is your cat?</h1>
-            <p className="aj-sub">Their age shapes what to watch for — we'll show you their place in the journey and what to do next.</p>
+            <p className="aj-sub">Their age shapes what to watch for. We'll place them on the journey and outline sensible next steps.</p>
             <form
               className="aj-form"
               onSubmit={(e) => {
@@ -168,7 +168,7 @@ export default function AgeJourney() {
               <p className="aj-stat-meta">{humanYears} human years</p>
             </div>
             <div className="aj-section">
-              <p className="aj-section-title">More likely at this age</p>
+              <p className="aj-section-title">More common at this age</p>
               <ul className="aj-list">
                 {profile.conditions.map((item, i) => (
                   <li key={item}>
@@ -187,9 +187,9 @@ export default function AgeJourney() {
       case 2:
         return (
           <>
-            <p className="aj-eyebrow">Risk screen</p>
+            <p className="aj-eyebrow">Step 3</p>
             <h1 className="aj-title">Have you noticed any of these?</h1>
-            <p className="aj-sub">Select all that apply.</p>
+            <p className="aj-sub">Select everything that applies. None is a valid answer.</p>
             <div className="aj-options">
               {SYMPTOMS.map((symptom) => {
                 const on = symptoms.has(symptom.id);
@@ -202,13 +202,13 @@ export default function AgeJourney() {
                     aria-pressed={on}
                   >
                     <span className="aj-option-text">{symptom.label}</span>
-                    <span className="aj-option-mark">{on ? "●" : "○"}</span>
+                    <span className="aj-option-mark" aria-hidden="true" />
                   </button>
                 );
               })}
             </div>
             <button type="button" className="aj-btn" onClick={() => setStep(3)}>
-              See results{symptoms.size > 0 ? ` · ${symptoms.size}` : ""}
+              View assessment{symptoms.size > 0 ? ` · ${symptoms.size} selected` : ""}
             </button>
           </>
         );
@@ -217,14 +217,14 @@ export default function AgeJourney() {
         return (
           <>
             <span className={`aj-tag${hasSymptoms ? " aj-tag-alert" : ""}`}>
-              {hasSymptoms ? "Signs reported" : "Screening"}
+              {hasSymptoms ? "Signs noted" : "Assessment"}
             </span>
             <h1 className="aj-title aj-title-sm">
               {hasSymptoms
                 ? `${catLabel} may be showing signs associated with kidney disease.`
-                : `At ${years}, screening still matters.`}
+                : `At ${years}, routine screening still matters.`}
             </h1>
-            <p className="aj-sub">A veterinarian can help determine whether testing is needed.</p>
+            <p className="aj-sub">A veterinarian can help determine whether bloodwork or a visit is warranted.</p>
             <div className="aj-section">
               <p className="aj-section-title">Recommended tests</p>
               <ul className="aj-list aj-list-compact">
@@ -234,7 +234,7 @@ export default function AgeJourney() {
               </ul>
             </div>
             <button type="button" className="aj-btn" onClick={() => setStep(4)}>
-              Book a consultation
+              Request a consultation
             </button>
           </>
         );
@@ -242,10 +242,10 @@ export default function AgeJourney() {
       case 4:
         return (
           <>
-            <p className="aj-eyebrow">Consultation</p>
-            <h1 className="aj-title">Vet reviews symptoms</h1>
+            <p className="aj-eyebrow">Step 5</p>
+            <h1 className="aj-title">Veterinary review</h1>
             <p className="aj-sub">
-              A licensed veterinarian reviews {catLabel}'s profile — age {years}, signs noticed — and recommends next steps.
+              A licensed veterinarian reviews {catLabel}'s profile — age {years}, signs noted — and recommends next steps.
             </p>
             <ul className="aj-bullets">
               <li>Age-calibrated symptom review</li>
@@ -256,7 +256,7 @@ export default function AgeJourney() {
               Request vet review
             </a>
             <button type="button" className="aj-link" onClick={complete}>
-              Continue to peticine
+              Continue to FeliCare
             </button>
           </>
         );
@@ -272,7 +272,7 @@ export default function AgeJourney() {
 
       <header className="aj-top">
         <a className="aj-logo" href="#top">
-          peticine
+          FeliCare
         </a>
         <div className="aj-top-meta">
           <span className="aj-step-num">

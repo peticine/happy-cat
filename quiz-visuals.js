@@ -1,77 +1,46 @@
-// Scenario illustrations for the screening flow — pick-by-sight, not read-and-compare.
-const QUIZ_VISUALS = {
-  fallback: `<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="320" height="240" fill="#faf7f2"/><ellipse cx="160" cy="200" rx="90" ry="12" fill="#e8e2d8"/><circle cx="160" cy="120" r="48" fill="#e0a23c"/><path d="M128 88 L118 58 L138 78 Z M192 88 L202 58 L182 78 Z" fill="#e0a23c"/></svg>`,
+// Photo options for the screening flow — image only, labels via aria.
 
-  "water:same": `<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="320" height="240" fill="#faf7f2"/><ellipse cx="160" cy="210" rx="100" ry="14" fill="#e8e2d8"/><rect x="40" y="160" width="56" height="28" rx="14" fill="#d4dce6"/><rect x="224" y="155" width="48" height="20" rx="10" fill="#c5d0dc" opacity="0.6"/><path d="M200 155 Q230 130 260 155" stroke="#c5d0dc" stroke-width="3" fill="none" opacity="0.5"/><ellipse cx="130" cy="145" rx="52" ry="36" fill="#d4a574"/><circle cx="115" cy="132" r="4" fill="#1d3b5c"/><circle cx="145" cy="132" r="4" fill="#1d3b5c"/><path d="M118 148 Q130 155 142 148" stroke="#1d3b5c" stroke-width="2" fill="none"/><path d="M95 120 Q80 100 90 85" stroke="#d4a574" stroke-width="14" stroke-linecap="round" fill="none"/><path d="M165 120 Q180 105 175 90" stroke="#d4a574" stroke-width="14" stroke-linecap="round" fill="none"/><text x="160" y="40" text-anchor="middle" fill="#5a7289" font-size="13" font-family="system-ui,sans-serif">Napping — bowl untouched</text></svg>`,
+const QUIZ_IMAGE_BASE = "./images/quiz";
 
-  "water:slight": `<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="320" height="240" fill="#faf7f2"/><ellipse cx="160" cy="210" rx="100" ry="14" fill="#e8e2d8"/><rect x="175" y="155" width="70" height="32" rx="16" fill="#b8d4e8"/><rect x="185" y="163" width="50" height="12" rx="6" fill="#7eb8dc"/><ellipse cx="120" cy="150" rx="50" ry="34" fill="#c9956a"/><circle cx="106" cy="138" r="4" fill="#1d3b5c"/><circle cx="134" cy="138" r="4" fill="#1d3b5c"/><path d="M155 168 L175 175" stroke="#c9956a" stroke-width="10" stroke-linecap="round"/><path d="M108 148 Q120 154 132 148" stroke="#1d3b5c" stroke-width="2" fill="none"/><text x="160" y="36" text-anchor="middle" fill="#5a7289" font-size="13" font-family="system-ui,sans-serif">At the bowl more often</text></svg>`,
+const QUIZ_IMAGES = {
+  "water:empty_bowl": `${QUIZ_IMAGE_BASE}/water-empty_bowl.png`,
+  "water:refills": `${QUIZ_IMAGE_BASE}/water-refills.png`,
+  "water:longer": `${QUIZ_IMAGE_BASE}/water-longer.png`,
+  "water:none": `${QUIZ_IMAGE_BASE}/water-none.png`,
+  "water:unsure": `${QUIZ_IMAGE_BASE}/water-unsure.png`,
 
-  "water:lots": `<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="320" height="240" fill="#faf7f2"/><ellipse cx="160" cy="210" rx="100" ry="14" fill="#e8e2d8"/><rect x="200" y="30" width="16" height="80" rx="4" fill="#a8b8c8"/><path d="M208 110 Q190 130 170 150 Q160 160 155 170" stroke="#6aacd8" stroke-width="4" fill="none"/><ellipse cx="145" cy="175" rx="48" ry="32" fill="#d4a574"/><circle cx="132" cy="165" r="4" fill="#1d3b5c"/><circle cx="158" cy="165" r="4" fill="#1d3b5c"/><path d="M175 178 L195 165" stroke="#d4a574" stroke-width="12" stroke-linecap="round"/><rect x="30" y="170" width="50" height="24" rx="12" fill="#b8d4e8"/><rect x="90" y="175" width="40" height="20" rx="10" fill="#b8d4e8"/><text x="160" y="28" text-anchor="middle" fill="#5a7289" font-size="12" font-family="system-ui,sans-serif">Bowl, tap, or extra water spots</text></svg>`,
+  "urination:larger": `${QUIZ_IMAGE_BASE}/urination-larger.png`,
+  "urination:more": `${QUIZ_IMAGE_BASE}/urination-more.png`,
+  "urination:both": `${QUIZ_IMAGE_BASE}/urination-both.png`,
+  "urination:same": `${QUIZ_IMAGE_BASE}/urination-same.png`,
+  "urination:unsure": `${QUIZ_IMAGE_BASE}/urination-unsure.png`,
 
-  "water:unsure": `<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="320" height="240" fill="#faf7f2"/><ellipse cx="160" cy="210" rx="100" ry="14" fill="#e8e2d8"/><ellipse cx="160" cy="140" rx="55" ry="38" fill="#c4c4c4" opacity="0.35"/><ellipse cx="160" cy="145" rx="48" ry="32" fill="#d4a574" opacity="0.85"/><circle cx="147" cy="135" r="4" fill="#1d3b5c"/><circle cx="173" cy="135" r="4" fill="#1d3b5c"/><text x="160" y="100" text-anchor="middle" fill="#e0a23c" font-size="36" font-weight="700" font-family="system-ui,sans-serif">?</text><text x="160" y="36" text-anchor="middle" fill="#5a7289" font-size="13" font-family="system-ui,sans-serif">Haven't been tracking it</text></svg>`,
+  "weight:ribs": `${QUIZ_IMAGE_BASE}/weight-ribs.png`,
+  "weight:slight": `${QUIZ_IMAGE_BASE}/weight-slight.png`,
+  "weight:same": `${QUIZ_IMAGE_BASE}/weight-same.png`,
+  "weight:heavier": `${QUIZ_IMAGE_BASE}/weight-heavier.png`,
+  "weight:unsure": `${QUIZ_IMAGE_BASE}/weight-unsure.png`,
 
-  "weight:stable": `<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="320" height="240" fill="#faf7f2"/><ellipse cx="160" cy="210" rx="100" ry="14" fill="#e8e2d8"/><path d="M70 170 Q160 120 250 170 L250 190 Q160 165 70 190 Z" fill="#d4a574"/><ellipse cx="160" cy="145" rx="22" ry="18" fill="#d4a574"/><circle cx="152" cy="140" r="3" fill="#1d3b5c"/><circle cx="168" cy="140" r="3" fill="#1d3b5c"/><path d="M100 165 Q160 155 220 165" stroke="#b88850" stroke-width="2" fill="none" opacity="0.5"/><text x="160" y="36" text-anchor="middle" fill="#5a7289" font-size="13" font-family="system-ui,sans-serif">Healthy weight from above</text></svg>`,
+  "appetite:leaving": `${QUIZ_IMAGE_BASE}/appetite-leaving.png`,
+  "appetite:less": `${QUIZ_IMAGE_BASE}/appetite-less.png`,
+  "appetite:same": `${QUIZ_IMAGE_BASE}/appetite-same.png`,
+  "appetite:more": `${QUIZ_IMAGE_BASE}/appetite-more.png`,
+  "appetite:unsure": `${QUIZ_IMAGE_BASE}/appetite-unsure.png`,
 
-  "weight:thinner": `<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="320" height="240" fill="#faf7f2"/><ellipse cx="160" cy="210" rx="100" ry="14" fill="#e8e2d8"/><path d="M90 175 Q160 130 230 175 L230 192 Q160 172 90 192 Z" fill="#d4a574"/><path d="M155 130 L160 175 L165 130" stroke="#1d3b5c" stroke-width="2" fill="none" opacity="0.4"/><ellipse cx="160" cy="125" rx="20" ry="16" fill="#d4a574"/><circle cx="153" cy="121" r="3" fill="#1d3b5c"/><circle cx="167" cy="121" r="3" fill="#1d3b5c"/><text x="160" y="36" text-anchor="middle" fill="#5a7289" font-size="12" font-family="system-ui,sans-serif">Spine or hips more noticeable</text></svg>`,
-
-  "weight:losing": `<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="320" height="240" fill="#faf7f2"/><ellipse cx="160" cy="210" rx="100" ry="14" fill="#e8e2d8"/><path d="M110 178 Q160 125 210 178 L210 195 Q160 178 110 195 Z" fill="#d4a574"/><path d="M158 118 L160 178" stroke="#1d3b5c" stroke-width="3" fill="none" opacity="0.55"/><path d="M148 140 L172 140 M148 155 L172 155 M148 170 L172 170" stroke="#1d3b5c" stroke-width="1.5" opacity="0.35"/><ellipse cx="160" cy="112" rx="18" ry="14" fill="#d4a574"/><text x="160" y="36" text-anchor="middle" fill="#5a7289" font-size="13" font-family="system-ui,sans-serif">Definitely bonier</text></svg>`,
-
-  "weight:unsure": `<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="320" height="240" fill="#faf7f2"/><ellipse cx="160" cy="210" rx="100" ry="14" fill="#e8e2d8"/><path d="M85 175 Q160 140 235 175 L235 192 Q160 168 85 192 Z" fill="#c4c4c4" opacity="0.4"/><ellipse cx="160" cy="130" rx="20" ry="16" fill="#d4a574" opacity="0.7"/><text x="160" y="95" text-anchor="middle" fill="#e0a23c" font-size="36" font-weight="700" font-family="system-ui,sans-serif">?</text><text x="160" y="36" text-anchor="middle" fill="#5a7289" font-size="13" font-family="system-ui,sans-serif">Not sure — haven't checked lately</text></svg>`,
-
-  "appetite:normal": `<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="320" height="240" fill="#faf7f2"/><ellipse cx="160" cy="210" rx="100" ry="14" fill="#e8e2d8"/><ellipse cx="160" cy="175" rx="55" ry="12" fill="#e8dfd0" stroke="#d4c8b8"/><ellipse cx="160" cy="168" rx="45" ry="8" fill="#c9956a" opacity="0.6"/><ellipse cx="130" cy="145" rx="42" ry="30" fill="#d4a574"/><circle cx="118" cy="135" r="4" fill="#1d3b5c"/><circle cx="142" cy="135" r="4" fill="#1d3b5c"/><path d="M115 148 Q128 156 141 148" stroke="#1d3b5c" stroke-width="2" fill="none"/><path d="M168 150 L185 165" stroke="#d4a574" stroke-width="10" stroke-linecap="round"/><text x="160" y="36" text-anchor="middle" fill="#5a7289" font-size="13" font-family="system-ui,sans-serif">Eating well at mealtime</text></svg>`,
-
-  "appetite:picky": `<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="320" height="240" fill="#faf7f2"/><ellipse cx="160" cy="210" rx="100" ry="14" fill="#e8e2d8"/><ellipse cx="160" cy="178" rx="55" ry="12" fill="#e8dfd0" stroke="#d4c8b8"/><ellipse cx="160" cy="172" rx="35" ry="6" fill="#c9956a" opacity="0.35"/><ellipse cx="200" cy="145" rx="42" ry="30" fill="#d4a574"/><circle cx="188" cy="135" r="4" fill="#1d3b5c"/><circle cx="212" cy="135" r="4" fill="#1d3b5c"/><path d="M195 148 Q205 142 215 148" stroke="#1d3b5c" stroke-width="2" fill="none"/><path d="M155 175 L145 160" stroke="#b54a4a" stroke-width="2" opacity="0.5"/><text x="160" y="36" text-anchor="middle" fill="#5a7289" font-size="12" font-family="system-ui,sans-serif">Sniffing — skipping some meals</text></svg>`,
-
-  "appetite:much_less": `<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="320" height="240" fill="#faf7f2"/><ellipse cx="160" cy="210" rx="100" ry="14" fill="#e8e2d8"/><ellipse cx="160" cy="180" rx="55" ry="12" fill="#e8dfd0" stroke="#d4c8b8"/><ellipse cx="220" cy="155" rx="40" ry="28" fill="#d4a574" opacity="0.7"/><circle cx="208" cy="147" r="3" fill="#1d3b5c"/><circle cx="230" cy="147" r="3" fill="#1d3b5c"/><path d="M160 175 L160 195" stroke="#b54a4a" stroke-width="3" opacity="0.6"/><text x="145" y="172" fill="#b54a4a" font-size="22" font-family="system-ui,sans-serif">✕</text><text x="160" y="36" text-anchor="middle" fill="#5a7289" font-size="13" font-family="system-ui,sans-serif">Barely touching food</text></svg>`,
-
-  "appetite:more": `<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="320" height="240" fill="#faf7f2"/><ellipse cx="160" cy="210" rx="100" ry="14" fill="#e8e2d8"/><ellipse cx="130" cy="175" rx="40" ry="10" fill="#e8dfd0" stroke="#d4c8b8"/><ellipse cx="190" cy="175" rx="40" ry="10" fill="#e8dfd0" stroke="#d4c8b8" opacity="0.5"/><ellipse cx="160" cy="140" rx="48" ry="32" fill="#d4a574"/><circle cx="147" cy="130" r="4" fill="#1d3b5c"/><circle cx="173" cy="130" r="4" fill="#1d3b5c"/><path d="M152 145 L168 145" stroke="#1d3b5c" stroke-width="2"/><text x="160" y="36" text-anchor="middle" fill="#5a7289" font-size="11" font-family="system-ui,sans-serif">Hungry but not gaining weight</text></svg>`,
-
-  "appetite:unsure": `<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="320" height="240" fill="#faf7f2"/><ellipse cx="160" cy="210" rx="100" ry="14" fill="#e8e2d8"/><ellipse cx="160" cy="175" rx="50" ry="11" fill="#e8dfd0" stroke="#d4c8b8" opacity="0.5"/><ellipse cx="160" cy="140" rx="44" ry="30" fill="#d4a574" opacity="0.75"/><text x="160" y="105" text-anchor="middle" fill="#e0a23c" font-size="36" font-weight="700" font-family="system-ui,sans-serif">?</text><text x="160" y="36" text-anchor="middle" fill="#5a7289" font-size="13" font-family="system-ui,sans-serif">Hard to say — varies a lot</text></svg>`,
-
-  "hydration:great": `<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="320" height="240" fill="#f3f7f0"/><ellipse cx="160" cy="210" rx="100" ry="14" fill="#e0e8dc"/><rect x="200" y="100" width="50" height="70" rx="8" fill="#a8c8e8"/><path d="M225 100 Q235 85 225 70 Q215 85 225 100" fill="#6aacd8"/><ellipse cx="120" cy="165" rx="48" ry="32" fill="#d4a574"/><circle cx="107" cy="155" r="4" fill="#1d3b5c"/><circle cx="133" cy="155" r="4" fill="#1d3b5c"/><ellipse cx="60" cy="175" rx="35" ry="12" fill="#c9956a" opacity="0.5"/><text x="160" y="36" text-anchor="middle" fill="#5f7355" font-size="12" font-family="system-ui,sans-serif">Fountain + wet food</text></svg>`,
-
-  "hydration:bowl": `<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="320" height="240" fill="#f3f7f0"/><ellipse cx="160" cy="210" rx="100" ry="14" fill="#e0e8dc"/><rect x="50" y="165" rx="8" width="45" height="30" fill="#e8c896"/><rect x="195" y="170" width="60" height="28" rx="14" fill="#b8d4e8"/><ellipse cx="130" cy="150" rx="46" ry="32" fill="#d4a574"/><circle cx="117" cy="140" r="4" fill="#1d3b5c"/><circle cx="143" cy="140" r="4" fill="#1d3b5c"/><text x="160" y="36" text-anchor="middle" fill="#5f7355" font-size="12" font-family="system-ui,sans-serif">Dry food + water bowl</text></svg>`,
-
-  "hydration:low": `<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="320" height="240" fill="#f3f7f0"/><ellipse cx="160" cy="210" rx="100" ry="14" fill="#e0e8dc"/><rect x="140" y="165" rx="8" width="50" height="32" fill="#e8c896"/><rect x="210" y="178" width="48" height="22" rx="11" fill="#d4dce6" opacity="0.5"/><ellipse cx="100" cy="155" rx="44" ry="30" fill="#d4a574"/><circle cx="88" cy="146" r="4" fill="#1d3b5c"/><circle cx="112" cy="146" r="4" fill="#1d3b5c"/><text x="160" y="36" text-anchor="middle" fill="#5f7355" font-size="11" font-family="system-ui,sans-serif">Mostly kibble — rarely drinks</text></svg>`,
-
-  "hydration:unsure": `<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="320" height="240" fill="#f3f7f0"/><ellipse cx="160" cy="210" rx="100" ry="14" fill="#e0e8dc"/><rect x="130" y="168" rx="8" width="60" height="28" fill="#e8c896" opacity="0.5"/><rect x="200" y="172" width="50" height="24" rx="12" fill="#d4dce6" opacity="0.35"/><ellipse cx="160" cy="140" rx="44" ry="30" fill="#d4a574" opacity="0.7"/><text x="160" y="105" text-anchor="middle" fill="#e0a23c" font-size="36" font-weight="700" font-family="system-ui,sans-serif">?</text><text x="160" y="36" text-anchor="middle" fill="#5f7355" font-size="12" font-family="system-ui,sans-serif">Haven't paid close attention</text></svg>`,
-
-  "wellness:recent": `<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="320" height="240" fill="#f3f7f0"/><rect x="40" y="50" width="240" height="150" rx="12" fill="#fff" stroke="#d4e0d0"/><circle cx="100" cy="110" r="35" fill="#d4a574"/><circle cx="88" cy="102" r="4" fill="#1d3b5c"/><circle cx="112" cy="102" r="4" fill="#1d3b5c"/><path d="M200 90 L200 130 M180 110 L220 110" stroke="#5f7355" stroke-width="4"/><circle cx="200" cy="110" r="28" fill="none" stroke="#5f7355" stroke-width="3"/><text x="160" y="36" text-anchor="middle" fill="#5f7355" font-size="12" font-family="system-ui,sans-serif">Vet visit within 6 months</text></svg>`,
-
-  "wellness:year": `<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="320" height="240" fill="#f3f7f0"/><rect x="70" y="60" width="180" height="130" rx="10" fill="#fff" stroke="#d4e0d0"/><text x="160" y="95" text-anchor="middle" fill="#1d3b5c" font-size="28" font-weight="700" font-family="system-ui,sans-serif">12</text><text x="160" y="120" text-anchor="middle" fill="#5a7289" font-size="14" font-family="system-ui,sans-serif">months ago</text><ellipse cx="160" cy="165" rx="30" ry="20" fill="#d4a574" opacity="0.6"/><text x="160" y="36" text-anchor="middle" fill="#5f7355" font-size="12" font-family="system-ui,sans-serif">Within the last year</text></svg>`,
-
-  "wellness:over": `<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="320" height="240" fill="#f3f7f0"/><rect x="70" y="60" width="180" height="130" rx="10" fill="#fff" stroke="#d4e0d0" opacity="0.7"/><text x="160" y="100" text-anchor="middle" fill="#8a9580" font-size="22" font-family="system-ui,sans-serif">18+ mo</text><path d="M90 150 L230 150" stroke="#c4c4c4" stroke-width="2" stroke-dasharray="6 4"/><ellipse cx="160" cy="175" rx="28" ry="18" fill="#d4a574" opacity="0.5"/><text x="160" y="36" text-anchor="middle" fill="#5f7355" font-size="12" font-family="system-ui,sans-serif">Over a year since last visit</text></svg>`,
-
-  "wellness:never": `<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="320" height="240" fill="#f3f7f0"/><ellipse cx="160" cy="155" rx="40" ry="28" fill="#e8c896"/><circle cx="150" cy="148" r="3" fill="#1d3b5c"/><circle cx="170" cy="148" r="3" fill="#1d3b5c"/><rect x="200" y="120" width="24" height="50" rx="4" fill="#b8d4e8"/><rect x="204" y="125" width="16" height="8" rx="2" fill="#e0a23c"/><text x="160" y="36" text-anchor="middle" fill="#5f7355" font-size="11" font-family="system-ui,sans-serif">Kitten shots only — not since</text></svg>`,
-
-  "body:lean": `<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="320" height="240" fill="#f3f7f0"/><ellipse cx="160" cy="210" rx="100" ry="14" fill="#e0e8dc"/><path d="M80 175 Q160 115 240 175" stroke="#d4a574" stroke-width="28" stroke-linecap="round" fill="none"/><path d="M130 155 Q160 148 190 155" stroke="#1d3b5c" stroke-width="1.5" fill="none" opacity="0.3"/><ellipse cx="250" cy="148" rx="16" ry="12" fill="#d4a574"/><circle cx="246" cy="145" r="2" fill="#1d3b5c"/><circle cx="254" cy="145" r="2" fill="#1d3b5c"/><text x="160" y="36" text-anchor="middle" fill="#5f7355" font-size="12" font-family="system-ui,sans-serif">Lean — waist visible from above</text></svg>`,
-
-  "body:ideal": `<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="320" height="240" fill="#f3f7f0"/><ellipse cx="160" cy="210" rx="100" ry="14" fill="#e0e8dc"/><path d="M75 178 Q160 125 245 178" stroke="#d4a574" stroke-width="32" stroke-linecap="round" fill="none"/><ellipse cx="255" cy="155" rx="18" ry="14" fill="#d4a574"/><circle cx="251" cy="152" r="2" fill="#1d3b5c"/><circle cx="259" cy="152" r="2" fill="#1d3b5c"/><text x="160" y="36" text-anchor="middle" fill="#5f7355" font-size="12" font-family="system-ui,sans-serif">Healthy middle — slightly soft OK</text></svg>`,
-
-  "body:chunky": `<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="320" height="240" fill="#f3f7f0"/><ellipse cx="160" cy="210" rx="100" ry="14" fill="#e0e8dc"/><path d="M70 182 Q160 130 250 182" stroke="#d4a574" stroke-width="38" stroke-linecap="round" fill="none"/><ellipse cx="160" cy="168" rx="28" ry="18" fill="#d4a574" opacity="0.35"/><ellipse cx="255" cy="158" rx="20" ry="16" fill="#d4a574"/><circle cx="251" cy="155" r="2" fill="#1d3b5c"/><circle cx="259" cy="155" r="2" fill="#1d3b5c"/><text x="160" y="36" text-anchor="middle" fill="#5f7355" font-size="12" font-family="system-ui,sans-serif">Round belly — ribs hard to feel</text></svg>`,
-
-  "body:unsure": `<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="320" height="240" fill="#f3f7f0"/><ellipse cx="160" cy="210" rx="100" ry="14" fill="#e0e8dc"/><path d="M80 178 Q160 140 240 178" stroke="#c4c4c4" stroke-width="30" stroke-linecap="round" fill="none" opacity="0.45"/><ellipse cx="255" cy="155" rx="18" ry="14" fill="#d4a574" opacity="0.5"/><text x="160" y="115" text-anchor="middle" fill="#e0a23c" font-size="36" font-weight="700" font-family="system-ui,sans-serif">?</text><text x="160" y="36" text-anchor="middle" fill="#5f7355" font-size="12" font-family="system-ui,sans-serif">Never really checked</text></svg>`,
+  "vomiting:four_plus": `${QUIZ_IMAGE_BASE}/vomiting-four_plus.png`,
+  "vomiting:two_three": `${QUIZ_IMAGE_BASE}/vomiting-two_three.png`,
+  "vomiting:once": `${QUIZ_IMAGE_BASE}/vomiting-once.png`,
+  "vomiting:never": `${QUIZ_IMAGE_BASE}/vomiting-never.png`,
+  "vomiting:unsure": `${QUIZ_IMAGE_BASE}/vomiting-unsure.png`,
 };
 
-function getQuizVisual(questionId, optionId) {
+function getQuizVisualSrc(questionId, optionId) {
   const key = `${questionId}:${optionId}`;
-  const aliases = {
-    "water:empty_bowl": "water:slight",
-    "water:refills": "water:slight",
-    "water:longer": "water:lots",
-    "water:none": "water:same",
-    "weight:ribs": "weight:losing",
-    "weight:slight": "weight:thinner",
-    "weight:same": "weight:stable",
-    "weight:heavier": "body:ideal",
-    "appetite:leaving": "appetite:picky",
-    "appetite:less": "appetite:picky",
-    "appetite:same": "appetite:normal",
-  };
-  const resolved = aliases[key] || key;
-  return QUIZ_VISUALS[resolved] || QUIZ_VISUALS.fallback;
+  return QUIZ_IMAGES[key] || `${QUIZ_IMAGE_BASE}/water-unsure.png`;
 }
 
 function renderQuizVisual(questionId, optionId, label) {
-  return `<span class="flow-visual-media" role="img" aria-label="${label.replace(/"/g, "&quot;")}">${getQuizVisual(questionId, optionId)}</span>`;
+  const src = getQuizVisualSrc(questionId, optionId);
+  const alt = label.replace(/"/g, "&quot;");
+  return `<span class="flow-visual-media flow-visual-media--photo" role="img" aria-label="${alt}"><img class="flow-visual-photo" src="${src}" alt="" loading="lazy" decoding="async" /></span>`;
 }
