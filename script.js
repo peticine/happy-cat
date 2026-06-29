@@ -21,7 +21,7 @@ let catAgeProfile = null;
 
 // ---- Analytics --------------------------------------------------------------
 // Vendor-agnostic event layer. Pushes to window.dataLayer (GA4 / GTM style),
-// dispatches a DOM CustomEvent ("felicare:track") so any tool can subscribe,
+// dispatches a DOM CustomEvent ("felica:track") so any tool can subscribe,
 // and logs in debug. Swap the body for your provider (Segment, PostHog, etc.).
 const FUNNEL_EVENTS = [];
 
@@ -36,14 +36,15 @@ function track(event, props = {}) {
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push(payload);
     if (typeof window.gtag === "function") window.gtag("event", event, props);
-    window.dispatchEvent(new CustomEvent("felicare:track", { detail: payload }));
+    window.dispatchEvent(new CustomEvent("felica:track", { detail: payload }));
     if (window.location.search.includes("debugAnalytics")) {
-      console.debug("[felicare:track]", event, props);
+      console.debug("[felica:track]", event, props);
     }
   } catch (err) {
     /* analytics must never break the app */
   }
 }
+window.felicaTrack = track;
 window.feliCareTrack = track;
 window.peticineTrack = track;
 
@@ -122,8 +123,8 @@ const AGE_CAROUSEL_STAGES = [
     label: "Kitten",
     ages: "0–2 yrs",
     title: "Foundation years",
-    image: "./images/stage-young.png?v=hc30",
-    imageAlt: "Curious kitten illustration",
+    image: "./images/stage-young.png?v=hc47",
+    imageAlt: "Real kitten portrait",
     issues: ["Early nutrition affects kidney health for life", "Congenital issues may show up now", "Growth problems can signal metabolic issues"],
     symptoms: ["Slow growth or lag vs littermates", "Frequent vomiting or diarrhea", "Lethargy or unusual sleeping patterns"],
     note: "What happens now shapes lifelong organ function. Early problems often catch up in senior years.",
@@ -133,8 +134,8 @@ const AGE_CAROUSEL_STAGES = [
     label: "Prime",
     ages: "3–6 yrs",
     title: "The healthiest years — keep them that way",
-    image: "./images/stage-prime.png?v=hc30",
-    imageAlt: "Alert young cat illustration",
+    image: "./images/stage-prime.png?v=hc47",
+    imageAlt: "Real adult cat portrait",
     issues: [
       "Weight creeps up slowly, often unnoticed",
       "Tartar and gum disease start building",
@@ -152,8 +153,8 @@ const AGE_CAROUSEL_STAGES = [
     label: "Mature",
     ages: "7–10 yrs",
     title: "The turning point",
-    image: "./images/stage-mature.png?v=hc30",
-    imageAlt: "Mature cat illustration",
+    image: "./images/stage-mature.png?v=hc47",
+    imageAlt: "Real mature cat portrait",
     issues: ["1 in 3 cats shows organ decline now", "Kidney disease becomes common", "Dental disease accelerates systemic problems"],
     symptoms: ["Drinking significantly more", "Weight loss despite eating", "Pickiness about food or water"],
     note: "This age window is critical. Early detection makes the difference between 6 months and 6 years.",
@@ -163,8 +164,8 @@ const AGE_CAROUSEL_STAGES = [
     label: "Senior",
     ages: "11–14 yrs",
     title: "Compensation fails",
-    image: "./images/stage-senior.png?v=hc30",
-    imageAlt: "Senior cat stretching illustration",
+    image: "./images/stage-senior.png?v=hc47",
+    imageAlt: "Real senior cat portrait",
     issues: ["Kidney function severely compromised", "Chronic conditions often diagnosed now", "Cats stop hiding illness symptoms"],
     symptoms: ["Increased vomiting", "Noticeable weight loss", "Behavior changes — less playful, more hiding"],
     note: "By now, damage is often advanced. But knowing exactly what changed helps your vet intervene fast.",
@@ -174,8 +175,8 @@ const AGE_CAROUSEL_STAGES = [
     label: "Geriatric",
     ages: "15+ yrs",
     title: "Quality of life",
-    image: "./images/stage-geriatric.png?v=hc30",
-    imageAlt: "Relaxed senior cat illustration",
+    image: "./images/stage-geriatric.png?v=hc47",
+    imageAlt: "Real geriatric cat portrait",
     issues: ["Multiple organ systems failing together", "Even minor changes signal bigger problems", "Rapid decline possible"],
     symptoms: ["Sudden weight drop", "Refusing food for 24+ hours", "Weakness, wobbly gait, or disorientation"],
     note: "At this stage, knowing what's changed helps you and your vet make comfort-first decisions quickly.",
@@ -190,7 +191,7 @@ function renderLifeStageCard(stage) {
     <article class="life-stage-card age-carousel-card" data-stage="${stage.id}" id="stage-${stage.id}" aria-labelledby="stage-title-${stage.id}">
       <div class="life-stage-visual age-carousel-visual">
         <img class="age-stage-photo" src="${stage.image}" alt="${stage.imageAlt}" loading="lazy" width="360" height="360" />
-        <span class="age-carousel-badge" data-here-badge hidden>Your cat</span>
+        <span class="age-carousel-badge" data-here-badge hidden>Current stage</span>
       </div>
       <div class="life-stage-content age-carousel-content">
         <p class="life-stage-ages">${stage.label} · ${stage.ages}</p>
@@ -219,7 +220,7 @@ function updateLifeJourneyForAge(years) {
   if (lead) {
     if (years != null) {
       const stage = AGE_CAROUSEL_STAGES.find((s) => s.id === stageId);
-      lead.textContent = `${name} is ${years}. Swipe to the ${stage?.label || "senior"} card to see what to watch at this age.`;
+      lead.textContent = `${name} is ${years}. Review the ${stage?.label || "senior"} stage for age-specific guidance.`;
     } else {
       lead.textContent =
         "Swipe through each life stage. The same five screening questions catch what changes at every age.";
@@ -393,9 +394,9 @@ function initAgeGate() {
   }
 }
 
-// ---- FeliCare screening --------------------------------------------------
-const FELICARE_NEWSLETTER_EMAIL = "hello@felicare.in";
-const FELICARE_WHATSAPP_URL = "https://chat.whatsapp.com/placeholder-felicare-community";
+// ---- Felica screening --------------------------------------------------
+const FELICA_NEWSLETTER_EMAIL = "hello@felica.in";
+const FELICA_WHATSAPP_URL = "https://chat.whatsapp.com/placeholder-felica-community";
 const SCREENING_API_BASE = "https://digi-clinic-tau.vercel.app";
 
 const SCREENING_QUESTIONS = [
@@ -912,7 +913,7 @@ function renderQuestionStep(qIndex) {
       <p class="flow-step-label">${formatFlowStepLabel(qIndex + 2, getFlowStepSuffix())}</p>
       <h1 class="flow-title" id="assflow-title">${q.title}</h1>
       <p class="flow-lead">${q.lead}</p>
-      <p class="flow-visual-hint">Tap the image that best matches what you've seen.</p>
+      <p class="flow-visual-hint">Select the option that best matches what you've seen.</p>
       <fieldset class="flow-fieldset flow-fieldset-visual flow-fieldset-visual-photo${q.options.length > 4 ? " flow-fieldset-visual-wide" : ""}">
         <legend class="visually-hidden">${q.title}</legend>
         <div class="flow-visual-grid">
@@ -1200,6 +1201,7 @@ const observer = new IntersectionObserver(
 
 document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
 
+window.felicaOpenFlow = openFlow;
 window.feliCareOpenFlow = openFlow;
 window.peticineOpenFlow = openFlow;
 

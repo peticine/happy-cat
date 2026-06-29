@@ -1,4 +1,4 @@
-// Photo options for the screening flow — image only, labels via aria.
+// Photo options for the screening flow — cropped image + short label below.
 
 const QUIZ_IMAGE_BASE = "./images/quiz";
 
@@ -41,6 +41,6 @@ function getQuizVisualSrc(questionId, optionId) {
 
 function renderQuizVisual(questionId, optionId, label) {
   const src = getQuizVisualSrc(questionId, optionId);
-  const alt = label.replace(/"/g, "&quot;");
-  return `<span class="flow-visual-media flow-visual-media--photo" role="img" aria-label="${alt}"><img class="flow-visual-photo" src="${src}" alt="" loading="lazy" decoding="async" /></span>`;
+  const safeLabel = label.replace(/"/g, "&quot;");
+  return `<span class="flow-visual-media flow-visual-media--photo"><img class="flow-visual-photo" src="${src}" alt="" loading="lazy" decoding="async" aria-hidden="true" /></span><span class="flow-visual-caption"><span class="flow-visual-caption-title">${safeLabel}</span></span>`;
 }

@@ -256,7 +256,7 @@ export default function AgeJourney() {
               Request vet review
             </a>
             <button type="button" className="aj-link" onClick={complete}>
-              Continue to FeliCare
+              Continue to Felica
             </button>
           </>
         );
@@ -272,7 +272,7 @@ export default function AgeJourney() {
 
       <header className="aj-top">
         <a className="aj-logo" href="#top">
-          FeliCare
+          Felica
         </a>
         <div className="aj-top-meta">
           <span className="aj-step-num">
