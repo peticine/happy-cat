@@ -272,7 +272,8 @@ export default function AgeJourney() {
 
       <header className="aj-top">
         <a className="aj-logo" href="#top">
-          Felica
+          <span>Feli</span>
+          <span className="aj-logo-accent">ca</span>
         </a>
         <div className="aj-top-meta">
           <span className="aj-step-num">

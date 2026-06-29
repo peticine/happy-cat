@@ -21,9 +21,74 @@ let catAgeProfile = null;
 
 // ---- Analytics --------------------------------------------------------------
 // Vendor-agnostic event layer. Pushes to window.dataLayer (GA4 / GTM style),
-// dispatches a DOM CustomEvent ("felica:track") so any tool can subscribe,
-// and logs in debug. Swap the body for your provider (Segment, PostHog, etc.).
+// dispatches a DOM CustomEvent ("felica:track"), and forwards funnel events
+// to Meta Pixel (fbq) for conversion tracking.
 const FUNNEL_EVENTS = [];
+
+function trackMetaPixel(event, props = {}) {
+  if (typeof window.fbq !== "function") return;
+  try {
+    switch (event) {
+      case "screening_started":
+        fbq("track", "ViewContent", {
+          content_name: "cat_health_screening",
+          content_category: "screening",
+        });
+        fbq("trackCustom", "ScreeningStarted", {
+          source: props.source,
+          has_saved_age: props.has_saved_age,
+        });
+        break;
+      case "screening_step_completed":
+        fbq("trackCustom", "ScreeningStepCompleted", {
+          step: props.step,
+          step_index: props.step_index,
+        });
+        break;
+      case "screening_score_computed":
+        if (props.source === "api") {
+          fbq("track", "CompleteRegistration", {
+            content_name: "cat_health_screening",
+            status: props.risk_level,
+          });
+          fbq("trackCustom", "ScreeningCompleted", {
+            risk_level: props.risk_level,
+            score: props.score,
+          });
+        } else {
+          fbq("trackCustom", "ScreeningQuestionsComplete", {
+            risk_level: props.risk_level,
+            score: props.score,
+          });
+        }
+        break;
+      case "whatsapp_number_collected":
+        fbq("track", "Lead", {
+          content_name: "cat_health_screening",
+          content_category: "screening",
+        });
+        break;
+      case "screening_closed":
+        if (!props.completed) {
+          fbq("trackCustom", "ScreeningAbandoned", {
+            exited_at_step: props.exited_at_step,
+          });
+        }
+        break;
+      case "cta_clicked":
+        if (props.intent === "start_screening") {
+          fbq("trackCustom", "ScreeningCTAClicked", {
+            location: props.location,
+          });
+        }
+        break;
+      default:
+        break;
+    }
+  } catch (err) {
+    /* pixel must never break the app */
+  }
+}
 
 function track(event, props = {}) {
   const payload = {
@@ -37,6 +102,7 @@ function track(event, props = {}) {
     window.dataLayer.push(payload);
     if (typeof window.gtag === "function") window.gtag("event", event, props);
     window.dispatchEvent(new CustomEvent("felica:track", { detail: payload }));
+    trackMetaPixel(event, props);
     if (window.location.search.includes("debugAnalytics")) {
       console.debug("[felica:track]", event, props);
     }
@@ -702,6 +768,11 @@ function resetQuizState() {
   setFlowProgramLabel();
 }
 
+function apiAnswerValue(questionId, answerId) {
+  if (questionId === "urination" && answerId === "same") return "none";
+  return answerId;
+}
+
 function buildScreeningQueryParams(phone) {
   const params = new URLSearchParams({
     catAge: String(quizState.age),
@@ -710,7 +781,7 @@ function buildScreeningQueryParams(phone) {
 
   SCREENING_QUESTIONS.forEach((q) => {
     const answer = quizState.answers[q.id];
-    if (answer?.id) params.set(q.id, answer.id);
+    if (answer?.id) params.set(q.id, apiAnswerValue(q.id, answer.id));
   });
 
   return params;
