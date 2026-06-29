@@ -1329,6 +1329,13 @@ track("page_viewed", {
   traffic_source: new URLSearchParams(window.location.search).get("utm_source") || "direct",
 });
 
+if ("scrollRestoration" in history) {
+  history.scrollRestoration = "manual";
+}
+if (!window.location.hash) {
+  window.scrollTo(0, 0);
+}
+
 initAgeGate();
 initAssessment();
 initLifeJourney();

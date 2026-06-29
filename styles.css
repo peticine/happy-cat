@@ -2166,16 +2166,17 @@ html.assflow-open .site-shell {
 
 .hero-clinic {
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   padding: 72px 0 56px;
   background: var(--bg);
   border-bottom: 1px solid var(--line);
 }
 
 /* Ad-aligned hero */
-.hero-ad {
+.hero.hero-ad {
   padding: 32px 0 48px;
   background: linear-gradient(180deg, #fbf8f3 0%, var(--bg) 100%);
+  min-height: min(100vh, 920px);
 }
 
 .hero-ad-grid {
@@ -2423,12 +2424,19 @@ html.assflow-open .site-shell {
     width: min(1200px, calc(100% - 32px));
   }
 
-  .hero-ad-visual {
+  .hero.hero-ad {
+    padding: 16px 0 28px;
     min-height: 0;
   }
 
+  .hero-ad-visual {
+    order: -1;
+    min-height: 0;
+    margin-bottom: 8px;
+  }
+
   .hero-ad-photo {
-    width: min(100%, 280px);
+    width: min(78vw, 260px);
   }
 
   .hero-ad-copy {
@@ -2455,6 +2463,20 @@ html.assflow-open .site-shell {
     width: 52px;
     height: 52px;
     font-size: 1.125rem;
+  }
+
+  .hero-signs {
+    margin-bottom: 14px;
+    padding: 14px 12px;
+  }
+
+  .hero-ad-notes {
+    margin-bottom: 16px;
+  }
+
+  .hero-ad-note {
+    padding: 10px 12px;
+    font-size: 0.8125rem;
   }
 
   .hero-signs-grid li {
