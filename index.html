@@ -8,6 +8,10 @@
       name="description"
       content="Free 2-minute cat health screening. About 1 in 3 cats develop chronic disease that's found late. Five questions catch what cats hide."
     />
+    <link rel="icon" href="./favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./images/apple-touch-icon.png" />
     <!-- Facebook Pixel Code -->
     <script>
       !function(f,b,e,v,n,t,s)
@@ -28,8 +32,8 @@
     <!-- End Facebook Pixel Code -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" />
-    <link rel="stylesheet" href="./styles.css?v=hc52" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&display=swap" />
+    <link rel="stylesheet" href="./styles.css?v=hc55" />
   </head>
   <body data-pet="cat">
     <div class="site-shell is-visible" id="site-shell">
@@ -55,16 +59,65 @@
       </header>
 
       <main>
-        <section class="hero hero-clinic">
-          <div class="wrap hero-grid">
-            <div class="hero-copy">
-              <p class="hero-eyebrow">Free cat health screening</p>
-              <h1 class="hero-title">Is your cat healthy, or just hiding it?</h1>
-              <p class="hero-lead">Cats mask illness but show symptoms. About 1 in 3 develop chronic disease, often found too late. Five questions, two minutes, no cost.</p>
-              <div class="hero-cta site-cta">
-                <button type="button" class="btn btn-get-started btn-hero-primary" id="hero-symptom-check">Start screening</button>
-                <p class="hero-micro">Takes about 2 minutes · no account required</p>
+        <section class="hero hero-clinic hero-ad" id="hero">
+          <div class="wrap hero-ad-grid">
+            <div class="hero-ad-copy">
+              <h1 class="hero-ad-title">Cats are masters at hiding how they <em>really</em> feel.</h1>
+              <div class="hero-ad-divider" aria-hidden="true">
+                <span class="hero-ad-divider-line"></span>
+                <span class="hero-ad-heart" aria-hidden="true">♥</span>
+                <span class="hero-ad-divider-line"></span>
               </div>
+              <p class="hero-ad-lead">By the time symptoms show, the problem may already be serious.</p>
+
+              <div class="hero-signs">
+                <p class="hero-signs-label">Signs you might miss</p>
+                <ul class="hero-signs-grid">
+                  <li>
+                    <span class="hero-sign-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="12" cy="14" rx="8" ry="3"/><path d="M6 14V9c0-2 2.5-4 6-4s6 2 6 4v5"/></svg>
+                    </span>
+                    <span>Eating a little less</span>
+                  </li>
+                  <li>
+                    <span class="hero-sign-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 14c2-1 4-4 6-4s4 3 6 4"/><circle cx="9" cy="11" r="1"/><circle cx="15" cy="11" r="1"/></svg>
+                    </span>
+                    <span>Sleeping more</span>
+                  </li>
+                  <li>
+                    <span class="hero-sign-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="10" width="16" height="8" rx="2"/><path d="M8 10V8a4 4 0 0 1 8 0v2"/></svg>
+                    </span>
+                    <span>Using litter box more</span>
+                  </li>
+                  <li>
+                    <span class="hero-sign-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 16c1-2 3-3 4-3s3 1 4 3"/><path d="M10 12h.01M14 12h.01"/></svg>
+                    </span>
+                    <span>Less playful, more quiet</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div class="hero-ad-notes">
+                <p class="hero-ad-note"><span class="hero-ad-note-icon" aria-hidden="true">♥</span> Your cat can't tell you. <strong>But you</strong> can stay one step ahead.</p>
+                <p class="hero-ad-note"><span class="hero-ad-note-icon hero-ad-note-icon--cal" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg>
+                </span> Regular checks can make all the difference.</p>
+              </div>
+
+              <div class="hero-cta-ad">
+                <button type="button" class="btn btn-get-started btn-hero-ad" id="hero-symptom-check">
+                  <span class="btn-hero-ad-text">Take a quick screening for your cat's health</span>
+                  <span class="btn-hero-ad-arrow" aria-hidden="true">→</span>
+                </button>
+                <span class="hero-ad-timer" aria-hidden="true"><span>2</span><small>min</small></span>
+              </div>
+              <p class="hero-ad-foot"><span aria-hidden="true">♥</span> Because lasting years together start with a little check today.</p>
+            </div>
+            <div class="hero-ad-visual" aria-hidden="true">
+              <img class="hero-ad-photo" src="./images/hero-ad-cat.png" alt="" width="512" height="861" loading="eager" decoding="async" />
             </div>
           </div>
         </section>
