@@ -805,12 +805,58 @@ function answerLabel(qId) {
   return a ? a.label : "Not answered";
 }
 
+function escapeHtml(text) {
+  return String(text)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function renderScreeningSummary() {
+  const ageRow =
+    quizState.age != null
+      ? `<li class="score-summary-item">
+          <span class="score-summary-q">Cat's age</span>
+          <span class="score-summary-a">${quizState.age} ${quizState.age === 1 ? "year" : "years"} · ${ageBandLabel(quizState.age)}</span>
+        </li>`
+      : "";
+
+  const rows = SCREENING_QUESTIONS.map((q) => {
+    const answer = quizState.answers[q.id];
+    const label = answer?.label || "Not answered";
+    return `<li class="score-summary-item">
+      <span class="score-summary-q">${q.title}</span>
+      <span class="score-summary-a">${escapeHtml(label)}</span>
+    </li>`;
+  }).join("");
+
+  return `
+    <div class="score-summary">
+      <p class="score-summary-title">Your answers</p>
+      <ul class="score-summary-list">${ageRow}${rows}</ul>
+    </div>`;
+}
+
+function renderSpecialistCallout(riskLevel) {
+  if (riskLevel === "low") {
+    return `
+      <p class="score-specialist score-specialist--low">
+        Your answers look reassuring overall. We'll remind you when it's time to screen again — and a feline specialist is available if you'd like help understanding what they mean.
+      </p>`;
+  }
+
+  return `
+    <p class="score-specialist">
+      A feline specialist will call you soon to walk through your answers, explain what they mean, and help you understand your cat's health better.
+    </p>`;
+}
+
 function renderScoreResult(result) {
   const riskLevel = result?.risk_level || "low";
   const tier = RISK_TIERS[riskLevel] || RISK_TIERS.low;
   const headline = result?.risk_label || tier.headline;
   const detail = result?.message || tier.detail;
-  const action = result?.recommendation || tier.action;
 
   return `
     <div class="quiz-result score-result score-result-${riskLevel}">
@@ -823,9 +869,10 @@ function renderScoreResult(result) {
       <h2 class="quiz-title score-headline" id="assflow-title">${headline}</h2>
       <p class="score-detail">${detail}</p>
 
-      <p class="score-next">${action}</p>
+      ${renderScreeningSummary()}
+      ${renderSpecialistCallout(riskLevel)}
 
-      <button type="button" class="btn btn-block" data-flow-done>Done</button>
+      <button type="button" class="btn btn-block btn-get-started" data-flow-done>Done</button>
       <p class="score-reassure">Not a diagnosis. Your vet makes every treatment decision.</p>
     </div>
   `;
@@ -1112,7 +1159,7 @@ function renderWhatsAppGate(tier) {
           />
         </div>
         <p class="whatsapp-gate-hint">Free · private · no spam</p>
-        <button type="submit" class="btn btn-block">Show my result</button>
+        <button type="submit" class="btn btn-block btn-get-started">Show my result</button>
       </form>
     </div>
   `;
