@@ -15,6 +15,121 @@ const CAT_PROFILE_KEY = "peticine-cat-profile";
 const AGE_DONE_KEY = "peticine-age-done";
 const AGE_THEMES = ["young", "prime", "mature", "senior", "geriatric"];
 
+const HERO_VARIANTS = {
+  water: {
+    headline: "Let's understand why your cat is drinking more water.",
+    subhead:
+      "A free 2-minute health screening helps you understand whether it's something to monitor or whether it's time to speak with your veterinarian.",
+    cta: "Start Free Screening",
+    image: "./images/hero-healthy-cat.png",
+  },
+  drinking: {
+    headline: "Let's understand why your cat is drinking more water.",
+    subhead:
+      "A free 2-minute health screening helps you understand whether it's something to monitor or whether it's time to speak with your veterinarian.",
+    cta: "Start Free Screening",
+    image: "./images/hero-healthy-cat.png",
+  },
+  eating: {
+    headline: "Let's understand why your cat is eating less.",
+    subhead:
+      "A free 2-minute screening helps you see whether it's a passing phase or something worth discussing with your vet.",
+    cta: "Start Free Screening",
+    image: "./images/hero-healthy-cat.png",
+  },
+  sleeping: {
+    headline: "Let's understand why your cat is sleeping more.",
+    subhead:
+      "Answer a few simple questions designed with veterinarians to understand whether it's normal rest or a sign to watch.",
+    cta: "Start Free Screening",
+    image: "./images/hero-healthy-cat.png",
+  },
+  litter: {
+    headline: "Let's understand why your cat is using the litter box more.",
+    subhead:
+      "A free 2-minute screening helps you understand what the change could mean — and whether a vet visit is recommended.",
+    cta: "Start Free Screening",
+    image: "./images/hero-healthy-cat.png",
+  },
+  urination: {
+    headline: "Let's understand why your cat is using the litter box more.",
+    subhead:
+      "A free 2-minute screening helps you understand what the change could mean — and whether a vet visit is recommended.",
+    cta: "Start Free Screening",
+    image: "./images/hero-healthy-cat.png",
+  },
+  quiet: {
+    headline: "Let's understand what your cat's quieter behaviour could mean.",
+    subhead:
+      "Less playfulness and more quiet can be subtle signs. A short screening helps you know what to do next.",
+    cta: "Start Free Screening",
+    image: "./images/hero-hiding-cat.png",
+  },
+  hiding: {
+    headline: "Let's find out what your cat's recent changes could mean.",
+    subhead:
+      "Answer a few simple questions designed with veterinarians to better understand your cat's health.",
+    cta: "Start Free Health Check",
+    image: "./images/hero-hiding-cat.png",
+  },
+  default: {
+    headline: "Let's find out what your cat's recent changes could mean.",
+    subhead:
+      "Answer a few simple questions designed with veterinarians to better understand your cat's health.",
+    cta: "Start Free Health Check",
+    image: "./images/hero-healthy-cat.png",
+  },
+};
+
+const HERO_CONCERN_ALIASES = {
+  drink: "water",
+  "drinking-more": "water",
+  "more-water": "water",
+  "eating-less": "eating",
+  appetite: "eating",
+  "sleeping-more": "sleeping",
+  sleep: "sleeping",
+  "litter-box": "litter",
+  litterbox: "litter",
+  pee: "litter",
+  "less-playful": "quiet",
+  behaviour: "quiet",
+  behavior: "quiet",
+};
+
+function normalizeHeroConcern(raw) {
+  if (!raw) return "default";
+  const key = raw.toLowerCase().trim().replace(/\s+/g, "-");
+  return HERO_CONCERN_ALIASES[key] || key;
+}
+
+function getHeroConcernFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const raw =
+    params.get("concern") ||
+    params.get("utm_content") ||
+    params.get("ad") ||
+    params.get("symptom") ||
+    "";
+  const normalized = normalizeHeroConcern(raw);
+  return HERO_VARIANTS[normalized] ? normalized : "default";
+}
+
+function initHeroPersonalization() {
+  const concern = getHeroConcernFromUrl();
+  const variant = HERO_VARIANTS[concern] || HERO_VARIANTS.default;
+
+  const headline = document.getElementById("hero-headline");
+  const subhead = document.getElementById("hero-subhead");
+  const ctaLabel = document.getElementById("hero-cta-label");
+
+  if (headline) headline.textContent = variant.headline;
+  if (subhead) subhead.textContent = variant.subhead;
+  if (ctaLabel) ctaLabel.textContent = variant.cta;
+
+  document.body.dataset.heroConcern = concern;
+}
+
 let catAge = null;
 let catName = null;
 let catAgeProfile = null;
@@ -1327,6 +1442,7 @@ track("page_viewed", {
   path: window.location.pathname,
   has_saved_age: localStorage.getItem(CAT_AGE_KEY) != null,
   traffic_source: new URLSearchParams(window.location.search).get("utm_source") || "direct",
+  hero_concern: getHeroConcernFromUrl(),
 });
 
 if ("scrollRestoration" in history) {
@@ -1346,6 +1462,7 @@ window.addEventListener("pageshow", (event) => {
   if (event.persisted) resetLandingScroll();
 });
 
+initHeroPersonalization();
 initAgeGate();
 initAssessment();
 initLifeJourney();

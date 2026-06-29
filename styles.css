@@ -66,21 +66,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.hero-title,
-.section-head h2,
-.curve-title,
-.final-cta h2,
-.plan-card-head h3,
-.step-card h3,
-.vet-card h3,
-.faq-item summary,
-.plan-amount,
-.proof-num,
-.testimonial blockquote,
-.med-copy h2 {
+.hero-convert-title,
+.hero-title {
   font-family: var(--font-display);
   font-weight: 500;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
 }
 
 img {
@@ -331,6 +321,24 @@ html.has-pet .journey-gate {
   gap: 12px;
 }
 
+.header-cta {
+  display: inline-flex;
+  min-width: auto;
+  padding: 10px 18px;
+  font-size: 0.8125rem;
+  white-space: nowrap;
+}
+
+.site-nav--drawer {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .header-actions .btn.header-cta {
+    display: none;
+  }
+}
+
 .pet-toggle {
   display: flex;
   padding: 4px;
@@ -496,15 +504,16 @@ html.has-pet .journey-gate {
 .hero-title,
 .subscribe-title {
   margin: 0;
-  font-size: clamp(1.875rem, 4vw, 2.75rem);
-  font-weight: 500;
-  letter-spacing: -0.025em;
-  line-height: 1.12;
+  font-family: var(--font);
+  font-size: clamp(1.625rem, 3.2vw, 2.125rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
 }
 
 .section-lead {
   margin: 16px 0 0;
-  font-size: 1.0625rem;
+  font-size: 1rem;
   color: var(--ink-muted);
   line-height: 1.6;
 }
@@ -2287,7 +2296,8 @@ html.assflow-open .site-shell {
   color: var(--accent);
 }
 
-.hero-sign-icon svg {
+.hero-sign-icon svg,
+svg.hero-sign-icon {
   width: 28px;
   height: 28px;
 }
@@ -2493,6 +2503,215 @@ html.assflow-open .site-shell {
   }
 }
 
+/* Conversion-focused hero */
+.hero.hero-convert {
+  position: relative;
+  overflow: hidden;
+  padding: 40px 0 48px;
+  border-bottom: 1px solid var(--line);
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(
+      102deg,
+      var(--bg) 0%,
+      rgba(247, 244, 239, 0.98) 34%,
+      rgba(247, 244, 239, 0.72) 48%,
+      rgba(247, 244, 239, 0.18) 62%,
+      transparent 74%
+    ),
+    url("./images/hero-cat-bed.png");
+  background-repeat: no-repeat;
+  background-position: right -20px bottom -28px;
+  background-size: min(44vw, 420px) auto, min(44vw, 420px) auto;
+}
+
+.hero-convert-inner {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-convert-copy {
+  max-width: 560px;
+}
+
+.hero-convert-title {
+  margin: 0 0 16px;
+  font-family: var(--font-display);
+  font-size: clamp(1.875rem, 5.5vw, 2.625rem);
+  font-weight: 500;
+  line-height: 1.14;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+}
+
+.hero-convert-lead {
+  margin: 0 0 28px;
+  max-width: 42ch;
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  color: var(--ink-soft);
+}
+
+.hero-convert-cta {
+  margin-bottom: 24px;
+}
+
+.hero-convert-cta .btn-hero-primary {
+  max-width: 100%;
+  min-height: 54px;
+  padding: 14px 24px;
+  justify-content: space-between;
+  gap: 12px;
+  border-radius: 16px;
+  font-size: 1rem;
+  font-weight: 600;
+  box-shadow: 0 10px 28px rgba(143, 135, 171, 0.28);
+}
+
+.btn-hero-arrow {
+  font-size: 1.125rem;
+  line-height: 1;
+  opacity: 0.95;
+}
+
+.hero-trust {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.hero-trust li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--ink-muted);
+}
+
+.hero-trust-icon {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.hero-trust-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+@media (min-width: 768px) {
+  .hero.hero-convert {
+    padding: 56px 0 64px;
+    background-position: right 0 bottom -36px;
+    background-size: min(40vw, 400px) auto, min(40vw, 400px) auto;
+  }
+}
+
+@media (max-width: 767px) {
+  .hero.hero-convert {
+    padding: 24px 0 36px;
+    background-image:
+      linear-gradient(
+        102deg,
+        var(--bg) 0%,
+        rgba(247, 244, 239, 0.97) 30%,
+        rgba(247, 244, 239, 0.52) 46%,
+        transparent 66%
+      ),
+      url("./images/hero-cat-bed.png");
+    background-position: right -32px bottom 8px;
+    background-size: min(58vw, 300px) auto, min(58vw, 300px) auto;
+  }
+
+  .hero-convert-copy {
+    max-width: none;
+  }
+
+  .hero-convert-lead {
+    font-size: 1rem;
+    margin-bottom: 22px;
+  }
+
+  .hero-trust li {
+    font-size: 0.75rem;
+  }
+}
+
+/* What you'll learn */
+.learn-section {
+  padding: var(--section-gap) 0;
+  background: var(--surface);
+}
+
+.learn-grid {
+  list-style: none;
+  margin: 32px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.learn-card {
+  padding: 24px 22px;
+  border-radius: var(--radius-md);
+  background: var(--bg);
+  border: 1px solid var(--line);
+}
+
+.learn-card-icon {
+  display: inline-flex;
+  margin-bottom: 14px;
+  font-family: var(--font);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.learn-card h3 {
+  margin: 0 0 8px;
+  font-family: var(--font);
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--ink);
+}
+
+.learn-card p {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+.learn-cta {
+  margin-top: 32px;
+}
+
+/* Trust section */
+.trust-section {
+  padding: var(--section-gap) 0;
+}
+
+.trust-section .vets-grid {
+  margin-top: 36px;
+}
+
+@media (max-width: 767px) {
+  .learn-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .hero-clinic::before {
   display: none;
 }
@@ -2554,7 +2773,6 @@ html.assflow-open .site-shell {
 .how.clinic-section,
 .final-cta {
   position: relative;
-  overflow: hidden;
 }
 
 @media (max-width: 720px) {
@@ -2934,6 +3152,10 @@ html.assflow-open .site-shell {
 
 /* ─── Life journey (scrollable healthspan) ─── */
 
+.hero.hero-convert + .life-journey {
+  padding-top: var(--section-gap);
+}
+
 .life-journey {
   padding-top: var(--section-stack);
   padding-bottom: var(--section-gap);
@@ -3219,17 +3441,18 @@ html.assflow-open .site-shell {
   margin: 0;
   font-size: 0.8125rem;
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
   color: var(--stage-color);
 }
 
 .life-stage-card h3 {
   margin: 0;
-  font-size: 1.5rem;
-  font-weight: 500;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
+  font-family: var(--font);
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
   color: var(--ink);
 }
 
@@ -3256,16 +3479,16 @@ html.assflow-open .site-shell {
 }
 
 .life-stage-block-label {
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
   color: var(--stage-color);
 }
 
 .life-stage-responsibility {
   margin: 0;
-  font-size: 0.8875rem;
+  font-size: 0.9375rem;
   line-height: 1.6;
   color: var(--ink-soft);
   font-weight: 500;
@@ -3277,8 +3500,8 @@ html.assflow-open .site-shell {
   justify-content: center;
   gap: 12px;
   margin-top: 8px;
-  font-size: 0.8125rem;
-  color: var(--ink-faint);
+  font-size: 0.875rem;
+  color: var(--ink-muted);
 }
 
 /* Age carousel — kitten to geriatric */
@@ -3290,6 +3513,8 @@ html.assflow-open .site-shell {
   max-width: 42ch;
   margin: 12px auto 0;
   text-align: center;
+  font-size: 1rem;
+  line-height: 1.6;
   color: var(--ink-soft);
 }
 
@@ -3352,9 +3577,9 @@ html.assflow-open .site-shell {
   border-radius: var(--radius-sm);
   background: var(--clinical);
   color: #fff;
-  font-size: 0.6875rem;
-  font-weight: 500;
-  letter-spacing: 0.04em;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
 }
 
@@ -3364,8 +3589,10 @@ html.assflow-open .site-shell {
 
 .age-carousel-content h3 {
   margin: 6px 0 18px;
+  font-family: var(--font);
   font-size: 1.125rem;
-  line-height: 1.3;
+  font-weight: 600;
+  line-height: 1.35;
 }
 
 .age-carousel-columns {
@@ -3378,9 +3605,9 @@ html.assflow-open .site-shell {
 .age-carousel-col-label {
   display: block;
   margin-bottom: 8px;
-  font-size: 0.6875rem;
-  font-weight: 500;
-  letter-spacing: 0.05em;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
   color: var(--ink-muted);
 }
@@ -3401,8 +3628,8 @@ html.assflow-open .site-shell {
 .age-carousel-list li {
   position: relative;
   padding-left: 14px;
-  font-size: 0.8125rem;
-  line-height: 1.45;
+  font-size: 0.9375rem;
+  line-height: 1.55;
   color: var(--ink-soft);
 }
 
@@ -3432,9 +3659,9 @@ html.assflow-open .site-shell {
 
 .age-carousel .life-stage-ages {
   margin: 0;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
   color: var(--stage-color);
 }
@@ -4393,7 +4620,7 @@ body[data-age-theme="geriatric"] .hero-clinic {
 
 /* Founder story */
 .why-section {
-  background: var(--surface-muted);
+  background: var(--surface);
 }
 
 .why-section.clinic-section {
@@ -4408,28 +4635,32 @@ body[data-age-theme="geriatric"] .hero-clinic {
 
 .why-section .why-copy h2 {
   margin: 8px 0 16px;
-  font-size: clamp(1.5rem, 3.5vw, 2.125rem);
+  font-family: var(--font);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
   line-height: 1.2;
 }
 
 .why-section .why-lead {
   margin: 0 0 16px;
-  font-size: 1.0625rem;
+  font-size: 1rem;
   line-height: 1.65;
   color: var(--ink);
 }
 
 .why-section .why-copy p:not(.eyebrow):not(.why-lead):not(.why-signoff) {
   margin: 0 0 16px;
+  font-size: 1rem;
   color: var(--ink-soft);
   line-height: 1.65;
 }
 
 .why-section .why-signoff {
   margin: 24px 0 0;
-  font-family: var(--font-display);
+  font-family: var(--font);
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--ink-soft);
 }
 .ig-social {
@@ -4475,18 +4706,6 @@ body[data-age-theme="geriatric"] .hero-clinic {
   background: var(--surface-muted);
 }
 
-#how.clinic-section {
-  padding-bottom: var(--section-stack);
-}
-
-#how.clinic-section + .result-preview-section {
-  padding-top: var(--section-stack);
-}
-
-.result-preview-section + .vets.clinic-section-muted {
-  padding-top: var(--section-stack);
-}
-
 #vets.clinic-section-muted {
   padding-bottom: var(--section-gap);
 }
@@ -4505,11 +4724,15 @@ body[data-age-theme="geriatric"] .hero-clinic {
 
 .result-preview-copy h2 {
   margin: 8px 0 12px;
+  font-family: var(--font);
   font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
 }
 
 .result-preview-copy p:last-child {
   margin: 0;
+  font-size: 1rem;
   color: var(--ink-soft);
   line-height: 1.6;
 }
@@ -4525,9 +4748,9 @@ body[data-age-theme="geriatric"] .hero-clinic {
 .result-preview-demo-label,
 .result-preview-demo-note {
   margin: 0;
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
   color: var(--ink-muted);
 }
@@ -4575,8 +4798,8 @@ body[data-age-theme="geriatric"] .hero-clinic {
 .result-preview-demo-caption,
 .gate-result-preview-tier {
   margin: 0;
-  font-family: var(--font-display);
-  font-size: 1.25rem;
+  font-family: var(--font);
+  font-size: 1.125rem;
   font-weight: 600;
   color: var(--ink);
 }
@@ -4617,6 +4840,20 @@ body[data-age-theme="geriatric"] .hero-clinic {
 @media (max-width: 767px) {
   body {
     padding-bottom: calc(88px + env(safe-area-inset-bottom));
+  }
+
+  .hero-convert-title {
+    font-size: clamp(1.625rem, 8.2vw, 2rem);
+    line-height: 1.18;
+  }
+
+  .hero-convert-cta .btn-hero-primary {
+    max-width: none;
+    width: 100%;
+  }
+
+  .final-cta.clinic-band {
+    padding-bottom: calc(var(--section-gap) + env(safe-area-inset-bottom));
   }
 
   .how.clinic-section {
@@ -4850,13 +5087,14 @@ body[data-age-theme="geriatric"] .hero-clinic {
 
 .vet-card h3 {
   margin: 0 0 4px;
+  font-family: var(--font);
   font-size: 1.0625rem;
   font-weight: 600;
   color: var(--ink-1);
 }
 .vet-cred {
   margin: 0;
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   color: var(--ink-soft);
 }
 .testimonials {
@@ -4900,7 +5138,8 @@ body[data-age-theme="geriatric"] .hero-clinic {
   justify-content: space-between;
   gap: 16px;
   padding: 20px 4px;
-  font-size: 1.0625rem;
+  font-family: var(--font);
+  font-size: 1rem;
   font-weight: 600;
   color: var(--ink-1);
   cursor: pointer;
@@ -4928,14 +5167,21 @@ body[data-age-theme="geriatric"] .hero-clinic {
   background: var(--ink-1);
   color: #fff;
 }
-.final-cta h2 { color: #fff; }
+.final-cta h2 {
+  color: #fff;
+  font-family: var(--font);
+  font-size: clamp(1.625rem, 3.2vw, 2.125rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
 .final-cta-inner {
   max-width: 680px;
   margin: 0 auto;
 }
 .final-cta-body {
   margin: 14px 0 8px;
-  font-size: 1.0625rem;
+  font-size: 1rem;
   line-height: 1.6;
   opacity: 0.92;
 }
