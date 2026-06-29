@@ -1332,9 +1332,19 @@ track("page_viewed", {
 if ("scrollRestoration" in history) {
   history.scrollRestoration = "manual";
 }
-if (!window.location.hash) {
-  window.scrollTo(0, 0);
+
+function resetLandingScroll() {
+  const hash = window.location.hash;
+  if (!hash || hash === "#top" || hash === "#hero") {
+    window.scrollTo(0, 0);
+  }
 }
+
+resetLandingScroll();
+window.addEventListener("load", resetLandingScroll);
+window.addEventListener("pageshow", (event) => {
+  if (event.persisted) resetLandingScroll();
+});
 
 initAgeGate();
 initAssessment();
