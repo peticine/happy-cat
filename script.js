@@ -26,69 +26,72 @@ const PRIMARY_CTA_LABEL = "Check My Cat Now";
 // eating/appetite: "Cat not eating much? Free screening in 2 minutes" | "Pickier appetite lately? Know if you should worry"
 //   | "Skipping meals? Free vet-designed cat health check" | "Appetite changes hide illness — screen free"
 //   | "Is your cat eating less? Get a plain-language answer"
+// litter/peeing-outside: "Is your cat peeing outside the litter box?" | "Find out if it's stress — or kidneys, bladder, or pain that needs a vet."
 const HERO_VARIANTS = {
   water: {
     headlineHook: "Drinking more water than usual?",
     headline: "Find out if it's normal — or a sign kidneys or thyroid need a vet look.",
     cta: PRIMARY_CTA_LABEL,
-    image: "./images/hero-healthy-cat.png",
   },
   drinking: {
     headlineHook: "Drinking more water than usual?",
     headline: "Find out if it's normal — or a sign kidneys or thyroid need a vet look.",
     cta: PRIMARY_CTA_LABEL,
-    image: "./images/hero-healthy-cat.png",
   },
   weight: {
     headlineHook: "Has your cat lost weight?",
     headline: "Find out if it's age and appetite — or something a vet should check soon.",
     cta: PRIMARY_CTA_LABEL,
-    image: "./images/hero-healthy-cat.png",
   },
   eating: {
     headlineHook: "Eating less than usual?",
     headline: "Find out if it's a passing phase — or a sign something's wrong.",
     cta: PRIMARY_CTA_LABEL,
-    image: "./images/hero-healthy-cat.png",
   },
   appetite: {
     headlineHook: "Eating less than usual?",
     headline: "Find out if it's a passing phase — or a sign something's wrong.",
     cta: PRIMARY_CTA_LABEL,
-    image: "./images/hero-healthy-cat.png",
   },
   sleeping: {
     headline: "Let's understand why your cat is sleeping more.",
     cta: PRIMARY_CTA_LABEL,
-    image: "./images/hero-healthy-cat.png",
   },
   litter: {
-    headline: "Let's understand why your cat is using the litter box more.",
-    cta: PRIMARY_CTA_LABEL,
-    image: "./images/hero-healthy-cat.png",
+    headlineHook: "Is your cat peeing outside the litter box?",
+    headline:
+      "Find out if it's stress — or kidneys, bladder, or pain that needs a vet.",
+    cta: "Take a quick screening",
+    image: "./images/hero-litter.png",
   },
   urination: {
-    headline: "Let's understand why your cat is using the litter box more.",
-    cta: PRIMARY_CTA_LABEL,
-    image: "./images/hero-healthy-cat.png",
+    headlineHook: "Is your cat peeing outside the litter box?",
+    headline:
+      "Find out if it's stress — or kidneys, bladder, or pain that needs a vet.",
+    cta: "Take a quick screening",
+    image: "./images/hero-litter.png",
   },
   quiet: {
     headline: "Let's understand what your cat's quieter behaviour could mean.",
     cta: PRIMARY_CTA_LABEL,
-    image: "./images/hero-hiding-cat.png",
   },
   hiding: {
     headlineHook: "30% of cats develop chronic disease.",
     headline: "Most owners don't notice until it's too late.",
     cta: PRIMARY_CTA_LABEL,
-    image: "./images/hero-hiding-cat.png",
   },
   default: {
     headlineHook: "30% of cats develop chronic disease.",
     headline: "Most owners don't notice until it's too late.",
     cta: PRIMARY_CTA_LABEL,
-    image: "./images/hero-healthy-cat.png",
   },
+};
+
+const HERO_BG_IMAGES = {
+  water: "./images/hero-water.png?v=9",
+  drinking: "./images/hero-water.png?v=9",
+  litter: "./images/hero-litter.png",
+  urination: "./images/hero-litter.png",
 };
 
 const HERO_CONCERN_ALIASES = {
@@ -106,6 +109,14 @@ const HERO_CONCERN_ALIASES = {
   "litter-box": "litter",
   litterbox: "litter",
   pee: "litter",
+  "peeing-outside": "litter",
+  "peeing-outside-litter-box": "litter",
+  "outside-litter-box": "litter",
+  "outside-the-litter-box": "litter",
+  "inappropriate-urination": "litter",
+  "litter-accident": "litter",
+  "litter-box-accident": "litter",
+  "urinating-outside": "litter",
   "less-playful": "quiet",
   behaviour: "quiet",
   behavior: "quiet",
@@ -144,6 +155,16 @@ function initHeroPersonalization() {
     }
   }
   if (ctaLabel) ctaLabel.textContent = variant.cta;
+
+  const hero = document.getElementById("hero");
+  if (hero) {
+    const heroBg = HERO_BG_IMAGES[concern];
+    if (heroBg) {
+      hero.style.setProperty("--hero-bg-image", `url("${heroBg}")`);
+    } else {
+      hero.style.removeProperty("--hero-bg-image");
+    }
+  }
 
   document.body.dataset.heroConcern = concern;
 }

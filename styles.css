@@ -2505,6 +2505,7 @@ svg.hero-sign-icon {
 
 /* Conversion-focused hero */
 .hero.hero-convert {
+  --hero-bg-image: url("./images/hero-cat-bed.png");
   position: relative;
   overflow: hidden;
   padding: 40px 0 48px;
@@ -2519,10 +2520,42 @@ svg.hero-sign-icon {
       rgba(247, 244, 239, 0.18) 62%,
       transparent 74%
     ),
-    url("./images/hero-cat-bed.png");
+    var(--hero-bg-image);
   background-repeat: no-repeat;
   background-position: right -20px bottom -28px;
   background-size: min(44vw, 420px) auto, min(44vw, 420px) auto;
+}
+
+body[data-hero-concern="litter"] .hero.hero-convert,
+body[data-hero-concern="urination"] .hero.hero-convert {
+  background-image:
+    linear-gradient(
+      102deg,
+      var(--bg) 0%,
+      rgba(247, 244, 239, 0.94) 28%,
+      rgba(247, 244, 239, 0.55) 42%,
+      rgba(247, 244, 239, 0.08) 58%,
+      transparent 68%
+    ),
+    var(--hero-bg-image);
+  background-position: right -20px bottom -28px;
+  background-size: min(44vw, 420px) auto, min(44vw, 420px) auto;
+}
+
+body[data-hero-concern="water"] .hero.hero-convert,
+body[data-hero-concern="drinking"] .hero.hero-convert {
+  background-image:
+    linear-gradient(
+      102deg,
+      var(--bg) 0%,
+      rgba(247, 244, 239, 0.99) 36%,
+      rgba(247, 244, 239, 0.82) 46%,
+      rgba(247, 244, 239, 0.42) 56%,
+      rgba(247, 244, 239, 0.1) 66%,
+      transparent 78%
+    ),
+    var(--hero-bg-image);
+  background-position: right -56px bottom -28px;
 }
 
 .hero-convert-inner {
@@ -2633,6 +2666,12 @@ svg.hero-sign-icon {
     background-position: right 0 bottom -36px;
     background-size: min(40vw, 400px) auto, min(40vw, 400px) auto;
   }
+
+  body[data-hero-concern="litter"] .hero.hero-convert,
+  body[data-hero-concern="urination"] .hero.hero-convert {
+    background-position: right 0 bottom -36px;
+    background-size: min(40vw, 400px) auto, min(40vw, 400px) auto;
+  }
 }
 
 @media (max-width: 767px) {
@@ -2646,9 +2685,40 @@ svg.hero-sign-icon {
         rgba(247, 244, 239, 0.52) 46%,
         transparent 66%
       ),
-      url("./images/hero-cat-bed.png");
+      var(--hero-bg-image);
     background-position: right -32px bottom 8px;
     background-size: min(58vw, 300px) auto, min(58vw, 300px) auto;
+  }
+
+  body[data-hero-concern="litter"] .hero.hero-convert,
+  body[data-hero-concern="urination"] .hero.hero-convert {
+    background-image:
+      linear-gradient(
+        102deg,
+        var(--bg) 0%,
+        rgba(247, 244, 239, 0.95) 24%,
+        rgba(247, 244, 239, 0.45) 40%,
+        transparent 58%
+      ),
+      var(--hero-bg-image);
+    background-position: right -32px bottom 8px;
+    background-size: min(58vw, 300px) auto, min(58vw, 300px) auto;
+  }
+
+  body[data-hero-concern="water"] .hero.hero-convert,
+  body[data-hero-concern="drinking"] .hero.hero-convert {
+    background-image:
+      linear-gradient(
+        102deg,
+        var(--bg) 0%,
+        rgba(247, 244, 239, 0.99) 32%,
+        rgba(247, 244, 239, 0.8) 42%,
+        rgba(247, 244, 239, 0.38) 52%,
+        rgba(247, 244, 239, 0.08) 62%,
+        transparent 74%
+      ),
+      var(--hero-bg-image);
+    background-position: right -64px bottom 8px;
   }
 
   .hero-convert-copy {
