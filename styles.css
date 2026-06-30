@@ -2535,12 +2535,27 @@ svg.hero-sign-icon {
 }
 
 .hero-convert-title {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   margin: 0 0 16px;
   font-family: var(--font-display);
-  font-size: clamp(1.875rem, 5.5vw, 2.625rem);
   font-weight: 500;
-  line-height: 1.14;
   letter-spacing: -0.025em;
+  color: var(--ink);
+}
+
+.hero-convert-title-hook {
+  font-size: clamp(1.125rem, 3.2vw, 1.375rem);
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--ink-soft);
+}
+
+.hero-convert-title-main {
+  display: block;
+  font-size: clamp(1.875rem, 5.5vw, 2.625rem);
+  line-height: 1.14;
   color: var(--ink);
 }
 
@@ -4842,7 +4857,7 @@ body[data-age-theme="geriatric"] .hero-clinic {
     padding-bottom: calc(88px + env(safe-area-inset-bottom));
   }
 
-  .hero-convert-title {
+  .hero-convert-title-main {
     font-size: clamp(1.625rem, 8.2vw, 2rem);
     line-height: 1.18;
   }

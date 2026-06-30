@@ -66,14 +66,16 @@ const HERO_VARIANTS = {
     image: "./images/hero-hiding-cat.png",
   },
   hiding: {
-    headline: "Let's find out what your cat's recent changes could mean.",
+    headlineHook: "Cats hide illness until it's too late.",
+    headline: "Find out if your cat's recent changes could be a warning sign.",
     subhead:
       "Answer a few simple questions designed with veterinarians to better understand your cat's health.",
     cta: "Start Free Health Check",
     image: "./images/hero-hiding-cat.png",
   },
   default: {
-    headline: "Let's find out what your cat's recent changes could mean.",
+    headlineHook: "Cats hide illness until it's too late.",
+    headline: "Find out if your cat's recent changes could be a warning sign.",
     subhead:
       "Answer a few simple questions designed with veterinarians to better understand your cat's health.",
     cta: "Start Free Health Check",
@@ -123,7 +125,13 @@ function initHeroPersonalization() {
   const subhead = document.getElementById("hero-subhead");
   const ctaLabel = document.getElementById("hero-cta-label");
 
-  if (headline) headline.textContent = variant.headline;
+  if (headline) {
+    if (variant.headlineHook) {
+      headline.innerHTML = `<span class="hero-convert-title-hook">${escapeHtml(variant.headlineHook)}</span><span class="hero-convert-title-main">${escapeHtml(variant.headline)}</span>`;
+    } else {
+      headline.textContent = variant.headline;
+    }
+  }
   if (subhead) subhead.textContent = variant.subhead;
   if (ctaLabel) ctaLabel.textContent = variant.cta;
 
