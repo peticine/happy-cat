@@ -14,7 +14,7 @@ const CAT_NAME_KEY = "peticine-cat-name";
 const CAT_PROFILE_KEY = "peticine-cat-profile";
 const AGE_DONE_KEY = "peticine-age-done";
 const AGE_THEMES = ["young", "prime", "mature", "senior", "geriatric"];
-const PRIMARY_CTA_LABEL = "Start free screening";
+const PRIMARY_CTA_LABEL = "Check My Cat Now";
 
 // Meta ad headlines per concern (use ?concern= in landing URL):
 // water/drinking: "Cat drinking more water? Free 2-min check" | "Extra water bowls? See if it's worth a vet call"
@@ -78,14 +78,14 @@ const HERO_VARIANTS = {
     image: "./images/hero-hiding-cat.png",
   },
   hiding: {
-    headlineHook: "Cats hide illness until it's too late.",
-    headline: "Find out if your cat's recent changes could be a warning sign.",
+    headlineHook: "30% of cats develop chronic disease.",
+    headline: "Most owners don't notice until it's too late.",
     cta: PRIMARY_CTA_LABEL,
     image: "./images/hero-hiding-cat.png",
   },
   default: {
-    headlineHook: "Cats hide illness until it's too late.",
-    headline: "Find out if your cat's recent changes could be a warning sign.",
+    headlineHook: "30% of cats develop chronic disease.",
+    headline: "Most owners don't notice until it's too late.",
     cta: PRIMARY_CTA_LABEL,
     image: "./images/hero-healthy-cat.png",
   },
@@ -594,6 +594,7 @@ function initAgeGate() {
 // ---- Felica screening --------------------------------------------------
 const FELICA_NEWSLETTER_EMAIL = "hello@felica.in";
 const FELICA_WHATSAPP_URL = "https://chat.whatsapp.com/placeholder-felica-community";
+const FELICA_CALLBACK_NUMBER = "+91 80 4728 5635";
 const SCREENING_API_BASE = "https://digi-clinic-tau.vercel.app";
 
 const SCREENING_QUESTIONS = [
@@ -980,6 +981,7 @@ function renderSpecialistCallout(riskLevel) {
   return `
     <p class="score-specialist">
       A feline specialist will call you soon to walk through your answers, explain what they mean, and help you understand your cat's health better.
+      <span class="score-callback-number">You'll get the call from <strong>${FELICA_CALLBACK_NUMBER}</strong> — save the number so you don't miss us.</span>
     </p>`;
 }
 

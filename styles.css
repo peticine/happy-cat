@@ -5566,6 +5566,21 @@ body[data-age-theme="geriatric"] .hero-clinic {
   border-color: var(--line);
 }
 
+.score-callback-number {
+  display: block;
+  margin-top: 10px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.score-callback-number strong {
+  font-weight: 600;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
 .score-next {
   margin: 0 0 24px;
   padding: 14px 16px;
