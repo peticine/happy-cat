@@ -16,69 +16,76 @@ const AGE_DONE_KEY = "peticine-age-done";
 const AGE_THEMES = ["young", "prime", "mature", "senior", "geriatric"];
 const PRIMARY_CTA_LABEL = "Start free screening";
 
+// Meta ad headlines per concern (use ?concern= in landing URL):
+// water/drinking: "Cat drinking more water? Free 2-min check" | "Extra water bowls? See if it's worth a vet call"
+//   | "Is your cat thirsty lately? Free health screening" | "More drinking can signal kidneys — check free in 2 min"
+//   | "Worried how much your cat drinks? Start here"
+// weight: "Cat losing weight? Free 2-minute screening" | "Thinner lately? Normal or a warning sign"
+//   | "Weight loss in cats is easy to miss — check free" | "Cat getting skinnier? Vet-designed screening, ₹0"
+//   | "Notice your cat feels lighter? Clear read in 2 min"
+// eating/appetite: "Cat not eating much? Free screening in 2 minutes" | "Pickier appetite lately? Know if you should worry"
+//   | "Skipping meals? Free vet-designed cat health check" | "Appetite changes hide illness — screen free"
+//   | "Is your cat eating less? Get a plain-language answer"
 const HERO_VARIANTS = {
   water: {
-    headline: "Let's understand why your cat is drinking more water.",
-    subhead:
-      "A free 2-minute health screening helps you understand whether it's something to monitor or whether it's time to speak with your veterinarian.",
+    headlineHook: "Drinking more water than usual?",
+    headline: "Find out if it's normal — or a sign kidneys or thyroid need a vet look.",
     cta: PRIMARY_CTA_LABEL,
     image: "./images/hero-healthy-cat.png",
   },
   drinking: {
-    headline: "Let's understand why your cat is drinking more water.",
-    subhead:
-      "A free 2-minute health screening helps you understand whether it's something to monitor or whether it's time to speak with your veterinarian.",
+    headlineHook: "Drinking more water than usual?",
+    headline: "Find out if it's normal — or a sign kidneys or thyroid need a vet look.",
+    cta: PRIMARY_CTA_LABEL,
+    image: "./images/hero-healthy-cat.png",
+  },
+  weight: {
+    headlineHook: "Has your cat lost weight?",
+    headline: "Find out if it's age and appetite — or something a vet should check soon.",
     cta: PRIMARY_CTA_LABEL,
     image: "./images/hero-healthy-cat.png",
   },
   eating: {
-    headline: "Let's understand why your cat is eating less.",
-    subhead:
-      "A free 2-minute screening helps you see whether it's a passing phase or something worth discussing with your vet.",
+    headlineHook: "Eating less than usual?",
+    headline: "Find out if it's a passing phase — or a sign something's wrong.",
+    cta: PRIMARY_CTA_LABEL,
+    image: "./images/hero-healthy-cat.png",
+  },
+  appetite: {
+    headlineHook: "Eating less than usual?",
+    headline: "Find out if it's a passing phase — or a sign something's wrong.",
     cta: PRIMARY_CTA_LABEL,
     image: "./images/hero-healthy-cat.png",
   },
   sleeping: {
     headline: "Let's understand why your cat is sleeping more.",
-    subhead:
-      "Answer a few simple questions designed with veterinarians to understand whether it's normal rest or a sign to watch.",
     cta: PRIMARY_CTA_LABEL,
     image: "./images/hero-healthy-cat.png",
   },
   litter: {
     headline: "Let's understand why your cat is using the litter box more.",
-    subhead:
-      "A free 2-minute screening helps you understand what the change could mean — and whether a vet visit is recommended.",
     cta: PRIMARY_CTA_LABEL,
     image: "./images/hero-healthy-cat.png",
   },
   urination: {
     headline: "Let's understand why your cat is using the litter box more.",
-    subhead:
-      "A free 2-minute screening helps you understand what the change could mean — and whether a vet visit is recommended.",
     cta: PRIMARY_CTA_LABEL,
     image: "./images/hero-healthy-cat.png",
   },
   quiet: {
     headline: "Let's understand what your cat's quieter behaviour could mean.",
-    subhead:
-      "Less playfulness and more quiet can be subtle signs. A short screening helps you know what to do next.",
     cta: PRIMARY_CTA_LABEL,
     image: "./images/hero-hiding-cat.png",
   },
   hiding: {
     headlineHook: "Cats hide illness until it's too late.",
     headline: "Find out if your cat's recent changes could be a warning sign.",
-    subhead:
-      "Answer a few simple questions designed with veterinarians to better understand your cat's health.",
     cta: PRIMARY_CTA_LABEL,
     image: "./images/hero-hiding-cat.png",
   },
   default: {
     headlineHook: "Cats hide illness until it's too late.",
     headline: "Find out if your cat's recent changes could be a warning sign.",
-    subhead:
-      "Answer a few simple questions designed with veterinarians to better understand your cat's health.",
     cta: PRIMARY_CTA_LABEL,
     image: "./images/hero-healthy-cat.png",
   },
@@ -89,6 +96,10 @@ const HERO_CONCERN_ALIASES = {
   "drinking-more": "water",
   "more-water": "water",
   "eating-less": "eating",
+  "weight-loss": "weight",
+  thinner: "weight",
+  skinny: "weight",
+  "losing-weight": "weight",
   appetite: "eating",
   "sleeping-more": "sleeping",
   sleep: "sleeping",
@@ -123,7 +134,6 @@ function initHeroPersonalization() {
   const variant = HERO_VARIANTS[concern] || HERO_VARIANTS.default;
 
   const headline = document.getElementById("hero-headline");
-  const subhead = document.getElementById("hero-subhead");
   const ctaLabel = document.getElementById("hero-cta-label");
 
   if (headline) {
@@ -133,7 +143,6 @@ function initHeroPersonalization() {
       headline.textContent = variant.headline;
     }
   }
-  if (subhead) subhead.textContent = variant.subhead;
   if (ctaLabel) ctaLabel.textContent = variant.cta;
 
   document.body.dataset.heroConcern = concern;
