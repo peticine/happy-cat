@@ -2108,9 +2108,9 @@ html.assflow-open .site-shell {
 .whatsapp-gate-form .btn,
 .quiz-vet-callout .btn {
   color: var(--surface);
-  background: var(--clinical);
-  border-color: var(--clinical);
-  font-weight: 500;
+  background: #6d6589;
+  border-color: #6d6589;
+  font-weight: 600;
 }
 
 /* Plan cards: screening is step 1, not buying a plan */
@@ -2132,8 +2132,8 @@ html.assflow-open .site-shell {
 .assflow-footer .btn:hover,
 .whatsapp-gate-form .btn:hover,
 .quiz-vet-callout .btn:hover {
-  background: var(--accent-hover);
-  border-color: var(--accent-hover);
+  background: #5c5475;
+  border-color: #5c5475;
   opacity: 1;
 }
 
@@ -3167,8 +3167,12 @@ svg.hero-sign-icon {
 
 /* ─── Life journey (scrollable healthspan) ─── */
 
-.hero.hero-convert + .life-journey {
-  padding-top: var(--section-gap);
+.hero.hero-convert + .proof-bar {
+  border-top: none;
+}
+
+.proof-bar + .life-journey {
+  padding-top: var(--section-stack);
 }
 
 .life-journey {
@@ -3517,6 +3521,11 @@ svg.hero-sign-icon {
   margin-top: 8px;
   font-size: 0.875rem;
   color: var(--ink-muted);
+}
+
+.life-journey-cta {
+  margin-top: 28px;
+  text-align: center;
 }
 
 /* Age carousel — kitten to geriatric */
@@ -4717,8 +4726,12 @@ body[data-age-theme="geriatric"] .hero-clinic {
 
 /* Result preview on LP */
 .result-preview-section {
-  padding: var(--section-stack) 0 var(--section-gap);
+  padding: var(--section-gap) 0;
   background: var(--surface-muted);
+}
+
+.result-preview-section + .trust-section {
+  padding-top: var(--section-gap);
 }
 
 #vets.clinic-section-muted {
@@ -4887,8 +4900,9 @@ body[data-age-theme="geriatric"] .hero-clinic {
   gap: 6px;
 }
 .proof-num {
+  font-family: var(--font);
   font-size: clamp(1.375rem, 3vw, 1.875rem);
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: -0.02em;
   color: var(--ink-1);
 }

@@ -14,55 +14,56 @@ const CAT_NAME_KEY = "peticine-cat-name";
 const CAT_PROFILE_KEY = "peticine-cat-profile";
 const AGE_DONE_KEY = "peticine-age-done";
 const AGE_THEMES = ["young", "prime", "mature", "senior", "geriatric"];
+const PRIMARY_CTA_LABEL = "Start free screening";
 
 const HERO_VARIANTS = {
   water: {
     headline: "Let's understand why your cat is drinking more water.",
     subhead:
       "A free 2-minute health screening helps you understand whether it's something to monitor or whether it's time to speak with your veterinarian.",
-    cta: "Start Free Screening",
+    cta: PRIMARY_CTA_LABEL,
     image: "./images/hero-healthy-cat.png",
   },
   drinking: {
     headline: "Let's understand why your cat is drinking more water.",
     subhead:
       "A free 2-minute health screening helps you understand whether it's something to monitor or whether it's time to speak with your veterinarian.",
-    cta: "Start Free Screening",
+    cta: PRIMARY_CTA_LABEL,
     image: "./images/hero-healthy-cat.png",
   },
   eating: {
     headline: "Let's understand why your cat is eating less.",
     subhead:
       "A free 2-minute screening helps you see whether it's a passing phase or something worth discussing with your vet.",
-    cta: "Start Free Screening",
+    cta: PRIMARY_CTA_LABEL,
     image: "./images/hero-healthy-cat.png",
   },
   sleeping: {
     headline: "Let's understand why your cat is sleeping more.",
     subhead:
       "Answer a few simple questions designed with veterinarians to understand whether it's normal rest or a sign to watch.",
-    cta: "Start Free Screening",
+    cta: PRIMARY_CTA_LABEL,
     image: "./images/hero-healthy-cat.png",
   },
   litter: {
     headline: "Let's understand why your cat is using the litter box more.",
     subhead:
       "A free 2-minute screening helps you understand what the change could mean — and whether a vet visit is recommended.",
-    cta: "Start Free Screening",
+    cta: PRIMARY_CTA_LABEL,
     image: "./images/hero-healthy-cat.png",
   },
   urination: {
     headline: "Let's understand why your cat is using the litter box more.",
     subhead:
       "A free 2-minute screening helps you understand what the change could mean — and whether a vet visit is recommended.",
-    cta: "Start Free Screening",
+    cta: PRIMARY_CTA_LABEL,
     image: "./images/hero-healthy-cat.png",
   },
   quiet: {
     headline: "Let's understand what your cat's quieter behaviour could mean.",
     subhead:
       "Less playfulness and more quiet can be subtle signs. A short screening helps you know what to do next.",
-    cta: "Start Free Screening",
+    cta: PRIMARY_CTA_LABEL,
     image: "./images/hero-hiding-cat.png",
   },
   hiding: {
@@ -70,7 +71,7 @@ const HERO_VARIANTS = {
     headline: "Find out if your cat's recent changes could be a warning sign.",
     subhead:
       "Answer a few simple questions designed with veterinarians to better understand your cat's health.",
-    cta: "Start Free Health Check",
+    cta: PRIMARY_CTA_LABEL,
     image: "./images/hero-hiding-cat.png",
   },
   default: {
@@ -78,7 +79,7 @@ const HERO_VARIANTS = {
     headline: "Find out if your cat's recent changes could be a warning sign.",
     subhead:
       "Answer a few simple questions designed with veterinarians to better understand your cat's health.",
-    cta: "Start Free Health Check",
+    cta: PRIMARY_CTA_LABEL,
     image: "./images/hero-healthy-cat.png",
   },
 };
@@ -502,8 +503,6 @@ function initLifeJourney() {
   scroller.addEventListener("scroll", syncLifeJourneyScroll, { passive: true });
   window.addEventListener("resize", syncLifeJourneyScroll, { passive: true });
 
-  document.getElementById("journey-screening-cta")?.addEventListener("click", openFlow);
-
   syncLifeJourneyScroll();
   if (catAge != null) updateLifeJourneyForAge(catAge);
 }
@@ -687,35 +686,35 @@ const FLOW_STORIES = {
     before: "Extra water bowls, seemed like nothing",
     after: "Vet confirmed early CKD · stable 2 years on",
     quote: "I'd dismissed the extra water bowls as nothing. The screening gave me the words to ask for bloodwork. That changed everything.",
-    who: "Daniel R.",
+    who: "Rahul M.",
     cat: "Mochi, 13",
   },
   theo: {
     before: "Drinking more, losing weight. No one said kidneys yet",
     after: "Caught at stage 2 · two years of good days since",
     quote: "The screening flagged changes my vet confirmed weeks later. We started a plan before he ever got sick.",
-    who: "Sarah M.",
+    who: "Meera K.",
     cat: "Theo, 11",
   },
   pepper: {
     before: "Just wanted peace of mind for an 8-year-old",
     after: "Low score, recheck in 6 months, sleeping better",
     quote: "Simple, honest, and not scary. It told me exactly what to watch and when to act, without guilt-tripping me.",
-    who: "Aisha K.",
+    who: "Ananya S.",
     cat: "Pepper, 8",
   },
   luna: {
     before: "Didn't know wet food mattered for kidneys",
     after: "Small habit changes · thriving at 3",
     quote: "The prevention check wasn't scary, just practical. We added wet food and I finally feel like I'm ahead of it.",
-    who: "Priya S.",
+    who: "Priya N.",
     cat: "Luna, 3",
   },
   milo: {
     before: "Signed up after a friend recommended it",
     after: "Monthly reminders kept us on track",
     quote: "The community nudges are gentle: vet visit reminders, hydration tips, no guilt. Exactly what I needed as a new cat parent.",
-    who: "James T.",
+    who: "Vikram R.",
     cat: "Milo, 2",
   },
 };
