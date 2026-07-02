@@ -2508,7 +2508,7 @@ svg.hero-sign-icon {
   --hero-bg-image: url("./images/hero-cat-bed.png");
   position: relative;
   overflow: hidden;
-  padding: 40px 0 48px;
+  padding: 64px 0 104px;
   border-bottom: 1px solid var(--line);
   background-color: var(--bg);
   background-image:
@@ -2596,6 +2596,23 @@ body[data-hero-concern="drinking"] .hero.hero-convert {
   color: var(--ink-soft);
 }
 
+.hero-convert-consequence {
+  margin: 14px 0 8px;
+  max-width: 44ch;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.55;
+  color: var(--ink);
+}
+
+.hero-convert-outcome {
+  margin: 0 0 18px;
+  max-width: 44ch;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
 .hero-convert-lead {
   margin: 0 0 20px;
   max-width: 44ch;
@@ -2606,6 +2623,14 @@ body[data-hero-concern="drinking"] .hero.hero-convert {
 
 .hero-convert-cta {
   margin-bottom: 18px;
+}
+
+.hero-cta-note {
+  margin: 10px 0 0;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--ink-muted);
+  text-align: center;
 }
 
 .hero-convert-cta .btn-hero-primary {
@@ -2812,6 +2837,7 @@ body[data-hero-concern="drinking"] .hero.hero-convert {
 /* Trust section */
 .trust-section {
   padding: var(--section-gap) 0;
+  background: var(--surface);
 }
 
 .trust-section .vets-grid {
@@ -3612,16 +3638,6 @@ body[data-hero-concern="drinking"] .hero.hero-convert {
   line-height: 1.6;
   color: var(--ink-soft);
   font-weight: 500;
-}
-
-.life-journey-hint {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  margin-top: 8px;
-  font-size: 0.875rem;
-  color: var(--ink-muted);
 }
 
 .life-journey-cta {
@@ -4745,7 +4761,7 @@ body[data-age-theme="geriatric"] .hero-clinic {
 
 /* Founder story */
 .why-section {
-  background: var(--surface);
+  background: var(--surface-muted);
 }
 
 .why-section.clinic-section {
@@ -4782,18 +4798,11 @@ body[data-age-theme="geriatric"] .hero-clinic {
 }
 
 .why-section .why-signoff {
-  margin: 0;
-  padding: 48px 24px 56px;
-  font-family: var(--font-display);
-  font-size: clamp(1.5rem, 5vw, 2.125rem);
-  font-weight: 500;
-  font-style: italic;
-  line-height: 1.35;
-  letter-spacing: -0.01em;
-  text-align: center;
-  color: var(--ink);
-  max-width: 520px;
-  margin-inline: auto;
+  margin: 24px 0 0;
+  font-family: var(--font);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ink-soft);
 }
 .ig-social {
   padding-top: 0;
@@ -4838,7 +4847,12 @@ body[data-age-theme="geriatric"] .hero-clinic {
   background: var(--surface-muted);
 }
 
-.result-preview-section + .trust-section {
+.hero.hero-convert + .what-you-get-section {
+  padding-top: 24px;
+}
+
+.result-preview-section + .trust-section,
+.evidence-section + .trust-section {
   padding-top: var(--section-gap);
 }
 
@@ -5276,7 +5290,7 @@ body[data-age-theme="geriatric"] .hero-clinic {
 }
 
 /* FAQ */
-.faq { background: var(--cream); }
+.faq { background: var(--surface); }
 .faq-wrap { max-width: 760px; }
 .faq-list {
   margin-top: 40px;
@@ -6243,7 +6257,7 @@ body[data-age-theme="geriatric"] .hero-clinic {
 /* Landing page v2 — tighter flow, outcome-focused sections */
 
 .hero.hero-convert {
-  padding: 28px 0 52px;
+  padding: 48px 0 96px;
 }
 
 .hero.hero-convert + .how-next-section {
@@ -6741,7 +6755,7 @@ body[data-age-theme="geriatric"] .hero-clinic {
 
 @media (max-width: 767px) {
   .hero.hero-convert {
-    padding: 20px 0 40px;
+    padding: 40px 0 88px;
   }
 
   .how-next-section {
@@ -6794,6 +6808,253 @@ body[data-age-theme="geriatric"] .hero-clinic {
 
 @media (min-width: 768px) {
   .hero.hero-convert {
-    padding: 40px 0 56px;
+    padding: 72px 0 128px;
+  }
+}
+
+/* Testimonial strip */
+.testimonial-strip {
+  padding: 20px 0 8px;
+  background: var(--surface-muted);
+  border-bottom: 1px solid var(--line);
+}
+
+.parent-testimonial {
+  margin: 0;
+  padding: 20px 22px;
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-sm);
+}
+
+.parent-testimonial-quote {
+  margin: 0 0 12px;
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 2.8vw, 1.125rem);
+  font-style: italic;
+  line-height: 1.55;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.parent-testimonial-meta {
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--ink-muted);
+}
+
+/* What you get (merged section) */
+.what-you-get-section {
+  padding: calc(var(--section-gap) - 8px) 0;
+  background: var(--surface);
+}
+
+.what-you-get-section .section-head {
+  margin-bottom: 0;
+}
+
+.what-you-get-steps {
+  list-style: none;
+  margin: 20px 0 0;
+  padding: 0;
+  max-width: 640px;
+  margin-inline: auto;
+}
+
+.what-you-get-step {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr);
+  gap: 12px 14px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.what-you-get-step:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.what-you-get-num {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-family: var(--font);
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.what-you-get-step-body h3 {
+  margin: 0 0 4px;
+  font-family: var(--font);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.what-you-get-step-body > p {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.what-you-get-step--results .result-reads-compact {
+  margin-top: 6px;
+}
+
+.result-reads-compact {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.result-reads-compact-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+.result-reads-compact-item strong {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.result-reads-compact-dot {
+  flex-shrink: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.result-reads-compact-item--green .result-reads-compact-dot {
+  background: #5a9468;
+}
+
+.result-reads-compact-item--orange .result-reads-compact-dot {
+  background: #b0783c;
+}
+
+.result-reads-compact-item--red .result-reads-compact-dot {
+  background: #a8372e;
+}
+
+.what-you-get-cta {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.what-you-get-step--highlight {
+  padding: 22px 18px;
+  margin: 0 -18px;
+  border-radius: var(--radius-md);
+  background: var(--accent-soft);
+  border-bottom-color: transparent;
+}
+
+.what-you-get-step--highlight + .what-you-get-step {
+  border-top: 1px solid var(--line);
+}
+
+.what-you-get-step--highlight .what-you-get-step-body h3 {
+  color: var(--accent-warm);
+}
+
+.what-you-get-step--highlight .what-you-get-step-body > p {
+  color: var(--ink);
+}
+
+.what-you-get-step--highlight .what-you-get-num {
+  background: var(--surface);
+  box-shadow: 0 0 0 1px var(--line);
+}
+
+@media (max-width: 767px) {
+  .what-you-get-step--highlight {
+    margin: 0;
+    padding: 20px 0;
+  }
+}
+
+.what-you-get-next {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.what-you-get-next li {
+  position: relative;
+  padding-left: 16px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+
+.what-you-get-next li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* Evidence (soft) */
+.evidence-soft {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.evidence-soft li {
+  padding: 18px 16px;
+  border-radius: var(--radius-md);
+  background: var(--surface-muted);
+  border: 1px solid var(--line);
+  text-align: center;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.evidence-section .evidence-method {
+  margin-top: 16px;
+}
+
+@media (max-width: 767px) {
+  .evidence-soft {
+    grid-template-columns: 1fr;
+  }
+
+  .what-you-get-step {
+    grid-template-columns: 32px minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .what-you-get-num {
+    width: 32px;
+    height: 32px;
+    font-size: 0.875rem;
   }
 }

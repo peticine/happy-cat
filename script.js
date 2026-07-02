@@ -14,7 +14,7 @@ const CAT_NAME_KEY = "peticine-cat-name";
 const CAT_PROFILE_KEY = "peticine-cat-profile";
 const AGE_DONE_KEY = "peticine-age-done";
 const AGE_THEMES = ["young", "prime", "mature", "senior", "geriatric"];
-const PRIMARY_CTA_LABEL = "Check My Cat Now";
+const PRIMARY_CTA_LABEL = "Start My Cat's Health Check";
 
 // Meta ad headlines per concern (use ?concern= in landing URL):
 // water/drinking: "Cat drinking more water? Free 2-min check" | "Extra water bowls? See if it's worth a vet call"
@@ -31,59 +31,70 @@ const HERO_VARIANTS = {
   water: {
     headlineHook: "Drinking more water than usual?",
     headline: "Find out if it's normal — or a sign kidneys or thyroid need a vet look.",
-    cta: PRIMARY_CTA_LABEL,
+    consequence: "Most cats don't show symptoms until much of their kidney function is already gone.",
+    cta: "Check for Early Kidney Disease",
   },
   drinking: {
     headlineHook: "Drinking more water than usual?",
     headline: "Find out if it's normal — or a sign kidneys or thyroid need a vet look.",
-    cta: PRIMARY_CTA_LABEL,
+    consequence: "Most cats don't show symptoms until much of their kidney function is already gone.",
+    cta: "Check for Early Kidney Disease",
   },
   weight: {
     headlineHook: "Has your cat lost weight?",
     headline: "Find out if it's age and appetite — or something a vet should check soon.",
-    cta: PRIMARY_CTA_LABEL,
+    consequence: "Weight loss is often the first change owners notice — and a sign something may already be progressing.",
+    cta: "Find Out If Your Cat Is At Risk",
   },
   eating: {
     headlineHook: "Eating less than usual?",
     headline: "Find out if it's a passing phase — or a sign something's wrong.",
-    cta: PRIMARY_CTA_LABEL,
+    consequence: "Appetite changes are easy to dismiss — but cats hide illness until habits shift.",
+    cta: "Find Out If Your Cat Is At Risk",
   },
   appetite: {
     headlineHook: "Eating less than usual?",
     headline: "Find out if it's a passing phase — or a sign something's wrong.",
-    cta: PRIMARY_CTA_LABEL,
+    consequence: "Appetite changes are easy to dismiss — but cats hide illness until habits shift.",
+    cta: "Find Out If Your Cat Is At Risk",
   },
   sleeping: {
     headline: "Let's understand why your cat is sleeping more.",
-    cta: PRIMARY_CTA_LABEL,
+    consequence: "More sleep can be age — or an early sign something inside is changing.",
+    cta: "Start My Cat's Health Check",
   },
   litter: {
     headlineHook: "Is your cat peeing outside the litter box?",
     headline:
       "Find out if it's stress — or kidneys, bladder, or pain that needs a vet.",
-    cta: "Take a quick screening",
+    consequence: "Litter box changes often mean discomfort — kidney and bladder issues are common in cats.",
+    cta: "Find Out If Your Cat Is At Risk",
     image: "./images/hero-litter.png",
   },
   urination: {
     headlineHook: "Is your cat peeing outside the litter box?",
     headline:
       "Find out if it's stress — or kidneys, bladder, or pain that needs a vet.",
-    cta: "Take a quick screening",
+    consequence: "Litter box changes often mean discomfort — kidney and bladder issues are common in cats.",
+    cta: "Find Out If Your Cat Is At Risk",
     image: "./images/hero-litter.png",
   },
   quiet: {
     headline: "Let's understand what your cat's quieter behaviour could mean.",
-    cta: PRIMARY_CTA_LABEL,
+    consequence: "When cats withdraw, it's often because they don't feel well — not because they're being difficult.",
+    cta: "Start My Cat's Health Check",
   },
   hiding: {
     headlineHook: "30% of cats develop chronic disease.",
     headline: "Most owners don't notice until it's too late.",
-    cta: PRIMARY_CTA_LABEL,
+    consequence: "CKD can't be reversed — but early detection can slow progression.",
+    cta: "Start My Cat's Health Check",
   },
   default: {
     headlineHook: "30% of cats develop chronic disease.",
     headline: "Most owners don't notice until it's too late.",
-    cta: PRIMARY_CTA_LABEL,
+    consequence: "CKD can't be reversed — but early detection can slow progression.",
+    cta: "Start My Cat's Health Check",
   },
 };
 
@@ -140,12 +151,23 @@ function getHeroConcernFromUrl() {
   return HERO_VARIANTS[normalized] ? normalized : "default";
 }
 
+function applySiteCtaLabels(label) {
+  document.querySelectorAll(".btn-get-started").forEach((btn) => {
+    const heroLabel = btn.querySelector("#hero-cta-label");
+    if (heroLabel) {
+      heroLabel.textContent = label;
+      return;
+    }
+    btn.textContent = label;
+  });
+}
+
 function initHeroPersonalization() {
   const concern = getHeroConcernFromUrl();
   const variant = HERO_VARIANTS[concern] || HERO_VARIANTS.default;
 
   const headline = document.getElementById("hero-headline");
-  const ctaLabel = document.getElementById("hero-cta-label");
+  const ctaLabel = variant.cta || PRIMARY_CTA_LABEL;
 
   if (headline) {
     if (variant.headlineHook) {
@@ -154,7 +176,7 @@ function initHeroPersonalization() {
       headline.textContent = variant.headline;
     }
   }
-  if (ctaLabel) ctaLabel.textContent = variant.cta;
+  applySiteCtaLabels(ctaLabel);
 
   const hero = document.getElementById("hero");
   if (hero) {
@@ -397,7 +419,7 @@ const AGE_CAROUSEL_STAGES = [
     keyPoints: [
       "Kidney function often severely compromised",
       "Chronic conditions frequently diagnosed now",
-      "Vomiting, weight loss, and hiding increase",
+      "Nausea, weight loss, and hiding increase",
     ],
     image: "./images/stage-senior.png?v=hc47",
     imageAlt: "Real senior cat portrait",
@@ -700,8 +722,8 @@ const SCREENING_QUESTIONS = [
   },
   {
     id: "vomiting",
-    title: "Vomiting",
-    lead: "How often has your cat vomited in the past week?",
+    title: "Nausea",
+    lead: "How often has your cat experienced nausea in the past week?",
     storyId: "theo",
     options: [
       { id: "four_plus", label: "4+ times", shortLabel: "4+ times", points: 3 },
