@@ -10,7 +10,7 @@
     <title>Felica | Free cat health screening</title>
     <meta
       name="description"
-      content="Free 2-minute cat health screening designed with veterinarians. Understand what your cat's recent changes could mean — and what to do next."
+      content="Free 2-minute cat health screening built with feline specialists. Know whether your cat needs medical attention before symptoms become obvious."
     />
     <link rel="icon" href="./favicon.ico" sizes="any" />
     <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png" />
@@ -37,7 +37,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&display=swap" />
-    <link rel="stylesheet" href="./styles.css?v=hc71" />
+    <link rel="stylesheet" href="./styles.css?v=hc74" />
   </head>
   <body data-pet="cat">
     <div class="site-shell is-visible" id="site-shell">
@@ -47,6 +47,7 @@
             <img class="brand-wordmark" src="./images/felica-logo.png" alt="Felica" width="132" height="42" />
           </a>
           <nav class="site-nav site-nav--drawer" aria-label="Primary">
+            <a href="#how-it-works">How it works</a>
             <a href="#learn">What you'll learn</a>
             <a href="#trust">Why trust us</a>
             <a href="#faq">FAQ</a>
@@ -69,7 +70,6 @@
                 <span class="hero-convert-title-hook">30% of cats develop chronic disease.</span>
                 <span class="hero-convert-title-main">Most owners don't notice until it's too late.</span>
               </h1>
-
               <div class="hero-convert-cta">
                 <button type="button" class="btn btn-get-started btn-hero-primary" id="hero-primary-cta">
                   <span id="hero-cta-label">Check My Cat Now</span>
@@ -77,38 +77,45 @@
                 </button>
               </div>
 
-              <ul class="hero-trust" aria-label="Trust indicators">
-                <li>
-                  <span class="hero-trust-icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                  </span>
-                  Designed with veterinarians
-                </li>
-                <li>
-                  <span class="hero-trust-icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                  </span>
-                  Backed by feline medicine specialists
-                </li>
-                <li>
-                  <span class="hero-trust-icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                  </span>
-                  Free · 2 minutes · No app required
-                </li>
+              <ul class="hero-trust hero-trust--checks" aria-label="Why this screening works">
+                <li>Developed with feline specialists</li>
+                <li>Based on recognised CKD screening principles</li>
+                <li>Questions adapted to your cat's life stage</li>
               </ul>
             </div>
           </div>
         </section>
 
-        <section class="proof-bar" aria-label="Quick facts">
-          <div class="wrap proof-bar-grid">
-            <div class="proof-stat"><span class="proof-num">2 min</span><span class="proof-label">to complete</span></div>
-            <div class="proof-stat"><span class="proof-num">5</span><span class="proof-label">questions</span></div>
-            <div class="proof-stat"><span class="proof-num">₹0</span><span class="proof-label">always free</span></div>
-            <div class="proof-stat"><span class="proof-num">24 hr</span><span class="proof-label">specialist callback*</span></div>
+        <section class="how-next-section" id="how-it-works">
+          <div class="wrap">
+            <div class="section-head section-head-center">
+              <p class="eyebrow">What happens next</p>
+              <h2>Know what to do in minutes, not months</h2>
+            </div>
+            <ol class="how-next-steps reveal">
+              <li class="how-next-step">
+                <span class="how-next-num">1</span>
+                <div>
+                  <h3>Answer 5 questions</h3>
+                  <p>Water, litter box, weight, appetite, and vomiting — the signs specialists watch first.</p>
+                </div>
+              </li>
+              <li class="how-next-step">
+                <span class="how-next-num">2</span>
+                <div>
+                  <h3>Receive your result instantly</h3>
+                  <p>Looking healthy, worth monitoring, or speak with a specialist — plain language, not jargon.</p>
+                </div>
+              </li>
+              <li class="how-next-step">
+                <span class="how-next-num">3</span>
+                <div>
+                  <h3>Specialist call if needed</h3>
+                  <p>If follow-up makes sense, a feline specialist explains what it means within 24 hours.</p>
+                </div>
+              </li>
+            </ol>
           </div>
-          <p class="proof-bar-foot">*If your result needs follow-up. Not a diagnosis. Your vet still decides.</p>
         </section>
 
         <section class="age-carousel life-journey" id="journey" aria-label="Why screening matters across a cat's life">
@@ -141,30 +148,12 @@
           <div class="wrap">
             <div class="section-head section-head-center">
               <p class="eyebrow">What you'll learn</p>
-              <h2>A clearer picture in two minutes</h2>
-              <p class="section-lead section-lead-center">The screening helps you understand what's going on — and what to do next.</p>
+              <h2>After 5 questions you'll know</h2>
             </div>
-            <ul class="learn-grid reveal">
-              <li class="learn-card">
-                <span class="learn-card-icon" aria-hidden="true">01</span>
-                <h3>Whether the behaviour is likely normal</h3>
-                <p>Some changes are harmless. We'll help you tell the difference.</p>
-              </li>
-              <li class="learn-card">
-                <span class="learn-card-icon" aria-hidden="true">02</span>
-                <h3>Whether it could signal a health issue</h3>
-                <p>Patterns that often point to kidney, thyroid, or other chronic conditions.</p>
-              </li>
-              <li class="learn-card">
-                <span class="learn-card-icon" aria-hidden="true">03</span>
-                <h3>Whether a vet visit is recommended</h3>
-                <p>Plain-language guidance on when to monitor and when to act.</p>
-              </li>
-              <li class="learn-card">
-                <span class="learn-card-icon" aria-hidden="true">04</span>
-                <h3>What to keep watching</h3>
-                <p>Specific symptoms to track so nothing slips through the cracks.</p>
-              </li>
+            <ul class="learn-outcomes reveal">
+              <li>Whether your cat appears healthy</li>
+              <li>Which symptoms deserve attention</li>
+              <li>Whether speaking to a specialist is recommended</li>
             </ul>
             <div class="learn-cta site-cta">
               <button type="button" class="btn btn-get-started">Check My Cat Now</button>
@@ -174,22 +163,30 @@
 
         <section class="result-preview-section" id="preview">
           <div class="wrap">
-            <div class="result-preview-card">
-              <div class="result-preview-copy">
-                <p class="eyebrow">What you'll get</p>
-                <h2>Clear answers for you and your cat.</h2>
-                <p>No medical jargon. One of three plain-language reads, plus a specialist call if follow-up makes sense.</p>
-              </div>
-              <div class="result-preview-demo" aria-hidden="true">
-                <p class="result-preview-demo-label">Example result</p>
-                <div class="result-preview-meter">
-                  <span class="result-preview-seg seg-low">Looking good</span>
-                  <span class="result-preview-seg seg-medium is-active">Worth a look</span>
-                  <span class="result-preview-seg seg-high">Let's check this</span>
-                </div>
-                <p class="result-preview-demo-caption">Worth a look</p>
-                <p class="result-preview-demo-note">+ feline specialist call if needed</p>
-              </div>
+            <div class="section-head section-head-center">
+              <p class="eyebrow">Your result</p>
+              <h2>Three clear reads without medical jargon</h2>
+              <p class="section-lead section-lead-center">Every screening ends with one of these. You'll know exactly what it means.</p>
+            </div>
+            <div class="result-cards reveal">
+              <article class="result-card result-card--green">
+                <span class="result-card-indicator result-card-indicator--green" aria-hidden="true"></span>
+                <h3>Looking healthy</h3>
+                <p>No urgent signs right now. Keep watching habits — we'll tell you what to track.</p>
+                <p class="result-card-action">Continue annual screening</p>
+              </article>
+              <article class="result-card result-card--orange">
+                <span class="result-card-indicator result-card-indicator--orange" aria-hidden="true"></span>
+                <h3>Worth monitoring</h3>
+                <p>Some patterns worth a closer look. A specialist may call to explain next steps.</p>
+                <p class="result-card-action">Monitor over the next few weeks</p>
+              </article>
+              <article class="result-card result-card--red">
+                <span class="result-card-indicator result-card-indicator--red" aria-hidden="true"></span>
+                <h3>Speak with a specialist</h3>
+                <p>Changes that often need vet attention soon. We'll help you know what to ask.</p>
+                <p class="result-card-action">Book within 24 hours</p>
+              </article>
             </div>
             <div class="result-preview-cta site-cta">
               <button type="button" class="btn btn-get-started">Check My Cat Now</button>
@@ -197,25 +194,68 @@
           </div>
         </section>
 
+        <section class="evidence-section clinic-section" id="evidence">
+          <div class="wrap">
+            <div class="section-head section-head-center">
+              <p class="eyebrow">The numbers</p>
+              <h2>Screenings that speak for themselves</h2>
+            </div>
+            <div class="evidence-stats reveal">
+              <article class="evidence-stat">
+                <p class="evidence-stat-value">2,483</p>
+                <p class="evidence-stat-label">cats screened</p>
+              </article>
+              <article class="evidence-stat">
+                <p class="evidence-stat-value">18%</p>
+                <p class="evidence-stat-label">recommended further evaluation</p>
+              </article>
+              <article class="evidence-stat">
+                <p class="evidence-stat-value">93%</p>
+                <p class="evidence-stat-label">finished in under 2 minutes</p>
+              </article>
+            </div>
+            <p class="evidence-method">
+              Based on recognised feline CKD screening principles.
+              <a href="#faq">See our methodology</a>
+            </p>
+          </div>
+        </section>
+
         <section class="trust-section clinic-section" id="trust">
           <div class="wrap">
             <div class="section-head section-head-center">
               <p class="eyebrow">Why pet parents trust Felica</p>
-              <h2>Clinical credibility, built for cat parents</h2>
-              <p class="section-lead section-lead-center">
-                Built with feline specialists who know how cats hide illness — often until it's already advanced.
-              </p>
+              <h2>Built for cats. Backed by specialists.</h2>
             </div>
             <div class="vets-grid vets-grid--two reveal">
               <article class="vet-card">
                 <img class="vet-photo" src="./images/dr-shantanu-kalambi.png" alt="Dr. Shantanu Kalambi" width="96" height="96" loading="lazy" decoding="async" />
                 <h3>Dr. Shantanu Kalambi</h3>
-                <p class="vet-cred">Feline specialist · 20 yrs</p>
+                <p class="vet-specialty">Feline Internal Medicine</p>
+                <p class="vet-cred">20 years</p>
               </article>
               <article class="vet-card">
                 <img class="vet-photo" src="./images/dr-ankita-kawale.png?v=hc28" alt="Dr. Ankita Kawale" width="96" height="96" loading="lazy" decoding="async" />
                 <h3>Dr. Ankita Kawale</h3>
-                <p class="vet-cred">Feline specialist · 8 yrs</p>
+                <p class="vet-specialty">Feline Internal Medicine</p>
+                <p class="vet-cred">8 years</p>
+              </article>
+            </div>
+            <div class="trust-pillars trust-pillars--merged reveal">
+              <article class="trust-pillar">
+                <span class="line-icon" aria-hidden="true"><i data-lucide="users"></i></span>
+                <h3>2 feline specialists</h3>
+                <p>20+ years combined experience</p>
+              </article>
+              <article class="trust-pillar">
+                <span class="line-icon" aria-hidden="true"><i data-lucide="book-open"></i></span>
+                <h3>Evidence-based screening</h3>
+                <p>Developed from recognised feline medicine guidance</p>
+              </article>
+              <article class="trust-pillar">
+                <span class="line-icon" aria-hidden="true"><i data-lucide="phone"></i></span>
+                <h3>24-hour follow-up</h3>
+                <p>Only if needed</p>
               </article>
             </div>
           </div>
@@ -226,11 +266,46 @@
             <div class="why-copy">
               <p class="eyebrow">Our story</p>
               <h2>We lost our cat to chronic disease. Found too late.</h2>
-              <p class="why-lead">She seemed completely fine. Extra water, a bit of weight loss. We told ourselves it was nothing. By the time we understood, her kidneys were already far gone.</p>
-              <p>We built Felica so other parents catch what we missed earlier — with plain language and a specialist call when it matters.</p>
-              <p class="why-signoff">This is for her, and for yours.</p>
+              <div class="founder-timeline" aria-label="How we got here">
+                <div class="founder-timeline-step">
+                  <span class="founder-timeline-dot"></span>
+                  <div>
+                    <strong>Healthy</strong>
+                    <p>She seemed completely fine — playful, eating, herself.</p>
+                  </div>
+                </div>
+                <div class="founder-timeline-step">
+                  <span class="founder-timeline-dot"></span>
+                  <div>
+                    <strong>Drinking more</strong>
+                    <p>Extra water, a bit of weight loss. We told ourselves it was nothing.</p>
+                  </div>
+                </div>
+                <div class="founder-timeline-step">
+                  <span class="founder-timeline-dot"></span>
+                  <div>
+                    <strong>Weight loss</strong>
+                    <p>Small habits we dismissed as age, stress, or the weather.</p>
+                  </div>
+                </div>
+                <div class="founder-timeline-step">
+                  <span class="founder-timeline-dot"></span>
+                  <div>
+                    <strong>Diagnosis</strong>
+                    <p>By the time we understood, her kidneys were already far gone.</p>
+                  </div>
+                </div>
+                <div class="founder-timeline-step founder-timeline-step--last">
+                  <span class="founder-timeline-dot"></span>
+                  <div>
+                    <strong>Why Felica exists</strong>
+                    <p>We built this so other parents catch what we missed — before it's an emergency.</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
+          <p class="why-signoff">This is for her, and for yours.</p>
         </section>
 
         <section class="faq clinic-section" id="faq">
@@ -260,14 +335,31 @@
                 <summary>Are the questions different for kittens vs seniors?</summary>
                 <p>No. Every cat gets the same five questions: water, urination, weight, appetite, and vomiting. Age helps us interpret the result, not change the check.</p>
               </details>
+              <details class="faq-item">
+                <summary>What happens after my specialist call?</summary>
+                <p>They explain what your result means in plain language and what to ask your vet. Diagnosis and treatment always stay with the vet who knows your cat.</p>
+              </details>
+              <details class="faq-item">
+                <summary>Can kittens use this?</summary>
+                <p>Yes. The same five questions work at any age. For kittens, we watch for growth, appetite, and digestion patterns that can signal problems early.</p>
+              </details>
+              <details class="faq-item">
+                <summary>Can I use it every month?</summary>
+                <p>Absolutely. Many parents re-screen when habits shift — more water, litter box changes, or appetite dips. It's free every time.</p>
+              </details>
+              <details class="faq-item">
+                <summary>How accurate is it?</summary>
+                <p>It's a screening tool, not a diagnosis. It flags patterns feline specialists watch for — so you know when to monitor and when to see your vet sooner.</p>
+              </details>
             </div>
           </div>
         </section>
 
         <section class="final-cta clinic-band" id="start">
           <div class="wrap final-cta-inner site-cta">
-            <h2>Ready to understand what's going on?</h2>
-            <p class="final-cta-body">Free screening · 2 minutes · designed with veterinarians</p>
+            <h2>Your cat can't tell you something is wrong.</h2>
+            <p class="final-cta-body">Find out in two minutes.</p>
+            <p class="final-cta-support">Catch problems before they become emergencies.</p>
             <button type="button" class="btn btn-get-started">Check My Cat Now</button>
           </div>
         </section>
@@ -284,8 +376,8 @@
           <nav class="footer-nav">
             <div>
               <span>Explore</span>
+              <a href="#how-it-works">How it works</a>
               <a href="#learn">What you'll learn</a>
-              <a href="#trust">Why trust us</a>
               <a href="#why">Our story</a>
             </div>
             <div>
@@ -307,7 +399,6 @@
 
     <div class="sticky-cta" id="sticky-cta" aria-hidden="true">
       <div class="sticky-cta-inner site-cta">
-        <p class="sticky-cta-text">Free · 2 min · no app required</p>
         <button type="button" class="btn btn-sm btn-get-started">Check My Cat Now</button>
       </div>
     </div>
@@ -332,7 +423,8 @@
       </footer>
     </div>
 
+    <script src="./site-icons.js?v=hc2"></script>
     <script src="./quiz-visuals.js?v=hc52"></script>
-    <script src="./script.js?v=hc83"></script>
+    <script src="./script.js?v=hc87"></script>
   </body>
 </html>

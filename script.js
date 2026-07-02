@@ -337,75 +337,89 @@ function getStageForAge(years) {
   return "geriatric";
 }
 
+const STAGE_ICON = {
+  young: "cat",
+  prime: "sparkles",
+  mature: "activity",
+  senior: "heart-pulse",
+  geriatric: "moon",
+};
+
 const AGE_CAROUSEL_STAGES = [
   {
     id: "young",
     label: "Kitten",
     ages: "0–2 yrs",
-    title: "Foundation years",
+    title: "Building lifelong health",
+    summary: "What happens now shapes organ health for life — early problems often catch up in senior years.",
+    keyPoints: [
+      "Early nutrition affects kidney health for life",
+      "Congenital issues may show up now",
+      "Growth problems can signal metabolic issues",
+    ],
     image: "./images/stage-young.png?v=hc47",
     imageAlt: "Real kitten portrait",
-    issues: ["Early nutrition affects kidney health for life", "Congenital issues may show up now", "Growth problems can signal metabolic issues"],
-    symptoms: ["Slow growth or lag vs littermates", "Frequent vomiting or diarrhea", "Lethargy or unusual sleeping patterns"],
-    note: "What happens now shapes lifelong organ function. Early problems often catch up in senior years.",
   },
   {
     id: "prime",
     label: "Prime",
     ages: "3–6 yrs",
-    title: "The healthiest years — keep them that way",
-    image: "./images/stage-prime.png?v=hc47",
-    imageAlt: "Real adult cat portrait",
-    issues: [
+    title: "Healthy doesn't always mean healthy",
+    summary: "Cats look completely healthy — blood work is often the only way to catch what's changing inside.",
+    keyPoints: [
       "Weight creeps up slowly, often unnoticed",
       "Tartar and gum disease start building",
-      "The ideal time to set baseline bloodwork",
+      "Ideal time to set baseline bloodwork",
     ],
-    symptoms: [
-      "Straining or frequent trips to the litter box",
-      "Bad breath, or dropping food while eating",
-      "A softening waistline, or jumping up less",
-    ],
-    note: "Cats look and act completely healthy. Blood work is the only way to catch what's changing inside.",
+    image: "./images/stage-prime.png?v=hc47",
+    imageAlt: "Real adult cat portrait",
   },
   {
     id: "mature",
     label: "Mature",
     ages: "7–10 yrs",
-    title: "The turning point",
+    title: "When hidden decline starts",
+    summary: "One in three cats shows organ decline now — early detection makes the difference between months and years.",
+    keyPoints: [
+      "Kidney disease becomes common",
+      "Dental disease accelerates systemic problems",
+      "Drinking or litter box changes are easy to miss",
+    ],
     image: "./images/stage-mature.png?v=hc47",
     imageAlt: "Real mature cat portrait",
-    issues: ["1 in 3 cats shows organ decline now", "Kidney disease becomes common", "Dental disease accelerates systemic problems"],
-    symptoms: ["Drinking significantly more", "Weight loss despite eating", "Pickiness about food or water"],
-    note: "This age window is critical. Early detection makes the difference between 6 months and 6 years.",
   },
   {
     id: "senior",
     label: "Senior",
     ages: "11–14 yrs",
-    title: "Compensation fails",
+    title: "Where chronic disease begins appearing",
+    summary: "Cats stop hiding illness — knowing exactly what changed helps your vet intervene fast.",
+    keyPoints: [
+      "Kidney function often severely compromised",
+      "Chronic conditions frequently diagnosed now",
+      "Vomiting, weight loss, and hiding increase",
+    ],
     image: "./images/stage-senior.png?v=hc47",
     imageAlt: "Real senior cat portrait",
-    issues: ["Kidney function severely compromised", "Chronic conditions often diagnosed now", "Cats stop hiding illness symptoms"],
-    symptoms: ["Increased vomiting", "Noticeable weight loss", "Behavior changes — less playful, more hiding"],
-    note: "By now, damage is often advanced. But knowing exactly what changed helps your vet intervene fast.",
   },
   {
     id: "geriatric",
     label: "Geriatric",
     ages: "15+ yrs",
-    title: "Quality of life",
+    title: "Every day of comfort counts",
+    summary: "Even minor changes signal bigger problems — comfort-first decisions need clarity, fast.",
+    keyPoints: [
+      "Multiple organ systems may fail together",
+      "Refusing food for 24+ hours needs attention",
+      "Weakness or disorientation can appear suddenly",
+    ],
     image: "./images/stage-geriatric.png?v=hc47",
     imageAlt: "Real geriatric cat portrait",
-    issues: ["Multiple organ systems failing together", "Even minor changes signal bigger problems", "Rapid decline possible"],
-    symptoms: ["Sudden weight drop", "Refusing food for 24+ hours", "Weakness, wobbly gait, or disorientation"],
-    note: "At this stage, knowing what's changed helps you and your vet make comfort-first decisions quickly.",
   },
 ];
 
 function renderLifeStageCard(stage) {
-  const issues = stage.issues.map((item) => `<li>${item}</li>`).join("");
-  const symptoms = stage.symptoms.map((item) => `<li>${item}</li>`).join("");
+  const bullets = stage.keyPoints.map((item) => `<li>${item}</li>`).join("");
 
   return `
     <article class="life-stage-card age-carousel-card" data-stage="${stage.id}" id="stage-${stage.id}" aria-labelledby="stage-title-${stage.id}">
@@ -416,17 +430,8 @@ function renderLifeStageCard(stage) {
       <div class="life-stage-content age-carousel-content">
         <p class="life-stage-ages">${stage.label} · ${stage.ages}</p>
         <h3 id="stage-title-${stage.id}">${stage.title}</h3>
-        <div class="age-carousel-columns">
-          <div class="age-carousel-col">
-            <span class="age-carousel-col-label">What's actually happening</span>
-            <ul class="age-carousel-list">${issues}</ul>
-          </div>
-          <div class="age-carousel-col age-carousel-col--watch">
-            <span class="age-carousel-col-label">Watch for these signs</span>
-            <ul class="age-carousel-list">${symptoms}</ul>
-          </div>
-        </div>
-        <p class="age-carousel-note">${stage.note}</p>
+        <p class="life-stage-summary">${stage.summary}</p>
+        <ul class="age-carousel-list age-carousel-list--compact">${bullets}</ul>
       </div>
     </article>`;
 }
@@ -434,18 +439,6 @@ function renderLifeStageCard(stage) {
 
 function updateLifeJourneyForAge(years) {
   const stageId = years != null ? getStageForAge(years) : null;
-  const lead = document.getElementById("life-journey-lead");
-  const name = catName && catName !== "Your cat" ? catName : "Your cat";
-
-  if (lead) {
-    if (years != null) {
-      const stage = AGE_CAROUSEL_STAGES.find((s) => s.id === stageId);
-      lead.textContent = `${name} is ${years}. Review the ${stage?.label || "senior"} stage for age-specific guidance.`;
-    } else {
-      lead.textContent =
-        "Swipe through each life stage. The same five screening questions catch what changes at every age.";
-    }
-  }
 
   document.querySelectorAll(".life-stage-card").forEach((card) => {
     const isCurrent = card.dataset.stage === stageId;
@@ -521,10 +514,19 @@ function initLifeJourney() {
   if (!track || !nav || !scroller) return;
 
   track.innerHTML = AGE_CAROUSEL_STAGES.map(renderLifeStageCard).join("");
-  nav.innerHTML = AGE_CAROUSEL_STAGES.map(
-    (stage) =>
-      `<button type="button" class="life-journey-nav-btn" role="tab" data-stage="${stage.id}" aria-controls="stage-${stage.id}" aria-selected="false">${stage.label}</button>`
-  ).join("");
+  nav.innerHTML = AGE_CAROUSEL_STAGES.map((stage, index) => {
+    const connector =
+      index > 0 ? '<span class="life-journey-progress-line" aria-hidden="true"></span>' : "";
+    return `${connector}<button type="button" class="life-journey-nav-btn life-journey-progress-btn" role="tab" data-stage="${stage.id}" aria-controls="stage-${stage.id}" aria-selected="false">
+      <span class="life-journey-progress-icon-wrap" aria-hidden="true"><i data-lucide="${STAGE_ICON[stage.id] || STAGE_ICON.young}"></i></span>
+      <span class="life-journey-progress-label">${stage.label}</span>
+      <span class="life-journey-progress-ages">${stage.ages}</span>
+    </button>`;
+  }).join("");
+
+  if (typeof window.initFelicaIcons === "function") {
+    window.initFelicaIcons(nav);
+  }
 
   nav.querySelectorAll(".life-journey-nav-btn").forEach((btn) => {
     btn.addEventListener("click", () => scrollToLifeStage(btn.dataset.stage));

@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "build:age": "vite build",
-    "build:icons": "vite build --config vite.hero-icons.config.js",
+    "build:icons": "vite build --config vite.hero-icons.config.js && vite build --config vite.site-icons.config.js",
     "dev:age": "vite build --watch"
   },
   "dependencies": {
