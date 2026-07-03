@@ -37,7 +37,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&display=swap" />
-    <link rel="stylesheet" href="./styles.css?v=hc85" />
+    <link rel="stylesheet" href="./styles.css?v=hc111" />
   </head>
   <body data-pet="cat">
     <div class="site-shell is-visible" id="site-shell">
@@ -48,11 +48,11 @@
           </a>
           <nav class="site-nav site-nav--drawer" aria-label="Primary">
             <a href="#how-it-works">How it works</a>
-            <a href="#trust">Why trust us</a>
+            <a href="#coverage">What we cover</a>
+            <a href="#trust">Our vets</a>
             <a href="#faq">FAQ</a>
           </nav>
           <div class="header-actions">
-            <button type="button" class="btn btn-sm btn-get-started header-cta">Start My Cat's Health Check</button>
             <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false">
               <span></span>
               <span></span>
@@ -62,14 +62,16 @@
       </header>
 
       <main>
-        <section class="hero hero-convert" id="hero">
-          <div class="wrap hero-convert-inner">
-            <div class="hero-convert-copy">
-              <h1 class="hero-convert-title" id="hero-headline">
-                <span class="hero-convert-title-hook">30% of cats develop chronic disease.</span>
-                <span class="hero-convert-title-main">Most owners don't notice until it's too late.</span>
+        <section class="hero hero-landing" id="hero">
+          <div class="wrap hero-landing-grid">
+            <div class="hero-landing-copy">
+              <h1 class="hero-landing-title" id="hero-headline">
+                <span class="hero-landing-title-hook">Cats hide their illnesses.</span>
+                <span class="hero-landing-title-main">Find out before it gets late.</span>
               </h1>
-              <div class="hero-convert-cta">
+              <p class="hero-landing-lead" id="hero-lead">Stress-free. At home.</p>
+
+              <div class="hero-landing-cta">
                 <button type="button" class="btn btn-get-started btn-hero-primary" id="hero-primary-cta">
                   <span id="hero-cta-label">Start My Cat's Health Check</span>
                   <span class="btn-hero-arrow" aria-hidden="true">→</span>
@@ -77,57 +79,138 @@
               </div>
 
               <ul class="hero-trust hero-trust--checks" aria-label="Why this screening works">
-                <li>Free. Takes under 2 minutes.</li>
-                <li>Reviewed by feline specialists.</li>
-                <li>Understand if your cat is at risk.</li>
+                <li>Vet-reviewed questions</li>
+                <li>Personalised insights</li>
+                <li>Next steps that matter</li>
               </ul>
+
+              <div class="hero-social-proof">
+                <div class="hero-social-avatars" aria-hidden="true">
+                  <span class="hero-social-avatar hero-social-avatar--1"></span>
+                  <span class="hero-social-avatar hero-social-avatar--2"></span>
+                  <span class="hero-social-avatar hero-social-avatar--3"></span>
+                </div>
+                <p>Join <strong>10,000+</strong> cat parents who've already started</p>
+              </div>
+            </div>
+
+            <div class="hero-landing-visual" aria-hidden="true">
+              <div class="hero-cat-scene">
+                <div class="hero-cat-portrait">
+                  <img
+                    class="hero-cat-portrait-img"
+                    id="hero-cat-image"
+                    src="./images/hero-cat-portrait.png"
+                    alt=""
+                    width="320"
+                    height="420"
+                    decoding="async"
+                  />
+                </div>
+                <ul class="hero-float-cards">
+                  <li class="hero-float-card hero-float-card--appetite">
+                    <span class="hero-float-card-icon"><i data-lucide="utensils"></i></span>
+                    <span class="hero-float-card-label">Drinking &amp; Appetite</span>
+                  </li>
+                  <li class="hero-float-card hero-float-card--energy">
+                    <span class="hero-float-card-icon"><i data-lucide="activity"></i></span>
+                    <span class="hero-float-card-label">Energy &amp; Behaviour</span>
+                  </li>
+                  <li class="hero-float-card hero-float-card--weight">
+                    <span class="hero-float-card-icon"><i data-lucide="scale"></i></span>
+                    <span class="hero-float-card-label">Weight Changes</span>
+                  </li>
+                  <li class="hero-float-card hero-float-card--litter">
+                    <span class="hero-float-card-icon"><i data-lucide="toilet"></i></span>
+                    <span class="hero-float-card-label">Litter Box</span>
+                  </li>
+                  <li class="hero-float-card hero-float-card--coat">
+                    <span class="hero-float-card-icon"><i data-lucide="sparkles"></i></span>
+                    <span class="hero-float-card-label">Skin &amp; Coat</span>
+                  </li>
+                  <li class="hero-float-card hero-float-card--breathing">
+                    <span class="hero-float-card-icon"><i data-lucide="wind"></i></span>
+                    <span class="hero-float-card-label">Breathing</span>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </section>
 
-        <section class="what-you-get-section clinic-section" id="how-it-works">
+        <section class="how-steps-section clinic-section" id="how-it-works">
           <div class="wrap">
             <div class="section-head section-head-center">
               <p class="eyebrow">How it works</p>
-              <h2>See what they can't tell you.</h2>
+              <h2>Simple steps to understand your cat's health.</h2>
             </div>
-            <ol class="what-you-get-steps reveal">
-              <li class="what-you-get-step">
-                <span class="what-you-get-num" aria-hidden="true">1</span>
-                <div class="what-you-get-step-body">
-                  <h3>Five screening questions</h3>
-                  <p>Water, litter, weight, appetite, and nausea — the signs specialists watch first.</p>
-                </div>
+            <ol class="how-steps reveal">
+              <li class="how-step">
+                <span class="how-step-icon" aria-hidden="true"><i data-lucide="clipboard-list"></i></span>
+                <h3>Answer smart questions</h3>
+                <p>Quick questions about recent changes in eating, litter, weight, and behaviour.</p>
               </li>
-              <li class="what-you-get-step what-you-get-step--results">
-                <span class="what-you-get-num" aria-hidden="true">2</span>
-                <div class="what-you-get-step-body">
-                  <h3>Your result</h3>
-                  <ul class="result-reads-compact">
-                    <li class="result-reads-compact-item result-reads-compact-item--green">
-                      <span class="result-reads-compact-dot" aria-hidden="true"></span>
-                      <span>Looking healthy</span>
-                    </li>
-                    <li class="result-reads-compact-item result-reads-compact-item--orange">
-                      <span class="result-reads-compact-dot" aria-hidden="true"></span>
-                      <span>Worth monitoring</span>
-                    </li>
-                    <li class="result-reads-compact-item result-reads-compact-item--red">
-                      <span class="result-reads-compact-dot" aria-hidden="true"></span>
-                      <span>Speak with a specialist</span>
-                    </li>
-                  </ul>
-                </div>
+              <li class="how-step-arrow" aria-hidden="true">→</li>
+              <li class="how-step">
+                <span class="how-step-icon" aria-hidden="true"><i data-lucide="search"></i></span>
+                <h3>Get personalised insights</h3>
+                <p>See what could be causing changes based on patterns feline specialists watch for.</p>
               </li>
-              <li class="what-you-get-step what-you-get-step--highlight">
-                <span class="what-you-get-num" aria-hidden="true">3</span>
-                <div class="what-you-get-step-body">
-                  <h3>Talk to a feline specialist</h3>
-                  <p>A feline specialist reviews your result and calls within 24 hours — so you know exactly what to do next.</p>
-                </div>
+              <li class="how-step-arrow" aria-hidden="true">→</li>
+              <li class="how-step">
+                <span class="how-step-icon" aria-hidden="true"><i data-lucide="list-checks"></i></span>
+                <h3>Know what to do next</h3>
+                <p>Clear next steps — monitor at home, test sooner, or see your vet with the right questions.</p>
+              </li>
+              <li class="how-step-arrow" aria-hidden="true">→</li>
+              <li class="how-step">
+                <span class="how-step-icon" aria-hidden="true"><i data-lucide="user-round"></i></span>
+                <h3>Get expert support</h3>
+                <p>Chat with feline vets when your result needs follow-up — guidance, not a diagnosis.</p>
               </li>
             </ol>
-            <div class="what-you-get-cta site-cta">
+          </div>
+        </section>
+
+        <section class="coverage-section clinic-section clinic-section-muted" id="coverage">
+          <div class="wrap">
+            <div class="section-head section-head-center">
+              <h2>The diseases cats hide — until it's late.</h2>
+              <p class="section-lead section-lead-center">These are the conditions we screen for. Not vague symptoms — the real problems feline specialists see every day.</p>
+            </div>
+            <div class="coverage-grid reveal">
+              <article class="coverage-card">
+                <span class="coverage-icon" aria-hidden="true"><i data-lucide="heart-pulse"></i></span>
+                <h3>Chronic kidney disease</h3>
+                <p>Affects 1 in 3 cats over 10. Extra thirst, weight loss, and nausea often show up long before owners notice.</p>
+              </article>
+              <article class="coverage-card">
+                <span class="coverage-icon" aria-hidden="true"><i data-lucide="zap"></i></span>
+                <h3>Hyperthyroidism</h3>
+                <p>Common in seniors. Eating more but losing weight, restless at night, or a coat that suddenly looks rough.</p>
+              </article>
+              <article class="coverage-card">
+                <span class="coverage-icon" aria-hidden="true"><i data-lucide="scale"></i></span>
+                <h3>Diabetes</h3>
+                <p>Drinking more, bigger litter clumps, and weight shifting — especially in overweight or older cats.</p>
+              </article>
+              <article class="coverage-card">
+                <span class="coverage-icon" aria-hidden="true"><i data-lucide="toilet"></i></span>
+                <h3>Urinary &amp; bladder disease</h3>
+                <p>Straining, crying at the litter box, blood in urine, or accidents. A medical emergency in male cats.</p>
+              </article>
+              <article class="coverage-card">
+                <span class="coverage-icon" aria-hidden="true"><i data-lucide="utensils"></i></span>
+                <h3>Dental disease</h3>
+                <p>Most cats over 3 have it. Dropping food, chewing on one side, bad breath, or eating less than usual.</p>
+              </article>
+              <article class="coverage-card">
+                <span class="coverage-icon" aria-hidden="true"><i data-lucide="moon"></i></span>
+                <h3>Arthritis &amp; hidden pain</h3>
+                <p>Less jumping, stiff walking, avoiding the box, or grooming less. Cats rarely limp — they just withdraw.</p>
+              </article>
+            </div>
+            <div class="coverage-cta site-cta">
               <button type="button" class="btn btn-get-started">Start My Cat's Health Check</button>
             </div>
           </div>
@@ -180,22 +263,9 @@
           </div>
         </section>
 
-        <section class="why-section clinic-section" id="why">
-          <div class="wrap why-grid">
-            <div class="why-copy">
-              <p class="eyebrow">Our story</p>
-              <h2>We lost our cat to chronic disease. Found too late.</h2>
-              <p class="why-lead">She seemed completely fine. Extra water, a bit of weight loss. We told ourselves it was nothing. By the time we understood, her kidneys were already far gone.</p>
-              <p>We built Felica so other parents catch what we missed earlier — with plain language and a specialist call when it matters.</p>
-              <p class="why-signoff">This is for her, and for yours.</p>
-            </div>
-          </div>
-        </section>
-
         <section class="faq clinic-section" id="faq">
           <div class="wrap faq-wrap">
             <div class="section-head section-head-center">
-              <p class="eyebrow">Questions</p>
               <h2>Before you start.</h2>
             </div>
             <div class="faq-list">
@@ -227,14 +297,6 @@
                 <summary>Can kittens use this?</summary>
                 <p>Yes. The same five questions work at any age. For kittens, we watch for growth, appetite, and digestion patterns that can signal problems early.</p>
               </details>
-              <details class="faq-item">
-                <summary>Can I use it every month?</summary>
-                <p>Absolutely. Many parents re-screen when habits shift — more water, litter box changes, or appetite dips. It's free every time.</p>
-              </details>
-              <details class="faq-item">
-                <summary>How accurate is it?</summary>
-                <p>It's a screening tool, not a diagnosis. It flags patterns feline specialists watch for — so you know when to monitor and when to see your vet sooner.</p>
-              </details>
             </div>
           </div>
         </section>
@@ -242,15 +304,22 @@
         <section class="final-cta clinic-band" id="start">
           <div class="wrap final-cta-inner site-cta">
             <h2>Your cat can't tell you something is wrong.</h2>
-            <p class="final-cta-body">Find out in two minutes.</p>
-            <p class="final-cta-support">Catch problems before they become emergencies.</p>
-            <button type="button" class="btn btn-get-started">Start My Cat's Health Check</button>
+            <p class="final-cta-body">But you can be one step ahead. Start your cat's health check in 2 minutes.</p>
+            <button type="button" class="btn btn-light btn-get-started btn-final-cta">
+              <span>Start My Cat's Health Check</span>
+              <span class="btn-hero-arrow" aria-hidden="true">→</span>
+            </button>
+            <ul class="final-cta-trust" aria-label="Screening details">
+              <li><i data-lucide="clock"></i> Takes 2 minutes</li>
+              <li><i data-lucide="lock"></i> 100% confidential</li>
+              <li><i data-lucide="heart-pulse"></i> Backed by feline vets</li>
+            </ul>
           </div>
         </section>
       </main>
 
       <footer class="site-footer">
-        <div class="wrap footer-grid">
+        <div class="wrap footer-grid footer-grid--landing">
           <div class="footer-brand">
             <span class="brand" aria-label="Felica">
               <img class="brand-wordmark" src="./images/felica-logo.png" alt="Felica" width="132" height="42" />
@@ -261,21 +330,36 @@
             <div>
               <span>Explore</span>
               <a href="#how-it-works">How it works</a>
-              <a href="#why">Our story</a>
+              <a href="#coverage">What we cover</a>
+              <a href="#journey">Life stages</a>
+              <a href="#trust">Our vets</a>
             </div>
             <div>
               <span>Support</span>
               <a href="#faq">FAQ</a>
-              <a href="mailto:hello@felica.in">Contact</a>
+              <a href="mailto:hello@felica.in">Contact us</a>
+              <a href="#">Privacy policy</a>
+              <a href="#">Terms</a>
             </div>
           </nav>
-        </div>
-        <div class="wrap footer-bottom">
-          <p>&copy; 2026 Felica. Not intended to diagnose, treat, cure, or prevent disease.</p>
-          <div class="footer-legal">
-            <a href="#">Privacy</a>
-            <a href="#">Terms</a>
+          <div class="footer-newsletter">
+            <span>Join our community</span>
+            <form class="footer-newsletter-form" action="#" method="post" onsubmit="return false;">
+              <label class="visually-hidden" for="footer-email">Email address</label>
+              <input id="footer-email" type="email" name="email" placeholder="Your email" autocomplete="email" />
+              <button type="submit" aria-label="Subscribe">
+                <span aria-hidden="true">→</span>
+              </button>
+            </form>
           </div>
+        </div>
+        <div class="wrap footer-bottom footer-bottom--landing">
+          <div class="footer-social" aria-label="Social media">
+            <a href="#" aria-label="Instagram">IG</a>
+            <a href="#" aria-label="Facebook">FB</a>
+            <a href="#" aria-label="YouTube">YT</a>
+          </div>
+          <p>&copy; 2026 Felica. Not intended to diagnose, treat, cure, or prevent disease.</p>
         </div>
       </footer>
     </div>
@@ -306,8 +390,8 @@
       </footer>
     </div>
 
-    <script src="./site-icons.js?v=hc2"></script>
+    <script src="./site-icons.js?v=hc3"></script>
     <script src="./quiz-visuals.js?v=hc52"></script>
-    <script src="./script.js?v=hc90"></script>
+    <script src="./script.js?v=hc100"></script>
   </body>
 </html>

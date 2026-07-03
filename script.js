@@ -31,14 +31,16 @@ const HERO_VARIANTS = {
   water: {
     headlineHook: "Drinking more water than usual?",
     headline: "Find out if it's normal — or a sign kidneys or thyroid need a vet look.",
-    consequence: "Most cats don't show symptoms until much of their kidney function is already gone.",
+    lead: "Early insights. Expert guidance. Better health for a longer life.",
     cta: "Check for Early Kidney Disease",
+    image: "./images/hero-water.png?v=9",
   },
   drinking: {
     headlineHook: "Drinking more water than usual?",
     headline: "Find out if it's normal — or a sign kidneys or thyroid need a vet look.",
-    consequence: "Most cats don't show symptoms until much of their kidney function is already gone.",
+    lead: "Early insights. Expert guidance. Better health for a longer life.",
     cta: "Check for Early Kidney Disease",
+    image: "./images/hero-water.png?v=9",
   },
   weight: {
     headlineHook: "Has your cat lost weight?",
@@ -67,7 +69,7 @@ const HERO_VARIANTS = {
     headlineHook: "Is your cat peeing outside the litter box?",
     headline:
       "Find out if it's stress — or kidneys, bladder, or pain that needs a vet.",
-    consequence: "Litter box changes often mean discomfort — kidney and bladder issues are common in cats.",
+    lead: "Early insights. Expert guidance. Better health for a longer life.",
     cta: "Find Out If Your Cat Is At Risk",
     image: "./images/hero-litter.png",
   },
@@ -75,7 +77,7 @@ const HERO_VARIANTS = {
     headlineHook: "Is your cat peeing outside the litter box?",
     headline:
       "Find out if it's stress — or kidneys, bladder, or pain that needs a vet.",
-    consequence: "Litter box changes often mean discomfort — kidney and bladder issues are common in cats.",
+    lead: "Early insights. Expert guidance. Better health for a longer life.",
     cta: "Find Out If Your Cat Is At Risk",
     image: "./images/hero-litter.png",
   },
@@ -84,16 +86,10 @@ const HERO_VARIANTS = {
     consequence: "When cats withdraw, it's often because they don't feel well — not because they're being difficult.",
     cta: "Start My Cat's Health Check",
   },
-  hiding: {
-    headlineHook: "30% of cats develop chronic disease.",
-    headline: "Most owners don't notice until it's too late.",
-    consequence: "CKD can't be reversed — but early detection can slow progression.",
-    cta: "Start My Cat's Health Check",
-  },
   default: {
-    headlineHook: "30% of cats develop chronic disease.",
-    headline: "Most owners don't notice until it's too late.",
-    consequence: "CKD can't be reversed — but early detection can slow progression.",
+    headlineHook: "Cats hide their illnesses.",
+    headline: "Find out before it gets late.",
+    lead: "Stress-free. At home.",
     cta: "Start My Cat's Health Check",
   },
 };
@@ -167,25 +163,26 @@ function initHeroPersonalization() {
   const variant = HERO_VARIANTS[concern] || HERO_VARIANTS.default;
 
   const headline = document.getElementById("hero-headline");
+  const heroLead = document.getElementById("hero-lead");
   const ctaLabel = variant.cta || PRIMARY_CTA_LABEL;
 
   if (headline) {
     if (variant.headlineHook) {
-      headline.innerHTML = `<span class="hero-convert-title-hook">${escapeHtml(variant.headlineHook)}</span><span class="hero-convert-title-main">${escapeHtml(variant.headline)}</span>`;
+      headline.innerHTML = `<span class="hero-landing-title-hook">${escapeHtml(variant.headlineHook)}</span><span class="hero-landing-title-main">${escapeHtml(variant.headline)}</span>`;
     } else {
-      headline.textContent = variant.headline;
+      headline.innerHTML = `<span class="hero-landing-title-main">${escapeHtml(variant.headline)}</span>`;
     }
+  }
+  if (heroLead && variant.lead) {
+    heroLead.textContent = variant.lead;
   }
   applySiteCtaLabels(ctaLabel);
 
-  const hero = document.getElementById("hero");
-  if (hero) {
-    const heroBg = HERO_BG_IMAGES[concern];
-    if (heroBg) {
-      hero.style.setProperty("--hero-bg-image", `url("${heroBg}")`);
-    } else {
-      hero.style.removeProperty("--hero-bg-image");
-    }
+  const heroImg = document.getElementById("hero-cat-image");
+  const heroImage =
+    variant.image || HERO_BG_IMAGES[concern] || "./images/hero-cat-portrait.png";
+  if (heroImg) {
+    heroImg.src = heroImage;
   }
 
   document.body.dataset.heroConcern = concern;
