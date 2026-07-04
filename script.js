@@ -219,10 +219,9 @@ function trackGoogleAds(event, props = {}) {
         });
         break;
       case "whatsapp_number_collected":
-        gtag("event", "generate_lead", {
-          currency: "INR",
-          value: 1,
-        });
+        if (typeof window.gtag_report_conversion === "function") {
+          window.gtag_report_conversion();
+        }
         break;
       case "screening_score_computed":
         if (props.source === "api") {

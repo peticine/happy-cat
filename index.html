@@ -43,6 +43,22 @@
 
       gtag('config', 'AW-18298322041');
     </script>
+    <script>
+      function gtag_report_conversion(url) {
+        var callback = function () {
+          if (typeof url != "undefined") {
+            window.location = url;
+          }
+        };
+        gtag("event", "conversion", {
+          send_to: "AW-18298322041/h0s8CN7EwcocEPn4qJVE",
+          value: 1.0,
+          currency: "INR",
+          event_callback: callback,
+        });
+        return false;
+      }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&display=swap" />
@@ -401,6 +417,6 @@
 
     <script src="./site-icons.js?v=hc3"></script>
     <script src="./quiz-visuals.js?v=hc52"></script>
-    <script src="./script.js?v=hc113"></script>
+    <script src="./script.js?v=hc114"></script>
   </body>
 </html>
