@@ -195,8 +195,49 @@ let catAgeProfile = null;
 // ---- Analytics --------------------------------------------------------------
 // Vendor-agnostic event layer. Pushes to window.dataLayer (GA4 / GTM style),
 // dispatches a DOM CustomEvent ("felica:track"), and forwards funnel events
-// to Meta Pixel (fbq) for conversion tracking.
+// to Meta Pixel (fbq) and Google Ads (gtag) for conversion tracking.
 const FUNNEL_EVENTS = [];
+
+function trackGoogleAds(event, props = {}) {
+  if (typeof window.gtag !== "function") return;
+  try {
+    window.gtag("event", event, props);
+
+    switch (event) {
+      case "cta_clicked":
+        if (props.intent === "start_screening") {
+          gtag("event", "select_promotion", {
+            promotion_name: "start_screening",
+            location: props.location,
+          });
+        }
+        break;
+      case "screening_started":
+        gtag("event", "begin_checkout", {
+          item_category: "cat_health_screening",
+          source: props.source,
+        });
+        break;
+      case "whatsapp_number_collected":
+        gtag("event", "generate_lead", {
+          currency: "INR",
+          value: 1,
+        });
+        break;
+      case "screening_score_computed":
+        if (props.source === "api") {
+          gtag("event", "sign_up", {
+            method: "cat_health_screening",
+          });
+        }
+        break;
+      default:
+        break;
+    }
+  } catch (err) {
+    /* ads tag must never break the app */
+  }
+}
 
 function trackMetaPixel(event, props = {}) {
   if (typeof window.fbq !== "function") return;
@@ -273,7 +314,7 @@ function track(event, props = {}) {
   try {
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push(payload);
-    if (typeof window.gtag === "function") window.gtag("event", event, props);
+    trackGoogleAds(event, props);
     window.dispatchEvent(new CustomEvent("felica:track", { detail: payload }));
     trackMetaPixel(event, props);
     if (window.location.search.includes("debugAnalytics")) {
