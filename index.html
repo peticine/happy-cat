@@ -46,15 +46,13 @@
     <script>
       function gtag_report_conversion(url) {
         var callback = function () {
-          if (typeof url != "undefined") {
+          if (typeof(url) != 'undefined') {
             window.location = url;
           }
         };
-        gtag("event", "conversion", {
-          send_to: "AW-18298322041/h0s8CN7EwcocEPn4qJVE",
-          value: 1.0,
-          currency: "INR",
-          event_callback: callback,
+        gtag('event', 'conversion', {
+          'send_to': 'AW-18298322041/boF_COGojMscEPn4qJVE',
+          'event_callback': callback
         });
         return false;
       }
