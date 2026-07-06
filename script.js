@@ -772,6 +772,390 @@ const SCREENING_QUESTIONS = [
   },
 ];
 
+const YOUNG_CAT_AGE_MAX = 6;
+
+const YOUNG_SYMPTOM_THEMES = {
+  appetite: { bg: "#fdf6ec", icon: "#b8721e", ring: "rgba(184, 114, 30, 0.18)" },
+  gut: { bg: "#fff4eb", icon: "#d4622a", ring: "rgba(212, 98, 42, 0.18)" },
+  litter: { bg: "#edf7f1", icon: "#2f8f5b", ring: "rgba(47, 143, 91, 0.18)" },
+  hydration: { bg: "#eef6fc", icon: "#2b7fc7", ring: "rgba(43, 127, 199, 0.18)" },
+  coat: { bg: "#faf3ee", icon: "#c47a45", ring: "rgba(196, 122, 69, 0.18)" },
+  behaviour: { bg: "#f1eef9", icon: "#5f51a6", ring: "rgba(95, 81, 166, 0.18)" },
+  mood: { bg: "#f3eef8", icon: "#7a4fa8", ring: "rgba(122, 79, 168, 0.18)" },
+  dental: { bg: "#f5f0ee", icon: "#8b5a45", ring: "rgba(139, 90, 69, 0.18)" },
+  mobility: { bg: "#eef3f8", icon: "#4a6fa5", ring: "rgba(74, 111, 165, 0.18)" },
+  prevention: { bg: "#eef5fc", icon: "#1559b7", ring: "rgba(21, 89, 183, 0.18)" },
+};
+
+const YOUNG_SYMPTOMS = [
+  {
+    id: "appetite",
+    label: "My cat isn't eating normally",
+    icon: "Utensils",
+    theme: "appetite",
+  },
+  {
+    id: "vomiting",
+    label: "My cat has been throwing up",
+    icon: "Wind",
+    theme: "gut",
+  },
+  {
+    id: "litter",
+    label: "Something's different in the litter box",
+    icon: "Toilet",
+    theme: "litter",
+  },
+  {
+    id: "hydration",
+    label: "My cat is drinking or peeing more than usual",
+    icon: "Droplets",
+    theme: "hydration",
+  },
+  {
+    id: "coat",
+    label: "My cat's coat doesn't look as healthy",
+    icon: "Sparkles",
+    theme: "coat",
+  },
+  {
+    id: "energy",
+    label: "My cat is sleeping more or has less energy",
+    icon: "Moon",
+    theme: "behaviour",
+  },
+  {
+    id: "mood",
+    label: "My cat isn't acting like themselves",
+    icon: "Cat",
+    theme: "mood",
+  },
+  {
+    id: "dental",
+    label: "My cat has bad breath or trouble eating",
+    icon: "Stethoscope",
+    theme: "dental",
+  },
+  {
+    id: "mobility",
+    label: "My cat isn't moving like they used to",
+    icon: "Activity",
+    theme: "mobility",
+  },
+  {
+    id: "prevention",
+    label: "Nothing's wrong — I just want to check on my cat",
+    icon: "Shield",
+    theme: "prevention",
+  },
+];
+
+const YOUNG_SYMPTOM_META = {
+  vomiting: {
+    durationTitle: (name) => `How long has ${name} been vomiting?`,
+    durationLead: "A hairball now and then is common in cats — the pattern is what matters.",
+    detailTitle: "How often this week?",
+    planTitle: "Stomach & gut plan",
+    products: [
+      { name: "Gut comfort supplement", note: "Gentle daily support after upset stomachs" },
+      { name: "Hairball paste", note: "Helps hair pass before it causes blockages" },
+      { name: "Probiotic sachets", note: "Rebuilds gut flora after vomiting episodes" },
+    ],
+  },
+  appetite: {
+    durationTitle: (name) => `How long has ${name} been eating less?`,
+    durationLead: "Cats hide illness — even a few skipped meals can be an early signal.",
+    detailTitle: "What best describes it?",
+    planTitle: "Appetite support plan",
+    products: [
+      { name: "Appetite support gel", note: "Palatable support when meals are being skipped" },
+      { name: "Probiotic paste", note: "Often helps when the gut is off and food is refused" },
+      { name: "Omega supplement", note: "Keeps coat and energy steady while appetite recovers" },
+    ],
+  },
+  litter: {
+    durationTitle: (name) => `How long has ${name}'s litter habit changed?`,
+    durationLead: "Stool and litter changes are one of the clearest signs something's off.",
+    detailTitle: "What's been happening?",
+    planTitle: "Digestion & litter plan",
+    products: [
+      { name: "Digestive probiotic", note: "Supports gut balance after diarrhoea or diet changes" },
+      { name: "Electrolyte support", note: "Helps after loose stool or dehydration risk" },
+      { name: "Monthly deworming", note: "Parasites are a common hidden cause in young cats" },
+    ],
+  },
+  skin: {
+    durationTitle: (name) => `How long has ${name}'s coat seemed off?`,
+    durationLead: "A dull coat or extra shedding is often the first visible change.",
+    detailTitle: "What have you noticed?",
+    planTitle: "Coat & skin plan",
+    products: [
+      { name: "Omega & coat oil", note: "Supports shine and skin recovery from the inside" },
+      { name: "Flea prevention", note: "Coat changes often start with parasites" },
+      { name: "Skin soothe supplement", note: "Daily support when the coat looks thin or dry" },
+    ],
+  },
+  coat: {
+    durationTitle: (name) => `How long has ${name}'s coat seemed off?`,
+    durationLead: "A dull coat or extra shedding is often the first visible change.",
+    detailTitle: "What have you noticed?",
+    planTitle: "Coat & skin plan",
+    products: [
+      { name: "Omega & coat oil", note: "Supports shine and skin recovery from the inside" },
+      { name: "Flea prevention", note: "Coat changes often start with parasites" },
+      { name: "Skin soothe supplement", note: "Daily support when the coat looks thin or dry" },
+    ],
+  },
+  hydration: {
+    durationTitle: (name) => `How long have you noticed more drinking or peeing?`,
+    durationLead: "More water or bigger litter clumps are easy to miss at first.",
+    detailTitle: "What changed first?",
+    planTitle: "Drinking & litter plan",
+    products: [
+      { name: "Urinary support supplement", note: "Gentle daily support for bladder health" },
+      { name: "Wet food variety pack", note: "Extra moisture helps cats that drink more" },
+      { name: "Kidney baseline screen at 7", note: "We'll remind you when it's time for a full check" },
+    ],
+  },
+  energy: {
+    durationTitle: (name) => `How long has ${name} had less energy?`,
+    durationLead: "Sleeping more is often the first sign something feels off.",
+    detailTitle: "What's changed most?",
+    planTitle: "Energy support plan",
+    products: [
+      { name: "Multivitamin drops", note: "Covers gaps when energy or appetite dips" },
+      { name: "Calm support supplement", note: "Gentle daily support when rest increases" },
+      { name: "Monthly wellness check", note: "We'll nudge you if patterns shift again" },
+    ],
+  },
+  mood: {
+    durationTitle: (name) => `How long has ${name} seemed unlike themselves?`,
+    durationLead: "Personality shifts in cats usually mean they don't feel right.",
+    detailTitle: "What stands out most?",
+    planTitle: "Behaviour plan",
+    products: [
+      { name: "Calm support supplement", note: "Helps when stress or discomfort changes behaviour" },
+      { name: "Multivitamin drops", note: "Useful when mood shifts come with eating less" },
+      { name: "Monthly wellness check", note: "We'll nudge you if patterns shift again" },
+    ],
+  },
+  dental: {
+    durationTitle: (name) => `How long has ${name} had mouth trouble?`,
+    durationLead: "Bad breath or chewing oddly often starts before obvious pain.",
+    detailTitle: "What have you noticed?",
+    planTitle: "Dental comfort plan",
+    products: [
+      { name: "Dental care gel", note: "Daily support between professional cleanings" },
+      { name: "Soft food variety", note: "Easier to eat while mouth discomfort settles" },
+      { name: "Dental check reminder", note: "Most cats need a dental look by age 3–4" },
+    ],
+  },
+  mobility: {
+    durationTitle: (name) => `How long has ${name} been moving differently?`,
+    durationLead: "Jumping less or stiffness is easy to blame on age — even in young cats.",
+    detailTitle: "What have you seen?",
+    planTitle: "Mobility support plan",
+    products: [
+      { name: "Joint comfort supplement", note: "Daily support for easier movement" },
+      { name: "Omega & coat oil", note: "Supports joints and inflammation naturally" },
+      { name: "Weight check guide", note: "Extra weight is a common hidden cause" },
+    ],
+  },
+  behaviour: {
+    durationTitle: (name) => `How long has ${name} seemed off?`,
+    durationLead: "When cats withdraw, it's often because they don't feel right — not because they're upset.",
+    detailTitle: "What's changed most?",
+    planTitle: "Energy & behaviour plan",
+    products: [
+      { name: "Calm support supplement", note: "Gentle daily support when stress or discomfort shows" },
+      { name: "Multivitamin drops", note: "Covers gaps when eating or energy is lower than usual" },
+      { name: "Monthly wellness check", note: "We'll nudge you if patterns shift again" },
+    ],
+  },
+  prevention: {
+    durationTitle: () => "Prevention rhythm",
+    durationLead: "",
+    detailTitle: "",
+    planTitle: "Prevention program",
+    products: [
+      { name: "Monthly deworming", note: "Due for most cats — indoor included" },
+      { name: "Flea prevention", note: "Year-round in most Indian homes" },
+      { name: "Daily omega & gut support", note: "Baseline wellness for cats under 7" },
+    ],
+  },
+};
+
+const YOUNG_SYMPTOM_ALIASES = {
+  vomiting: "vomiting",
+  nausea: "vomiting",
+  gut: "vomiting",
+  eating: "appetite",
+  appetite: "appetite",
+  litter: "litter",
+  urination: "hydration",
+  pee: "hydration",
+  water: "hydration",
+  drinking: "hydration",
+  diarrhoea: "litter",
+  skin: "coat",
+  coat: "coat",
+  quiet: "mood",
+  sleeping: "energy",
+  behaviour: "mood",
+  behavior: "mood",
+  dental: "dental",
+  mobility: "mobility",
+  prevention: "prevention",
+  wellness: "prevention",
+};
+
+const YOUNG_DURATION_OPTIONS = [
+  { id: "today", label: "Just today" },
+  { id: "few_days", label: "3–7 days" },
+  { id: "one_two_weeks", label: "1–2 weeks" },
+  { id: "longer", label: "Longer" },
+];
+
+const YOUNG_DETAIL_QUESTIONS = {
+  vomiting: {
+    lead: "How often has your cat vomited this week?",
+    options: [
+      { id: "once", label: "Once" },
+      { id: "two_three", label: "2–3 times" },
+      { id: "four_plus", label: "4 or more times" },
+    ],
+  },
+  appetite: {
+    lead: "What best describes the change?",
+    options: [
+      { id: "less", label: "Eating less than usual" },
+      { id: "refusing", label: "Refusing food" },
+      { id: "picky", label: "Picky, but still eating some" },
+    ],
+  },
+  litter: {
+    lead: "Which of these have you seen?",
+    options: [
+      { id: "diarrhoea", label: "Loose or watery stool" },
+      { id: "outside_box", label: "Accidents outside the litter box" },
+      { id: "straining", label: "Straining or crying in the box" },
+    ],
+  },
+  skin: {
+    lead: "What have you noticed?",
+    options: [
+      { id: "scratching", label: "Scratching or licking more than usual" },
+      { id: "fleas", label: "Fleas or tiny black specks in the fur" },
+      { id: "hair_loss", label: "Bald patches or thinning fur" },
+    ],
+  },
+  coat: {
+    lead: "What have you noticed?",
+    options: [
+      { id: "dull", label: "Coat looks dull or dry" },
+      { id: "shedding", label: "Shedding more than usual" },
+      { id: "thin", label: "Fur looks thin or patchy" },
+    ],
+  },
+  hydration: {
+    lead: "What did you notice first?",
+    options: [
+      { id: "drinking", label: "Emptying the water bowl more" },
+      { id: "peeing", label: "Bigger or more frequent litter clumps" },
+      { id: "both", label: "Both drinking and peeing more" },
+    ],
+  },
+  energy: {
+    lead: "Pick the main change you've noticed.",
+    options: [
+      { id: "few_days", label: "Sleeping more than usual" },
+      { id: "one_two_weeks", label: "Less playful or curious" },
+      { id: "gradual", label: "Tiring quickly after small activity" },
+    ],
+  },
+  mood: {
+    lead: "What stands out most?",
+    options: [
+      { id: "hiding", label: "Hiding or avoiding people" },
+      { id: "irritable", label: "More irritable or jumpy" },
+      { id: "withdrawn", label: "Just seems unlike themselves" },
+    ],
+  },
+  dental: {
+    lead: "What have you noticed?",
+    options: [
+      { id: "breath", label: "Bad breath" },
+      { id: "chewing", label: "Chewing on one side or dropping food" },
+      { id: "pawing", label: "Pawing at the mouth" },
+    ],
+  },
+  mobility: {
+    lead: "What have you seen?",
+    options: [
+      { id: "jumping", label: "Not jumping up like before" },
+      { id: "stiff", label: "Stiff or slow when getting up" },
+      { id: "limping", label: "Limping or favouring a leg" },
+    ],
+  },
+  behaviour: {
+    lead: "Pick the main change you've noticed.",
+    options: [
+      { id: "few_days", label: "Sleeping more than usual" },
+      { id: "one_two_weeks", label: "Hiding or avoiding people" },
+      { id: "gradual", label: "Less playful or curious" },
+    ],
+  },
+};
+
+const FELICA_PREVENTION_PROGRAM = {
+  name: "Felica Prevention Program",
+  price: "₹799",
+  period: "month",
+  note: "Everything in your plan, delivered monthly. Adjusts as your cat grows.",
+};
+
+function getYoungSymptomMeta() {
+  const id = getPrimaryYoungSymptom()?.id || "prevention";
+  return YOUNG_SYMPTOM_META[id] || YOUNG_SYMPTOM_META.prevention;
+}
+
+function getSelectedYoungSymptoms() {
+  return quizState.youngSymptoms || [];
+}
+
+function getSelectedIssueSymptoms() {
+  return getSelectedYoungSymptoms().filter((s) => s.id !== "prevention");
+}
+
+function getPrimaryYoungSymptom() {
+  const issues = getSelectedIssueSymptoms();
+  const answers = getYoungDetailAnswers();
+
+  for (const issue of issues) {
+    if (YOUNG_URGENT_DETAIL_IDS.has(answers[issue.id]?.id)) return issue;
+  }
+  for (const issue of issues) {
+    if (answers[issue.id]?.id === "refusing") return issue;
+  }
+  if (issues.length) return issues[0];
+  return getSelectedYoungSymptoms()[0] || null;
+}
+
+function isYoungSymptomSelected(id) {
+  return getSelectedYoungSymptoms().some((s) => s.id === id);
+}
+
+function getYoungSymptomTheme(symptomId) {
+  const symptom = YOUNG_SYMPTOMS.find((s) => s.id === symptomId);
+  return YOUNG_SYMPTOM_THEMES[symptom?.theme || "prevention"];
+}
+
+function refreshFlowIcons() {
+  if (typeof window.initFelicaIcons === "function") {
+    window.initFelicaIcons(assflowMain);
+  }
+}
+
 // Parent stories shown during the check — matched to question topic and result tier.
 const FLOW_STORIES = {
   mochi: {
@@ -873,7 +1257,497 @@ function getFlowStepSuffix() {
 
 function setFlowProgramLabel() {
   if (!assflowProgramLabel) return;
-  assflowProgramLabel.textContent = "Cat health screening";
+  assflowProgramLabel.textContent = isYoungFlow() ? "Cat care" : "Cat health screening";
+}
+
+function isYoungFlow() {
+  return quizState.flowTrack === "young";
+}
+
+function isYoungCatAge(years) {
+  return years != null && years <= YOUNG_CAT_AGE_MAX;
+}
+
+function isPreventionPath() {
+  const selected = getSelectedYoungSymptoms();
+  return selected.length === 1 && selected[0].id === "prevention";
+}
+
+function getYoungConnectStep() {
+  if (isPreventionPath()) return 3;
+  return 4 + getSelectedIssueSymptoms().length;
+}
+
+function getYoungReviewStep() {
+  return getYoungConnectStep() + 1;
+}
+
+function getYoungPlanStep() {
+  return getYoungConnectStep() + 2;
+}
+
+function getYoungStepCount() {
+  return getYoungPlanStep();
+}
+
+function formatYoungStepLabel(step) {
+  return `Step ${step} of ${getYoungStepCount()}`;
+}
+
+function getYoungDetailAnswers() {
+  return quizState.youngDetailAnswers || {};
+}
+
+function getIssueDetailAnswer(symptomId) {
+  return getYoungDetailAnswers()[symptomId] || null;
+}
+
+const YOUNG_URGENT_DETAIL_IDS = new Set(["straining", "four_plus", "limping", "pawing", "both"]);
+
+function getYoungSymptomFromUrl() {
+  const concern = getHeroConcernFromUrl();
+  const mapped = YOUNG_SYMPTOM_ALIASES[concern];
+  if (!mapped) return null;
+  return YOUNG_SYMPTOMS.find((s) => s.id === mapped) || null;
+}
+
+function getCatDisplayName() {
+  const name = quizState.catName?.trim();
+  return name || "your cat";
+}
+
+function getYoungSymptomLabel() {
+  const selected = getSelectedYoungSymptoms();
+  if (!selected.length) return "Not specified";
+  return selected.map((s) => s.label).join(" · ");
+}
+
+function getYoungUrgentReasons() {
+  const reasons = [];
+  const answers = getYoungDetailAnswers();
+  const durationId = quizState.youngDuration?.id;
+  const symptomIds = getSelectedIssueSymptoms().map((s) => s.id);
+
+  if (answers.litter?.id === "straining") {
+    reasons.push("Straining in the litter box can block urine — this is an emergency in cats.");
+  }
+  if (answers.vomiting?.id === "four_plus") {
+    reasons.push("Frequent vomiting needs same-day assessment.");
+  }
+  if (answers.mobility?.id === "limping") {
+    reasons.push("Limping should be examined in person.");
+  }
+  if (answers.dental?.id === "pawing") {
+    reasons.push("Mouth pain can make cats stop eating quickly.");
+  }
+  if (answers.hydration?.id === "both") {
+    reasons.push("Drinking and peeing more together needs prompt bloodwork.");
+  }
+  if (answers.appetite?.id === "refusing" && durationId && durationId !== "today") {
+    reasons.push("Food refusal that has continued needs an in-person exam.");
+  }
+  if (symptomIds.length >= 3) {
+    reasons.push("Several changes at once usually need a hands-on vet exam.");
+  }
+  if (
+    symptomIds.length >= 2 &&
+    (durationId === "one_two_weeks" || durationId === "longer")
+  ) {
+    reasons.push("Multiple issues lasting weeks should be seen in clinic.");
+  }
+  if (symptomIds.includes("litter") && symptomIds.includes("hydration")) {
+    reasons.push("Litter and drinking changes together need an in-person workup.");
+  }
+
+  if (!reasons.length) {
+    reasons.push("What you described needs a physical exam — not a phone consultation.");
+  }
+  return reasons;
+}
+
+function resolveYoungUrgency() {
+  if (isPreventionPath()) return "prevention";
+
+  const symptomIds = getSelectedIssueSymptoms().map((s) => s.id);
+  const durationId = quizState.youngDuration?.id;
+  const answers = getYoungDetailAnswers();
+  const detailIds = Object.values(answers).map((a) => a?.id).filter(Boolean);
+
+  for (const id of detailIds) {
+    if (YOUNG_URGENT_DETAIL_IDS.has(id)) return "urgent";
+  }
+  if (detailIds.includes("refusing") && durationId && durationId !== "today") return "urgent";
+
+  if (symptomIds.length >= 3) return "urgent";
+  if (
+    symptomIds.length >= 2 &&
+    (durationId === "one_two_weeks" || durationId === "longer")
+  ) {
+    return "urgent";
+  }
+  if (durationId === "longer" && symptomIds.some((id) => ["vomiting", "appetite", "litter"].includes(id))) {
+    return "urgent";
+  }
+  if (symptomIds.includes("litter") && symptomIds.includes("hydration")) return "urgent";
+
+  return "consult";
+}
+
+function buildYoungCarePlan() {
+  const name = getCatDisplayName();
+  const age = quizState.age;
+  const symptomId = getPrimaryYoungSymptom()?.id || "prevention";
+  const durationId = quizState.youngDuration?.id;
+  const detailId = getIssueDetailAnswer(symptomId)?.id;
+  const meta = getYoungSymptomMeta();
+  const isPrevention = isPreventionPath();
+  const issues = getSelectedIssueSymptoms();
+  const detailAnswers = getYoungDetailAnswers();
+
+  const heard = isPrevention
+    ? [`${name} is ${age} ${age === 1 ? "year" : "years"} old`, "Routine prevention check-in"]
+    : [
+        `${name} is ${age} ${age === 1 ? "year" : "years"} old`,
+        ...issues.map((issue) => {
+          const detail = detailAnswers[issue.id];
+          return detail ? `${issue.label} — ${detail.label}` : issue.label;
+        }),
+        quizState.youngDuration?.label ? `Overall duration: ${quizState.youngDuration.label}` : null,
+      ].filter(Boolean);
+
+  const planBodies = {
+    vomiting: {
+      once: {
+        summary: `${name} vomited once this week — often a hairball or quick stomach upset at this age.`,
+        watch: [
+          "Withhold food for 4–6 hours, then offer a small bland meal.",
+          "Brush more often this week if hairballs are common.",
+        ],
+        escalate: "See your vet if it happens again within 48 hours or food is refused.",
+      },
+      two_three: {
+        summary: `A few vomiting episodes in a week is worth taking seriously for ${name}.`,
+        watch: [
+          "Offer smaller meals and note whether water intake is normal.",
+          "Check litter — diarrhoea together changes urgency.",
+        ],
+        escalate: "Book a vet visit within 24–48 hours if vomiting continues.",
+      },
+      four_plus: {
+        summary: `Frequent vomiting in ${name} needs a closer look soon.`,
+        watch: [
+          "Make sure water is available — don't wait to see if it passes.",
+          "Note energy level and whether any food stays down.",
+        ],
+        escalate: "See your vet today if vomiting is frequent or your cat is lethargic.",
+      },
+      default: {
+        summary: "This pattern is often mild stomach upset in younger cats — but frequency matters.",
+        watch: [
+          "Skip one meal, then offer a small bland portion if appetite returns.",
+          "Note any lethargy, blood in vomit, or refusal to drink.",
+        ],
+        escalate: "See your vet today if vomiting is frequent, or your cat won't drink or play.",
+      },
+    },
+    appetite: {
+      refusing: {
+        summary: `${name} refusing food is a signal worth acting on — cats can decline quickly.`,
+        watch: [
+          "Warm wet food slightly and offer a favourite flavour in small amounts.",
+          "Check if vomiting or litter changes started at the same time.",
+        ],
+        escalate: "See your vet within 24 hours if no food is eaten at all.",
+      },
+      less: {
+        summary: `${name} is eating less than usual — early appetite shifts are easy to miss.`,
+        watch: [
+          "Track how much is left in the bowl for the next two days.",
+          "Try smaller, more frequent meals instead of one large serving.",
+        ],
+        escalate: "See your vet if intake keeps dropping beyond 48 hours.",
+      },
+      picky: {
+        summary: `${name} seems picky rather than unwell — still worth watching closely.`,
+        watch: [
+          "Stick to one food type for 3 days before switching again.",
+          "Note weight by feel — ribs shouldn't get sharper.",
+        ],
+        escalate: "See your vet if picky eating lasts more than a week or weight drops.",
+      },
+      default: {
+        summary: "Appetite shifts are easy to miss in cats. Catching them early is worthwhile.",
+        watch: [
+          "Warm food slightly and offer smaller portions more often.",
+          "Check if litter and water habits have changed too.",
+        ],
+        escalate: "See your vet within 24–48 hours if food refusal continues beyond a day.",
+      },
+    },
+    litter: {
+      diarrhoea: {
+        summary: `Loose stool in ${name} is often diet or parasites — sometimes both.`,
+        watch: [
+          "Note colour and frequency for the next 24 hours.",
+          "Keep water fresh — dehydration happens fast with diarrhoea.",
+        ],
+        escalate: "See your vet if diarrhoea lasts more than 48 hours or blood is seen.",
+      },
+      outside_box: {
+        summary: `Litter box accidents in ${name} can be stress — or pain while toileting.`,
+        watch: [
+          "Add a second litter box in a quiet spot.",
+          "Note if straining happens or stool looks abnormal.",
+        ],
+        escalate: "See your vet promptly if accidents continue or straining is seen.",
+      },
+      straining: {
+        summary: `Straining in the litter box needs attention — especially in male cats.`,
+        watch: [
+          "Check if any urine is produced at all.",
+          "Keep the litter box clean and easy to reach.",
+        ],
+        escalate: "See your vet today — straining to urinate can be an emergency.",
+      },
+      default: {
+        summary: "Litter and digestion changes can be stress — or something that needs a closer look.",
+        watch: [
+          "Keep litter clean and note stool consistency for two days.",
+          "Make sure water is fresh and easy to reach.",
+        ],
+        escalate: "See your vet promptly if there's straining, pain, or no urination.",
+      },
+    },
+    skin: {
+      fleas: {
+        summary: `Fleas on ${name} need treating on the cat and in the home environment.`,
+        watch: [
+          "Wash bedding on a hot cycle and vacuum soft furnishings.",
+          "Treat all pets in the home — not just the itchy one.",
+        ],
+        escalate: "See your vet if scratching continues after flea treatment starts.",
+      },
+      scratching: {
+        summary: `${name} is scratching more than usual — fleas or allergies are the usual causes.`,
+        watch: [
+          "Check the base of the tail and neck for flea dirt.",
+          "Avoid new treats, detergents, or sprays this week.",
+        ],
+        escalate: "See your vet if skin breaks open or scratching keeps worsening.",
+      },
+      hair_loss: {
+        summary: `Patchy hair loss in ${name} shouldn't wait — parasites, allergy, or infection are common.`,
+        watch: [
+          "Photograph patches to track spread over a few days.",
+          "Stop any new food or treats until reviewed.",
+        ],
+        escalate: "See your vet within a few days — spreading bald patches need a look.",
+      },
+      default: {
+        summary: "Itching and coat changes are common — parasites and allergies are the usual suspects.",
+        watch: [
+          "Check for fleas at the base of the tail and around the neck.",
+          "Avoid new treats or detergents until you've spoken with a vet.",
+        ],
+        escalate: "See your vet if hair loss spreads or scratching breaks the skin.",
+      },
+    },
+    coat: {
+      dull: {
+        summary: `${name}'s coat looks dull — often diet, parasites, or early illness showing on the outside.`,
+        watch: [
+          "Check for fleas at the tail base even if there's no scratching.",
+          "Note whether eating and energy are normal too.",
+        ],
+        escalate: "See your vet if the coat keeps dulling or shedding increases.",
+      },
+      default: {
+        summary: `A change in ${name}'s coat is often the first thing you can see from the outside.`,
+        watch: [
+          "Photograph the coat in good light to track changes.",
+          "Check eating, energy, and litter at the same time.",
+        ],
+        escalate: "See your vet if the coat keeps thinning or patchy areas spread.",
+      },
+    },
+    hydration: {
+      drinking: {
+        summary: `${name} is drinking more — worth noting even in a young cat.`,
+        watch: [
+          "Measure roughly how often you refill the water bowl.",
+          "Check litter clumps for size and frequency too.",
+        ],
+        escalate: "See your vet if heavy drinking continues beyond a few days.",
+      },
+      peeing: {
+        summary: `More pee or bigger clumps in the litter box is a change worth following up.`,
+        watch: [
+          "Note clump size and how often the box is used.",
+          "Make sure fresh water is always available.",
+        ],
+        escalate: "See your vet if litter changes continue or your cat seems uncomfortable.",
+      },
+      both: {
+        summary: `More drinking and peeing together is a pattern that deserves a closer look.`,
+        watch: [
+          "Track both water bowl refills and litter clumps for 48 hours.",
+          "Note appetite and weight by feel.",
+        ],
+        escalate: "Book a vet visit this week to discuss the pattern.",
+      },
+      default: {
+        summary: `Changes in drinking or peeing are easy to miss — but cats often show illness here first.`,
+        watch: [
+          "Note water bowl refills and litter clump size for two days.",
+          "Watch appetite and energy alongside.",
+        ],
+        escalate: "See your vet if the pattern continues beyond a week.",
+      },
+    },
+    energy: {
+      default: {
+        summary: `${name} has less energy than usual — often the first sign something feels off.`,
+        watch: [
+          "Note whether they rouse for food and favourite sounds.",
+          "Check litter and water while they're resting more.",
+        ],
+        escalate: "See your vet if low energy lasts more than a few days or meals are skipped.",
+      },
+    },
+    mood: {
+      default: {
+        summary: `${name} isn't acting like themselves — personality shifts often mean discomfort.`,
+        watch: [
+          "Offer a quiet resting spot and monitor eating and litter.",
+          "Note whether withdrawal is constant or only around noise.",
+        ],
+        escalate: "See your vet if unusual behaviour lasts more than a few days.",
+      },
+    },
+    dental: {
+      default: {
+        summary: `Mouth trouble in ${name} can make eating painful before it's obvious.`,
+        watch: [
+          "Offer soft food and watch for drooling or pawing at the mouth.",
+          "Smell breath when your cat yawns or comes close.",
+        ],
+        escalate: "See your vet within a week — dental pain worsens quickly in cats.",
+      },
+    },
+    mobility: {
+      default: {
+        summary: `${name} is moving differently — stiffness isn't only an older-cat problem.`,
+        watch: [
+          "Note whether jumping to favourite spots has stopped.",
+          "Keep food, water, and litter easy to reach.",
+        ],
+        escalate: "See your vet if limping, stiffness, or reluctance to move continues.",
+      },
+    },
+    behaviour: {
+      few_days: {
+        summary: `${name} is sleeping more than usual — often the first sign something feels off.`,
+        watch: [
+          "Note whether they rouse for food and favourite sounds.",
+          "Check litter and water while they're resting more.",
+        ],
+        escalate: "See your vet if sleepiness lasts more than a few days or meals are skipped.",
+      },
+      one_two_weeks: {
+        summary: `${name} has been hiding or avoiding people — cats often withdraw when they don't feel right.`,
+        watch: [
+          "Leave food and water near their hiding spot.",
+          "Avoid forcing interaction — watch from a distance.",
+        ],
+        escalate: "Book a vet visit this week — hiding that persists usually has a physical cause.",
+      },
+      gradual: {
+        summary: `${name} seems less playful or curious — gradual changes are easy to normalise.`,
+        watch: [
+          "Compare jumping, grooming, and play to what's normal for them.",
+          "Weigh by feel or scale if possible.",
+        ],
+        escalate: "See your vet if the trend continues over the next fortnight.",
+      },
+      default: {
+        summary: "When cats withdraw, it's often because they don't feel quite right.",
+        watch: [
+          "Offer a quiet resting spot and monitor eating and litter use.",
+          "Note whether hiding is constant or only around noise or visitors.",
+        ],
+        escalate: "See your vet if low energy lasts more than a few days or appetite drops.",
+      },
+    },
+    prevention: {
+      default: {
+        summary: `No urgent flags for ${name} — a steady prevention rhythm is the right next step.`,
+        watch: [
+          "Keep wet food in the weekly routine for hydration.",
+          "Note appetite, litter, and energy once a month.",
+        ],
+        escalate: "We'll remind you when it's time for a full chronic screen at age 7.",
+      },
+    },
+  };
+
+  const symptomPlans = planBodies[symptomId] || planBodies.prevention;
+  const body = symptomPlans[detailId] || symptomPlans.default;
+
+  if (durationId === "today" && !isPrevention && symptomId !== "mood") {
+    body.watch = [`Started recently — recheck ${name} closely over the next 24 hours.`, ...body.watch];
+  }
+  if (durationId === "longer" && !isPrevention) {
+    body.escalate = `Because this has gone on longer, ${body.escalate.charAt(0).toLowerCase()}${body.escalate.slice(1)}`;
+  }
+
+  const productMap = new Map();
+  const symptomSources = isPrevention
+    ? [getPrimaryYoungSymptom()].filter(Boolean)
+    : getSelectedIssueSymptoms().length
+      ? getSelectedIssueSymptoms()
+      : [getPrimaryYoungSymptom()].filter(Boolean);
+  symptomSources.forEach((symptom) => {
+    (YOUNG_SYMPTOM_META[symptom.id]?.products || []).forEach((product) => {
+      if (!productMap.has(product.name)) productMap.set(product.name, product);
+    });
+  });
+  const products = [...productMap.values()].slice(0, 4);
+
+  let summary = body.summary;
+  if (!isPrevention && issues.length > 1) {
+    summary = `You noticed a few changes. Focusing first on what matters most: ${summary}`;
+  }
+
+  const urgency = resolveYoungUrgency();
+
+  if (urgency === "urgent") {
+    const urgentReasons = getYoungUrgentReasons();
+    return {
+      heard,
+      urgency,
+      urgentReasons,
+      planTitle: "Go to a vet clinic now",
+      summary: `${name} needs an in-person vet visit today. Felica cannot help with urgent cases — please go to a nearby veterinary clinic or emergency vet.`,
+      watch: [
+        "Leave now for the nearest open veterinary clinic or emergency vet.",
+        "If your clinic is closed, go to an emergency vet — don't wait until morning.",
+        "Bring notes on when each symptom started and what you've noticed.",
+      ],
+      escalate: null,
+      products: [],
+      isPrevention: false,
+    };
+  }
+
+  return {
+    heard,
+    ...body,
+    summary,
+    urgency,
+    planTitle: issues.length > 1 ? "Your cat's care plan" : meta.planTitle,
+    products: products.length ? products : meta.products,
+    isPrevention,
+  };
 }
 
 function ageRiskPoints(years) {
@@ -965,8 +1839,14 @@ function scoreQuiz() {
 
 let quizState = {
   step: 1,
+  flowTrack: "chronic",
   age: null,
   answers: {},
+  youngSymptoms: [],
+  youngDuration: null,
+  youngDetailAnswers: {},
+  catName: null,
+  contactMethod: "call",
   whatsappNumber: null,
   screeningResult: null,
 };
@@ -974,8 +1854,14 @@ let quizState = {
 function resetQuizState() {
   quizState = {
     step: 1,
+    flowTrack: catAge != null && isYoungCatAge(catAge) ? "young" : "chronic",
     age: catAge != null ? catAge : null,
     answers: {},
+    youngSymptoms: [],
+    youngDuration: null,
+    youngDetailAnswers: {},
+    catName: null,
+    contactMethod: "call",
     whatsappNumber: null,
     screeningResult: null,
   };
@@ -1100,7 +1986,10 @@ function setFlowProgress(step, total) {
 }
 
 function updateFlowChrome() {
-  if (assflowBack) assflowBack.hidden = quizState.step <= 1 || quizState.step === getResultStep();
+  const terminalStep = isYoungFlow() ? getYoungPlanStep() : getResultStep();
+  if (assflowBack) {
+    assflowBack.hidden = quizState.step <= 1 || quizState.step === terminalStep;
+  }
 }
 
 function setFlowFooter({ label = "Next", visible = true, disabled = true } = {}) {
@@ -1148,10 +2037,9 @@ function closeFlow() {
 }
 
 function flowBack() {
-  if (quizState.step > 1) {
-    quizState.step -= 1;
-    renderFlowStep();
-  }
+  if (quizState.step <= 1) return;
+  quizState.step -= 1;
+  renderFlowStep();
 }
 
 function renderAgeStep() {
@@ -1161,7 +2049,7 @@ function renderAgeStep() {
     <div class="flow-step">
       <p class="flow-step-label">${formatFlowStepLabel(1, "About your cat")}</p>
       <h1 class="flow-title" id="assflow-title">How old is your cat?</h1>
-      <p class="flow-lead">Age helps us interpret your answers. The same five questions apply at every life stage.</p>
+      <p class="flow-lead">Age helps us choose the right next steps for your cat.</p>
       <div class="flow-age">
         <label class="flow-age-label" for="flow-age-input">Age in years</label>
         <input
@@ -1217,6 +2105,11 @@ function renderAgeStep() {
     if (error) error.hidden = true;
     quizState.age = years;
     quizState.answers = {};
+    quizState.flowTrack = isYoungCatAge(years) ? "young" : "chronic";
+    quizState.youngSymptoms = [];
+    quizState.youngDuration = null;
+    quizState.youngDetailAnswers = {};
+    quizState.catName = null;
     setFlowProgramLabel();
     track("screening_step_completed", {
       step: "age",
@@ -1224,6 +2117,7 @@ function renderAgeStep() {
       cat_age: years,
       human_age: catToHumanAge(years),
       age_band: ageBandLabel(years),
+      flow_track: quizState.flowTrack,
     });
     quizState.step = 2;
     renderFlowStep();
@@ -1466,11 +2360,640 @@ function bindAgingResultHandlers() {
   });
 }
 
+function bindYoungPlanHandlers() {
+  assflowMain.querySelectorAll("[data-flow-done]").forEach((btn) => {
+    btn.addEventListener("click", closeFlow);
+  });
+
+  assflowMain.querySelector("[data-young-program]")?.addEventListener("click", () => {
+    track("cta_clicked", {
+      location: "young_care_plan",
+      intent: "prevention_program",
+      cat_age: quizState.age,
+      symptoms: getSelectedYoungSymptoms().map((s) => s.id),
+    });
+  });
+}
+
+function renderYoungOptionCards(name, options, savedId, onSelect) {
+  return `
+    <fieldset class="flow-fieldset young-option-fieldset">
+      <legend class="visually-hidden">${name}</legend>
+      <div class="young-option-grid">
+        ${options
+          .map(
+            (opt) => `
+          <label class="young-option-card">
+            <input
+              type="radio"
+              name="${name}"
+              value="${opt.id}"
+              data-label="${escapeHtml(opt.label)}"
+              ${savedId === opt.id ? "checked" : ""}
+            />
+            <span class="young-option-card-label">${escapeHtml(opt.label)}</span>
+          </label>`
+          )
+          .join("")}
+      </div>
+    </fieldset>`;
+}
+
+function renderYoungSymptomStep() {
+  setFlowProgress(1, getYoungStepCount());
+  setFlowProgramLabel();
+  const preselected = getYoungSymptomFromUrl();
+  if (preselected && !getSelectedYoungSymptoms().length) {
+    quizState.youngSymptoms = [{ id: preselected.id, label: preselected.label }];
+  }
+
+  const selectedCount = getSelectedIssueSymptoms().length;
+  const multiHint =
+    selectedCount > 1
+      ? `<p class="flow-lead young-issue-multi-hint">You selected ${selectedCount} changes — we'll ask a quick follow-up for each.</p>`
+      : "";
+
+  assflowMain.innerHTML = `
+    <div class="flow-step young-issue-screen">
+      <p class="flow-step-label">${formatYoungStepLabel(2)}</p>
+      <h1 class="flow-title" id="assflow-title">What's been different lately?</h1>
+      <p class="flow-lead">Select everything you've noticed.</p>
+      ${multiHint}
+      <div class="young-issue-list" role="group" aria-label="Changes you've noticed">
+        ${YOUNG_SYMPTOMS.map((symptom) => {
+          const theme = YOUNG_SYMPTOM_THEMES[symptom.theme];
+          const selected = isYoungSymptomSelected(symptom.id) ? " is-selected" : "";
+          return `
+          <label
+            class="young-issue-card young-issue-card--multi${selected}"
+            data-symptom-id="${symptom.id}"
+            style="--issue-bg:${theme.bg};--issue-icon:${theme.icon};--issue-ring:${theme.ring}"
+          >
+            <input
+              type="checkbox"
+              name="young-symptoms"
+              value="${symptom.id}"
+              data-label="${escapeHtml(symptom.label)}"
+              ${selected ? "checked" : ""}
+            />
+            <span class="young-issue-icon-wrap" aria-hidden="true">
+              <i data-lucide="${symptom.icon}"></i>
+            </span>
+            <span class="young-issue-copy">
+              <span class="young-issue-label">${escapeHtml(symptom.label)}</span>
+            </span>
+            <span class="young-issue-check" aria-hidden="true">
+              <i data-lucide="check"></i>
+            </span>
+          </label>`;
+        }).join("")}
+      </div>
+    </div>
+  `;
+
+  const updateContinue = () => {
+    setFlowFooter({
+      visible: true,
+      disabled: getSelectedYoungSymptoms().length === 0,
+      label: "Continue",
+    });
+  };
+
+  refreshFlowIcons();
+  updateContinue();
+
+  assflowMain.querySelectorAll('.young-issue-card input[name="young-symptoms"]').forEach((input) => {
+    input.addEventListener("change", () => {
+      const symptom = YOUNG_SYMPTOMS.find((s) => s.id === input.value);
+      if (!symptom) return;
+
+      let next = getSelectedYoungSymptoms().filter((s) => s.id !== symptom.id);
+      if (input.checked) {
+        if (symptom.id === "prevention") {
+          next = [{ id: symptom.id, label: symptom.label }];
+        } else {
+          next = next.filter((s) => s.id !== "prevention");
+          next.push({ id: symptom.id, label: symptom.label });
+        }
+      }
+
+      quizState.youngSymptoms = next;
+      quizState.youngDuration = null;
+      quizState.youngDetailAnswers = {};
+
+      const card = input.closest(".young-issue-card");
+      card?.classList.toggle("is-selected", input.checked);
+
+      if (symptom.id === "prevention" && input.checked) {
+        assflowMain.querySelectorAll('.young-issue-card input[name="young-symptoms"]').forEach((other) => {
+          if (other.value !== "prevention") {
+            other.checked = false;
+            other.closest(".young-issue-card")?.classList.remove("is-selected");
+          }
+        });
+      }
+
+      updateContinue();
+      const multiHintEl = assflowMain.querySelector(".young-issue-multi-hint");
+      const issueCount = getSelectedIssueSymptoms().length;
+      if (issueCount > 1) {
+        if (!multiHintEl) {
+          const hint = document.createElement("p");
+          hint.className = "flow-lead young-issue-multi-hint";
+          hint.textContent = `You selected ${issueCount} changes — we'll ask a quick follow-up for each.`;
+          assflowMain.querySelector(".flow-lead")?.after(hint);
+        } else {
+          multiHintEl.textContent = `You selected ${issueCount} changes — we'll ask a quick follow-up for each.`;
+        }
+        setFlowProgress(1, getYoungStepCount());
+        assflowMain.querySelector(".flow-step-label").textContent = formatYoungStepLabel(2);
+      } else if (multiHintEl) {
+        multiHintEl.remove();
+        setFlowProgress(1, getYoungStepCount());
+        assflowMain.querySelector(".flow-step-label").textContent = formatYoungStepLabel(2);
+      }
+    });
+  });
+
+  bindFlowContinue(() => {
+    if (!getSelectedYoungSymptoms().length) return;
+    track("young_symptoms_selected", {
+      symptoms: getSelectedYoungSymptoms().map((s) => s.id),
+      cat_age: quizState.age,
+    });
+    quizState.step = 3;
+    renderFlowStep();
+  });
+}
+
+function renderYoungDurationStep() {
+  setFlowProgress(2, getYoungStepCount());
+  const savedId = quizState.youngDuration?.id || "";
+  const issues = getSelectedIssueSymptoms();
+  const multiple = issues.length > 1;
+  const title = multiple
+    ? "How long have you noticed these changes?"
+    : getYoungSymptomMeta().durationTitle(getCatDisplayName());
+  const lead = multiple
+    ? "Even small changes are worth noting when they stick around."
+    : getYoungSymptomMeta().durationLead;
+
+  assflowMain.innerHTML = `
+    <div class="flow-step young-detail-screen">
+      <p class="flow-step-label">${formatYoungStepLabel(3)}</p>
+      <h1 class="flow-title" id="assflow-title">${escapeHtml(title)}</h1>
+      <p class="flow-lead">${escapeHtml(lead)}</p>
+      ${renderYoungOptionCards("young-duration", YOUNG_DURATION_OPTIONS, savedId)}
+    </div>
+  `;
+
+  setFlowFooter({ visible: false });
+  assflowMain.querySelectorAll('input[name="young-duration"]').forEach((input) => {
+    input.addEventListener("change", () => {
+      quizState.youngDuration = { id: input.value, label: input.dataset.label };
+      track("young_step_completed", { step: "duration", value: input.value });
+      quizState.step = 4;
+      window.setTimeout(renderFlowStep, 220);
+    });
+  });
+}
+
+function renderYoungIssueDetailStep() {
+  const issues = getSelectedIssueSymptoms();
+  const index = quizState.step - 4;
+  const issue = issues[index];
+
+  if (!issue || index >= issues.length) {
+    quizState.step = getYoungConnectStep();
+    renderFlowStep();
+    return;
+  }
+
+  const detailQ = YOUNG_DETAIL_QUESTIONS[issue.id];
+  if (!detailQ) {
+    quizState.step += 1;
+    renderFlowStep();
+    return;
+  }
+
+  const meta = YOUNG_SYMPTOM_META[issue.id] || YOUNG_SYMPTOM_META.prevention;
+  const savedId = getIssueDetailAnswer(issue.id)?.id || "";
+  const issueNumber = index + 1;
+  const issueTotal = issues.length;
+
+  setFlowProgress(quizState.step - 1, getYoungStepCount());
+
+  assflowMain.innerHTML = `
+    <div class="flow-step young-detail-screen">
+      <p class="flow-step-label">${formatYoungStepLabel(quizState.step)}</p>
+      <p class="young-detail-progress">Issue ${issueNumber} of ${issueTotal}</p>
+      <p class="young-detail-issue">${escapeHtml(issue.label)}</p>
+      <h1 class="flow-title" id="assflow-title">${escapeHtml(meta.detailTitle)}</h1>
+      <p class="flow-lead">${escapeHtml(detailQ.lead)}</p>
+      ${renderYoungOptionCards(`young-detail-${issue.id}`, detailQ.options, savedId)}
+    </div>
+  `;
+
+  setFlowFooter({ visible: false });
+  assflowMain.querySelectorAll(`input[name="young-detail-${issue.id}"]`).forEach((input) => {
+    input.addEventListener("change", () => {
+      if (!quizState.youngDetailAnswers) quizState.youngDetailAnswers = {};
+      quizState.youngDetailAnswers[issue.id] = {
+        id: input.value,
+        label: input.dataset.label,
+      };
+      track("young_step_completed", {
+        step: "detail",
+        symptom: issue.id,
+        value: input.value,
+      });
+      quizState.step += 1;
+      if (
+        quizState.step === getYoungConnectStep() &&
+        resolveYoungUrgency() === "urgent"
+      ) {
+        quizState.step = getYoungReviewStep();
+      }
+      window.setTimeout(renderFlowStep, 220);
+    });
+  });
+}
+
+function renderYoungConnectStep() {
+  const connectStep = getYoungConnectStep();
+  setFlowProgress(connectStep - 1, getYoungStepCount());
+  const catPrefill = quizState.catName || catName || "";
+  const method = quizState.contactMethod || "call";
+  const isPrevention = isPreventionPath();
+  const connectLeads = {
+    vomiting: "We'll review the pattern you described, then call to close the loop.",
+    appetite: "We'll review what you shared about eating, then reach out with next steps.",
+    litter: "We'll review the litter changes you noted, then reach out with guidance.",
+    coat: "We'll review what you noticed about the coat, then reach out with a plan.",
+    hydration: "We'll review the drinking and litter changes, then reach out with guidance.",
+    energy: "We'll review the energy changes you described, then reach out.",
+    mood: "We'll review the behaviour changes you described, then reach out.",
+    dental: "We'll review the mouth trouble you described, then reach out.",
+    mobility: "We'll review how movement has changed, then reach out.",
+    prevention: "Leave your number — we'll send your prevention plan on WhatsApp.",
+  };
+  const connectLead = isPrevention
+    ? connectLeads.prevention
+    : getSelectedIssueSymptoms().length > 1
+      ? "We'll review everything you noticed, then reach out with next steps."
+      : connectLeads[getPrimaryYoungSymptom()?.id] ||
+        "Someone will review what you shared, then reach out.";
+  const isLikelyUrgent = !isPrevention && resolveYoungUrgency() === "urgent";
+
+  assflowMain.innerHTML = `
+    <div class="flow-step young-connect-step">
+      <p class="flow-step-label">${formatYoungStepLabel(connectStep)}</p>
+      ${
+        isLikelyUrgent
+          ? `<div class="young-urgent-inline" role="status">
+          <p class="young-urgent-inline-title">This may need an in-person vet today</p>
+          <p class="young-urgent-inline-copy">Based on your answers, we'll direct you to a nearby clinic — Felica cannot help with urgent cases.</p>
+        </div>`
+          : ""
+      }
+      <h1 class="flow-title" id="assflow-title">${isPrevention ? "Start your prevention plan" : "How should we reach you?"}</h1>
+      <p class="flow-lead">${
+        isPrevention ? connectLeads.prevention : connectLead
+      }</p>
+
+      <form class="young-connect-form" id="young-connect-form" novalidate>
+        <label class="flow-age-label" for="young-cat-name">Cat's name</label>
+        <input
+          class="flow-age-input young-cat-name-input"
+          id="young-cat-name"
+          type="text"
+          value="${escapeHtml(catPrefill)}"
+          placeholder="e.g. Mochi"
+          autocomplete="off"
+        />
+
+        ${
+          isPrevention
+            ? ""
+            : `
+        <p class="young-connect-method-label">Preferred contact</p>
+        <div class="young-connect-methods">
+          <label class="young-connect-method ${method === "call" ? "is-selected" : ""}">
+            <input type="radio" name="contact-method" value="call" ${method === "call" ? "checked" : ""} />
+            <span class="young-connect-method-title">Call me</span>
+            <span class="young-connect-method-note">Usually within 15–30 minutes</span>
+          </label>
+          <label class="young-connect-method ${method === "whatsapp" ? "is-selected" : ""}">
+            <input type="radio" name="contact-method" value="whatsapp" ${method === "whatsapp" ? "checked" : ""} />
+            <span class="young-connect-method-title">WhatsApp me</span>
+            <span class="young-connect-method-note">Reply on WhatsApp when reviewed</span>
+          </label>
+        </div>`
+        }
+
+        <label class="whatsapp-gate-label" for="young-phone-input">Mobile number</label>
+        <div class="whatsapp-gate-input-wrap">
+          <span class="whatsapp-gate-prefix" aria-hidden="true">🇮🇳 +91</span>
+          <input
+            class="whatsapp-gate-input"
+            type="tel"
+            id="young-phone-input"
+            placeholder="9876543210"
+            inputmode="numeric"
+            maxlength="10"
+            autocomplete="tel"
+            required
+          />
+        </div>
+
+        <p class="young-connect-next">
+          ${isPrevention ? "We'll follow up on WhatsApp with your plan." : "Next: we prepare a summary from your answers."}
+        </p>
+        <p class="flow-error" id="young-connect-error" hidden>Enter a valid 10-digit mobile number.</p>
+        <button type="submit" class="btn btn-block btn-get-started">${isPrevention ? "Continue" : "Continue"}</button>
+      </form>
+    </div>
+  `;
+
+  setFlowFooter({ visible: false });
+
+  assflowMain.querySelectorAll('input[name="contact-method"]').forEach((input) => {
+    input.addEventListener("change", () => {
+      quizState.contactMethod = input.value;
+      assflowMain.querySelectorAll(".young-connect-method").forEach((el) => {
+        el.classList.toggle("is-selected", el.querySelector("input")?.value === input.value);
+      });
+    });
+  });
+
+  const form = assflowMain.querySelector("#young-connect-form");
+  form?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const phoneInput = form.querySelector("#young-phone-input");
+    const nameInput = form.querySelector("#young-cat-name");
+    const error = form.querySelector("#young-connect-error");
+    const number = phoneInput?.value?.trim();
+    const petName = nameInput?.value?.trim();
+
+    if (!number || number.length !== 10 || !/^\d+$/.test(number)) {
+      phoneInput?.classList.add("error");
+      if (error) error.hidden = false;
+      phoneInput?.focus();
+      setTimeout(() => phoneInput?.classList.remove("error"), 2000);
+      return;
+    }
+
+    if (error) error.hidden = true;
+    quizState.whatsappNumber = number;
+    if (petName) {
+      quizState.catName = petName;
+      catName = petName;
+      try {
+        localStorage.setItem(CAT_NAME_KEY, petName);
+      } catch (err) {
+        /* ignore */
+      }
+    }
+
+    track("whatsapp_number_collected", {
+      cat_age: quizState.age,
+      flow_track: "young",
+      symptoms: getSelectedYoungSymptoms().map((s) => s.id),
+      contact_method: quizState.contactMethod,
+    });
+
+    quizState.step = getYoungReviewStep();
+    renderFlowStep();
+  });
+}
+
+function renderYoungReviewStep() {
+  const reviewStep = getYoungReviewStep();
+  setFlowProgress(reviewStep - 1, getYoungStepCount());
+  flowCompleted = false;
+
+  const name = getCatDisplayName();
+  const issues = getSelectedIssueSymptoms();
+  const detailAnswers = getYoungDetailAnswers();
+  const isUrgent = resolveYoungUrgency() === "urgent";
+
+  assflowMain.innerHTML = `
+    <div class="flow-step young-review-step${isUrgent ? " young-review-step--urgent" : ""}">
+      <p class="flow-step-label">${formatYoungStepLabel(reviewStep)}</p>
+      <div class="young-review-card" aria-live="polite">
+        <div class="young-review-spinner" aria-hidden="true"></div>
+        <h1 class="flow-title" id="assflow-title">${
+          isUrgent
+            ? "Checking urgency…"
+            : `Preparing ${escapeHtml(name)}'s summary`
+        }</h1>
+        <p class="flow-lead young-review-status">${
+          isUrgent
+            ? "Your answers suggest an in-person vet visit may be needed."
+            : "Reviewing what you shared…"
+        }</p>
+        <ul class="young-review-checklist">
+          ${issues
+            .map((issue) => {
+              const detail = detailAnswers[issue.id];
+              const label = detail ? `${issue.label} — ${detail.label}` : issue.label;
+              return `<li class="young-review-item is-done">${escapeHtml(label)}</li>`;
+            })
+            .join("")}
+          ${
+            quizState.youngDuration
+              ? `<li class="young-review-item is-done">Duration: ${escapeHtml(quizState.youngDuration.label)}</li>`
+              : ""
+          }
+          <li class="young-review-item is-pending">Building next steps</li>
+        </ul>
+      </div>
+    </div>
+  `;
+
+  setFlowFooter({ visible: false });
+
+  window.setTimeout(() => {
+    const status = assflowMain.querySelector(".young-review-status");
+    const pending = assflowMain.querySelector(".young-review-item.is-pending");
+    if (status) status.textContent = "Almost ready…";
+    if (pending) pending.classList.replace("is-pending", "is-done");
+  }, 1200);
+
+  window.setTimeout(() => {
+    track("young_review_complete", {
+      cat_age: quizState.age,
+      symptoms: getSelectedYoungSymptoms().map((s) => s.id),
+    });
+    quizState.step = getYoungPlanStep();
+    renderFlowStep();
+  }, 2600);
+}
+
+function renderYoungPlanStep() {
+  setFlowProgress(getYoungStepCount() - 1, getYoungStepCount());
+  setFlowFooter({ visible: false });
+  setFlowProgramLabel();
+  flowCompleted = true;
+
+  const plan = buildYoungCarePlan();
+  const name = getCatDisplayName();
+  const isPrevention = plan.isPrevention;
+
+  track("young_plan_viewed", {
+    cat_age: quizState.age,
+    symptoms: getSelectedYoungSymptoms().map((s) => s.id),
+    prevention: isPrevention,
+    urgency: plan.urgency,
+  });
+
+  const isUrgent = plan.urgency === "urgent";
+  const showFelicaFollowUp = !isPrevention && !isUrgent;
+
+  assflowMain.innerHTML = `
+    <div class="flow-step flow-step-result young-plan-step${isUrgent ? " young-plan-step--urgent" : ""}">
+      <div class="young-care-plan">
+        ${
+          isUrgent
+            ? `
+        <div class="young-urgent-panel" role="alert">
+          <p class="young-urgent-eyebrow">Urgent — in-person vet needed</p>
+          <h2 class="young-urgent-title" id="assflow-title">${escapeHtml(plan.planTitle)}</h2>
+          <p class="young-urgent-lead">${escapeHtml(plan.summary)}</p>
+          <ul class="young-urgent-reasons">
+            ${(plan.urgentReasons || [])
+              .map((reason) => `<li>${escapeHtml(reason)}</li>`)
+              .join("")}
+          </ul>
+          <p class="young-urgent-note">Felica does not provide emergency care or teleconsult for urgent cases.</p>
+        </div>`
+            : `
+        <p class="young-plan-eyebrow">${escapeHtml(name)}'s care plan</p>
+        <h2 class="young-plan-title" id="assflow-title">${escapeHtml(plan.planTitle)}</h2>
+        <p class="young-plan-summary">${escapeHtml(plan.summary)}</p>`
+        }
+
+        <div class="young-plan-section">
+          <p class="young-plan-section-title">What we heard</p>
+          <ul class="young-plan-heard">
+            ${plan.heard.map((line) => `<li>${escapeHtml(line)}</li>`).join("")}
+          </ul>
+        </div>
+
+        <div class="young-plan-section">
+          <p class="young-plan-section-title">${isUrgent ? "What to do right now" : "This week"}</p>
+          <ul class="young-plan-list">
+            ${plan.watch.map((line) => `<li>${escapeHtml(line)}</li>`).join("")}
+          </ul>
+        </div>
+
+        ${
+          plan.escalate
+            ? `<p class="young-plan-escalate">${escapeHtml(plan.escalate)}</p>`
+            : ""
+        }
+
+        ${
+          showFelicaFollowUp
+            ? `<p class="young-plan-callback">A feline vet from Felica will ${
+                quizState.contactMethod === "whatsapp" ? "message you on WhatsApp" : "call you"
+              } at <strong>+91 ${quizState.whatsappNumber}</strong> to walk through your answers. Save <strong>${FELICA_CALLBACK_NUMBER}</strong> so you don't miss us.</p>`
+            : ""
+        }
+
+        ${
+          !isUrgent
+            ? `
+        <div class="young-plan-products">
+          <p class="young-plan-section-title">Ongoing care</p>
+          ${plan.products
+            .map(
+              (product) => `
+            <div class="young-plan-product">
+              <div class="young-plan-product-copy">
+                <p class="young-plan-product-name">${escapeHtml(product.name)}</p>
+                <p class="young-plan-product-note">${escapeHtml(product.note)}</p>
+              </div>
+            </div>`
+            )
+            .join("")}
+
+          <div class="young-plan-program">
+            <p class="young-plan-program-name">${escapeHtml(FELICA_PREVENTION_PROGRAM.name)}</p>
+            <p class="young-plan-program-price">${FELICA_PREVENTION_PROGRAM.price}<span>/${FELICA_PREVENTION_PROGRAM.period}</span></p>
+            <p class="young-plan-program-note">${escapeHtml(FELICA_PREVENTION_PROGRAM.note)}</p>
+            <button type="button" class="btn btn-block btn-get-started" data-young-program>Start prevention program</button>
+          </div>
+        </div>`
+            : ""
+        }
+
+        <button type="button" class="btn btn-block ${isUrgent ? "btn-get-started" : "young-plan-done"}" data-flow-done>${
+          isUrgent ? "Got it" : "Done for now"
+        }</button>
+        <p class="score-reassure">Not a diagnosis. Your vet makes every treatment decision.</p>
+      </div>
+    </div>
+  `;
+
+  bindYoungPlanHandlers();
+}
+
+function renderYoungFlowStep() {
+  const step = quizState.step;
+
+  if (step === 2) {
+    renderYoungSymptomStep();
+    return;
+  }
+
+  if (step === 3) {
+    if (isPreventionPath()) renderYoungConnectStep();
+    else renderYoungDurationStep();
+    return;
+  }
+
+  if (isPreventionPath()) {
+    if (step === 4) renderYoungReviewStep();
+    else if (step === 5) renderYoungPlanStep();
+    return;
+  }
+
+  if (step >= 4 && step < getYoungConnectStep()) {
+    renderYoungIssueDetailStep();
+    return;
+  }
+
+  if (step === getYoungConnectStep()) {
+    if (resolveYoungUrgency() === "urgent") {
+      quizState.step = getYoungReviewStep();
+      renderYoungFlowStep();
+      return;
+    }
+    renderYoungConnectStep();
+    return;
+  }
+
+  if (step === getYoungReviewStep()) {
+    renderYoungReviewStep();
+    return;
+  }
+
+  if (step === getYoungPlanStep()) {
+    renderYoungPlanStep();
+  }
+}
+
 function renderFlowStep() {
   updateFlowChrome();
 
   if (quizState.step === 1) {
     renderAgeStep();
+    return;
+  }
+
+  if (isYoungFlow()) {
+    renderYoungFlowStep();
     return;
   }
 

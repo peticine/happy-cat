@@ -7743,3 +7743,609 @@ body[data-age-theme="geriatric"] .hero-clinic {
     grid-template-columns: 1fr;
   }
 }
+
+/* Young cat care flow */
+.young-issue-screen {
+  padding-bottom: 8px;
+}
+
+.young-issue-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.young-issue-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  margin: 0;
+  padding: 16px 14px;
+  border: 1px solid var(--issue-ring, var(--line));
+  border-radius: 16px;
+  background: var(--surface);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 200ms var(--ease),
+    box-shadow 200ms var(--ease),
+    transform 160ms var(--ease);
+}
+
+.young-issue-card:hover {
+  border-color: var(--issue-icon, var(--accent));
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+  transform: translateY(-1px);
+}
+
+.young-issue-card.is-selected,
+.young-issue-card:active {
+  border-color: var(--issue-icon, var(--accent));
+  box-shadow: 0 0 0 1px var(--issue-icon, var(--accent));
+}
+
+.young-issue-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: var(--issue-bg, var(--accent-soft));
+  color: var(--issue-icon, var(--accent));
+}
+
+.young-issue-icon-wrap svg {
+  width: 22px;
+  height: 22px;
+  stroke: currentColor;
+}
+
+.young-issue-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.young-issue-label {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--ink);
+}
+
+.young-issue-hint {
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--ink-muted);
+}
+
+.young-issue-card--multi {
+  position: relative;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+}
+
+.young-issue-card--multi input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.young-issue-check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1.5px solid var(--line);
+  color: transparent;
+  background: var(--surface);
+  transition:
+    border-color 200ms var(--ease),
+    background 200ms var(--ease),
+    color 200ms var(--ease);
+}
+
+.young-issue-check svg {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+}
+
+.young-issue-card--multi.is-selected .young-issue-check {
+  border-color: var(--issue-icon, var(--accent));
+  background: var(--issue-icon, var(--accent));
+  color: #fff;
+}
+
+.young-issue-card--multi .young-issue-label {
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+
+.young-issue-screen .young-issue-list {
+  gap: 12px;
+}
+
+.young-issue-screen .young-issue-card {
+  min-height: 72px;
+  padding: 16px;
+}
+
+.young-detail-screen .young-option-card {
+  padding: 16px 18px;
+}
+
+.young-detail-screen .young-option-card-label {
+  font-size: 1rem;
+}
+
+.young-option-grid {
+  display: grid;
+  gap: 8px;
+}
+
+.young-option-card {
+  display: block;
+  margin: 0;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  cursor: pointer;
+  transition:
+    border-color 200ms var(--ease),
+    background 200ms var(--ease);
+}
+
+.young-option-card:hover {
+  border-color: rgba(21, 89, 183, 0.35);
+}
+
+.young-option-card:has(input:checked) {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.young-option-card input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.young-option-card-label {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.young-connect-step {
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.young-connect-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.young-cat-name-input {
+  margin-bottom: 4px;
+}
+
+.young-connect-method-label {
+  margin: 4px 0 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.young-connect-methods {
+  display: grid;
+  gap: 8px;
+}
+
+.young-connect-method {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  cursor: pointer;
+  transition:
+    border-color 200ms var(--ease),
+    background 200ms var(--ease);
+}
+
+.young-connect-method.is-selected,
+.young-connect-method:has(input:checked) {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.young-connect-method input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.young-connect-method-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.young-connect-method-note {
+  font-size: 0.8125rem;
+  color: var(--ink-soft);
+}
+
+.young-connect-next {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--ink-muted);
+}
+
+.young-review-step {
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.young-review-card {
+  padding: 8px 0 0;
+  text-align: left;
+}
+
+.young-review-spinner {
+  width: 36px;
+  height: 36px;
+  margin-bottom: 16px;
+  border: 3px solid var(--line);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: young-review-spin 0.9s linear infinite;
+}
+
+@keyframes young-review-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.young-review-checklist {
+  list-style: none;
+  margin: 20px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.young-review-item {
+  position: relative;
+  padding-left: 22px;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--ink-muted);
+}
+
+.young-review-item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.45em;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--line);
+}
+
+.young-review-item.is-done {
+  color: var(--ink);
+}
+
+.young-review-item.is-done::before {
+  background: var(--accent);
+}
+
+.young-review-item.is-pending::before {
+  background: transparent;
+  border: 2px solid var(--line);
+}
+
+.young-plan-step {
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+.young-care-plan {
+  text-align: left;
+}
+
+.young-plan-eyebrow {
+  margin: 0 0 6px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.young-plan-title {
+  margin: 0 0 10px;
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 4vw, 1.65rem);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+.young-plan-summary {
+  margin: 0 0 20px;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+.young-plan-section {
+  margin-bottom: 18px;
+}
+
+.young-plan-section-title {
+  margin: 0 0 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.young-plan-heard,
+.young-plan-list {
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--ink);
+}
+
+.young-plan-heard li + li,
+.young-plan-list li + li {
+  margin-top: 6px;
+}
+
+.young-issue-multi-hint {
+  margin-top: -4px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.young-urgent-inline {
+  margin-bottom: 16px;
+  padding: 14px 14px;
+  border-radius: 12px;
+  border: 1.5px solid #e8b4af;
+  background: #fff7f6;
+}
+
+.young-urgent-inline-title {
+  margin: 0 0 6px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #a8372e;
+}
+
+.young-urgent-inline-copy {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: #7a2a22;
+}
+
+.young-detail-progress {
+  margin: 0 0 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.young-detail-issue {
+  margin: 0 0 14px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+
+.young-urgent-panel {
+  margin-bottom: 22px;
+  padding: 18px 16px;
+  border-radius: 16px;
+  border: 1.5px solid #e8b4af;
+  background: linear-gradient(160deg, #fff7f6 0%, #fdeeed 100%);
+}
+
+.young-urgent-eyebrow {
+  margin: 0 0 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #a8372e;
+}
+
+.young-urgent-title {
+  margin: 0 0 10px;
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 4.5vw, 1.75rem);
+  font-weight: 600;
+  line-height: 1.15;
+  color: #8f2d25;
+}
+
+.young-urgent-lead {
+  margin: 0 0 14px;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--ink);
+}
+
+.young-urgent-reasons {
+  margin: 0 0 14px;
+  padding-left: 1.1rem;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: #7a2a22;
+}
+
+.young-urgent-reasons li + li {
+  margin-top: 8px;
+}
+
+.young-urgent-note {
+  margin: 0;
+  padding-top: 12px;
+  border-top: 1px solid rgba(168, 55, 46, 0.18);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: #a8372e;
+}
+
+.young-plan-step--urgent .young-plan-urgency {
+  display: inline-block;
+  margin: 0 0 10px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #fdeeed;
+  color: #a8372e;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.young-plan-step--urgent .young-plan-summary {
+  color: var(--ink);
+}
+
+.young-plan-escalate {
+  margin: 0 0 20px;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-soft);
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: var(--ink);
+}
+
+.young-plan-callback {
+  margin: 0 0 22px;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+.young-plan-products {
+  margin-bottom: 16px;
+  padding-top: 4px;
+  border-top: 1px solid var(--line);
+}
+
+.young-plan-product {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.young-plan-product-name {
+  margin: 0 0 4px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.young-plan-product-note {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--ink-muted);
+}
+
+.young-plan-program {
+  margin-top: 16px;
+  padding: 16px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(160deg, #fff 0%, var(--accent-soft) 100%);
+  border: 1px solid var(--line);
+}
+
+.young-plan-program-name {
+  margin: 0 0 4px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.young-plan-program-price {
+  margin: 0 0 8px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.young-plan-program-price span {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--ink-muted);
+}
+
+.young-plan-program-note {
+  margin: 0 0 14px;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.young-plan-done {
+  margin-top: 10px;
+  background: transparent;
+  color: var(--ink-muted);
+  border: 1px solid var(--line);
+}
+
+@media (min-width: 480px) {
+  .young-issue-list {
+    gap: 12px;
+  }
+
+  .young-issue-card {
+    padding: 18px 16px;
+  }
+
+  .young-issue-icon-wrap {
+    width: 52px;
+    height: 52px;
+  }
+}
