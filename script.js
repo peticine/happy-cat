@@ -969,6 +969,7 @@ let quizState = {
   answers: {},
   whatsappNumber: null,
   screeningResult: null,
+  screeningSessionId: null,
 };
 
 function resetQuizState() {
@@ -978,8 +979,22 @@ function resetQuizState() {
     answers: {},
     whatsappNumber: null,
     screeningResult: null,
+    screeningSessionId: crypto.randomUUID(),
   };
   setFlowProgramLabel();
+}
+
+function trackScreeningStep(step) {
+  const sessionId = quizState.screeningSessionId;
+  if (!sessionId) return;
+  try {
+    const url = new URL("/screening/analytics", SCREENING_API_BASE);
+    url.searchParams.set("sessionId", sessionId);
+    url.searchParams.set("step", step);
+    fetch(url, { method: "GET", keepalive: true, mode: "cors" });
+  } catch (err) {
+    /* partner beacon must never break the app */
+  }
 }
 
 function apiAnswerValue(questionId, answerId) {
@@ -989,6 +1004,7 @@ function apiAnswerValue(questionId, answerId) {
 
 function buildScreeningQueryParams(phone) {
   const params = new URLSearchParams({
+    sessionId: quizState.screeningSessionId,
     catAge: String(quizState.age),
     phone,
   });
@@ -1003,7 +1019,10 @@ function buildScreeningQueryParams(phone) {
 
 async function fetchScreeningResult(phone) {
   const params = buildScreeningQueryParams(phone);
-  const response = await fetch(`${SCREENING_API_BASE}/screening?${params.toString()}`);
+  const response = await fetch(`${SCREENING_API_BASE}/screening?${params.toString()}`, {
+    method: "GET",
+    mode: "cors",
+  });
 
   if (!response.ok) {
     const error = new Error("Screening request failed");
@@ -1229,6 +1248,7 @@ function renderAgeStep() {
     renderFlowStep();
   });
 
+  trackScreeningStep("catAge");
   window.setTimeout(() => input.focus(), 60);
 }
 
@@ -1299,6 +1319,8 @@ function renderQuestionStep(qIndex) {
       window.setTimeout(renderFlowStep, 240);
     });
   });
+
+  trackScreeningStep(q.id);
 }
 
 function renderResultStep() {
@@ -1329,6 +1351,7 @@ function renderResultStep() {
     </div>
   `;
   bindWhatsAppGateHandlers();
+  trackScreeningStep("phone");
 }
 
 function renderGateResultPreview(tier) {
