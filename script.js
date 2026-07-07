@@ -779,7 +779,9 @@ const YOUNG_SYMPTOM_THEMES = {
   gut: { bg: "#fff4eb", icon: "#d4622a", ring: "rgba(212, 98, 42, 0.18)" },
   litter: { bg: "#edf7f1", icon: "#2f8f5b", ring: "rgba(47, 143, 91, 0.18)" },
   hydration: { bg: "#eef6fc", icon: "#2b7fc7", ring: "rgba(43, 127, 199, 0.18)" },
+  skin: { bg: "#fdf8ee", icon: "#a67c2e", ring: "rgba(166, 124, 46, 0.18)" },
   coat: { bg: "#faf3ee", icon: "#c47a45", ring: "rgba(196, 122, 69, 0.18)" },
+  eyes: { bg: "#eef6fa", icon: "#3a7ca5", ring: "rgba(58, 124, 165, 0.18)" },
   behaviour: { bg: "#f1eef9", icon: "#5f51a6", ring: "rgba(95, 81, 166, 0.18)" },
   mood: { bg: "#f3eef8", icon: "#7a4fa8", ring: "rgba(122, 79, 168, 0.18)" },
   dental: { bg: "#f5f0ee", icon: "#8b5a45", ring: "rgba(139, 90, 69, 0.18)" },
@@ -790,61 +792,73 @@ const YOUNG_SYMPTOM_THEMES = {
 const YOUNG_SYMPTOMS = [
   {
     id: "appetite",
-    label: "My cat isn't eating normally",
+    label: "My cat is not eating properly",
     icon: "Utensils",
     theme: "appetite",
   },
   {
     id: "vomiting",
-    label: "My cat has been throwing up",
+    label: "My cat is vomiting — food, hairball, or yellow liquid",
     icon: "Wind",
     theme: "gut",
   },
   {
+    id: "skin",
+    label: "My cat is scratching a lot, or has fleas/ticks/lice",
+    icon: "Bug",
+    theme: "skin",
+  },
+  {
     id: "litter",
-    label: "Something's different in the litter box",
+    label: "My cat has loose motion (diarrhoea) or is straining in the litter box",
     icon: "Toilet",
     theme: "litter",
   },
   {
+    id: "behaviour",
+    label: "My cat seems off — restless, hiding, irritable, or aggressive",
+    icon: "Cat",
+    theme: "behaviour",
+  },
+  {
     id: "hydration",
-    label: "My cat is drinking or peeing more than usual",
+    label: "My cat is drinking more water or peeing more than usual",
     icon: "Droplets",
     theme: "hydration",
   },
   {
-    id: "coat",
-    label: "My cat's coat doesn't look as healthy",
-    icon: "Sparkles",
-    theme: "coat",
-  },
-  {
     id: "energy",
-    label: "My cat is sleeping more or has less energy",
+    label: "My cat is sleeping more or has low energy",
     icon: "Moon",
     theme: "behaviour",
   },
   {
-    id: "mood",
-    label: "My cat isn't acting like themselves",
-    icon: "Cat",
-    theme: "mood",
+    id: "eyes",
+    label: "My cat has teary eyes or eye stains",
+    icon: "Eye",
+    theme: "eyes",
+  },
+  {
+    id: "coat",
+    label: "My cat's fur looks dull, dry, or is falling out",
+    icon: "Sparkles",
+    theme: "coat",
   },
   {
     id: "dental",
-    label: "My cat has bad breath or trouble eating",
+    label: "My cat has bad breath or difficulty chewing food",
     icon: "Stethoscope",
     theme: "dental",
   },
   {
     id: "mobility",
-    label: "My cat isn't moving like they used to",
+    label: "My cat is not jumping or walking properly — limping or stiff",
     icon: "Activity",
     theme: "mobility",
   },
   {
     id: "prevention",
-    label: "Nothing's wrong — I just want to check on my cat",
+    label: "Nothing wrong — I just want a routine health check",
     icon: "Shield",
     theme: "prevention",
   },
@@ -885,14 +899,36 @@ const YOUNG_SYMPTOM_META = {
     ],
   },
   skin: {
-    durationTitle: (name) => `How long has ${name}'s coat seemed off?`,
-    durationLead: "A dull coat or extra shedding is often the first visible change.",
-    detailTitle: "What have you noticed?",
-    planTitle: "Coat & skin plan",
+    durationTitle: (name) => `How long has ${name} been scratching or showing fleas?`,
+    durationLead: "Scratching and fleas often go together — treating the cat and home matters.",
+    detailTitle: "What fits best?",
+    planTitle: "Itching & parasite plan",
     products: [
-      { name: "Omega & coat oil", note: "Supports shine and skin recovery from the inside" },
-      { name: "Flea prevention", note: "Coat changes often start with parasites" },
-      { name: "Skin soothe supplement", note: "Daily support when the coat looks thin or dry" },
+      { name: "Flea prevention", note: "Monthly treatment for cats and home" },
+      { name: "Skin soothe supplement", note: "Daily support when itching won't settle" },
+      { name: "Omega & coat oil", note: "Helps dry skin and coat recovery" },
+    ],
+  },
+  eyes: {
+    durationTitle: (name) => `How long have ${name}'s eyes been teary or stained?`,
+    durationLead: "Some tear staining is normal — sudden changes or red eyes need a closer look.",
+    detailTitle: "How often do you see this?",
+    planTitle: "Eye care plan",
+    products: [
+      { name: "Eye wipe routine", note: "Gentle daily cleaning for tear stains" },
+      { name: "Flea & allergy check", note: "Face rubbing can stain eyes and irritate skin" },
+      { name: "Vet eye check reminder", note: "Red or sticky eyes should be seen in clinic" },
+    ],
+  },
+  behaviour: {
+    durationTitle: (name) => `How long has ${name} seemed off?`,
+    durationLead: "Restlessness, hiding, or irritability usually means they don't feel right.",
+    detailTitle: "What stands out most?",
+    planTitle: "Behaviour plan",
+    products: [
+      { name: "Calm support supplement", note: "Gentle daily support when stress or discomfort shows" },
+      { name: "Neuter/spay reminder", note: "Trying to go out is common in unneutered cats" },
+      { name: "Multivitamin drops", note: "Useful when behaviour shifts come with eating less" },
     ],
   },
   coat: {
@@ -928,17 +964,6 @@ const YOUNG_SYMPTOM_META = {
       { name: "Monthly wellness check", note: "We'll nudge you if patterns shift again" },
     ],
   },
-  mood: {
-    durationTitle: (name) => `How long has ${name} seemed unlike themselves?`,
-    durationLead: "Personality shifts in cats usually mean they don't feel right.",
-    detailTitle: "What stands out most?",
-    planTitle: "Behaviour plan",
-    products: [
-      { name: "Calm support supplement", note: "Helps when stress or discomfort changes behaviour" },
-      { name: "Multivitamin drops", note: "Useful when mood shifts come with eating less" },
-      { name: "Monthly wellness check", note: "We'll nudge you if patterns shift again" },
-    ],
-  },
   dental: {
     durationTitle: (name) => `How long has ${name} had mouth trouble?`,
     durationLead: "Bad breath or chewing oddly often starts before obvious pain.",
@@ -959,17 +984,6 @@ const YOUNG_SYMPTOM_META = {
       { name: "Joint comfort supplement", note: "Daily support for easier movement" },
       { name: "Omega & coat oil", note: "Supports joints and inflammation naturally" },
       { name: "Weight check guide", note: "Extra weight is a common hidden cause" },
-    ],
-  },
-  behaviour: {
-    durationTitle: (name) => `How long has ${name} seemed off?`,
-    durationLead: "When cats withdraw, it's often because they don't feel right — not because they're upset.",
-    detailTitle: "What's changed most?",
-    planTitle: "Energy & behaviour plan",
-    products: [
-      { name: "Calm support supplement", note: "Gentle daily support when stress or discomfort shows" },
-      { name: "Multivitamin drops", note: "Covers gaps when eating or energy is lower than usual" },
-      { name: "Monthly wellness check", note: "We'll nudge you if patterns shift again" },
     ],
   },
   prevention: {
@@ -997,12 +1011,23 @@ const YOUNG_SYMPTOM_ALIASES = {
   water: "hydration",
   drinking: "hydration",
   diarrhoea: "litter",
-  skin: "coat",
+  skin: "skin",
+  scratching: "skin",
+  itching: "skin",
+  fleas: "skin",
+  ticks: "skin",
+  lice: "skin",
+  parasites: "skin",
   coat: "coat",
-  quiet: "mood",
+  eyes: "eyes",
+  tear: "eyes",
+  stains: "eyes",
+  restless: "behaviour",
+  mood: "behaviour",
+  behaviour: "behaviour",
+  quiet: "behaviour",
   sleeping: "energy",
-  behaviour: "mood",
-  behavior: "mood",
+  behavior: "behaviour",
   dental: "dental",
   mobility: "mobility",
   prevention: "prevention",
@@ -1018,91 +1043,97 @@ const YOUNG_DURATION_OPTIONS = [
 
 const YOUNG_DETAIL_QUESTIONS = {
   vomiting: {
-    lead: "How often has your cat vomited this week?",
+    lead: "How many times did your cat vomit this week?",
     options: [
-      { id: "once", label: "Once" },
+      { id: "once", label: "Once — a single vomit" },
       { id: "two_three", label: "2–3 times" },
       { id: "four_plus", label: "4 or more times" },
     ],
   },
   appetite: {
-    lead: "What best describes the change?",
+    lead: "What is happening with food?",
     options: [
-      { id: "less", label: "Eating less than usual" },
-      { id: "refusing", label: "Refusing food" },
-      { id: "picky", label: "Picky, but still eating some" },
+      { id: "less", label: "Eating less than before" },
+      { id: "refusing", label: "Not eating at all / refusing food" },
+      { id: "picky", label: "Picky — eats only a little" },
     ],
   },
   litter: {
-    lead: "Which of these have you seen?",
+    lead: "What did you notice in the litter box?",
     options: [
-      { id: "diarrhoea", label: "Loose or watery stool" },
-      { id: "outside_box", label: "Accidents outside the litter box" },
-      { id: "straining", label: "Straining or crying in the box" },
+      { id: "diarrhoea", label: "Loose motion / watery stool (diarrhoea)" },
+      { id: "outside_box", label: "Pooping outside the litter box" },
+      { id: "straining", label: "Straining or crying while passing urine or stool" },
     ],
   },
   skin: {
-    lead: "What have you noticed?",
+    lead: "What fits best?",
     options: [
-      { id: "scratching", label: "Scratching or licking more than usual" },
-      { id: "fleas", label: "Fleas or tiny black specks in the fur" },
-      { id: "hair_loss", label: "Bald patches or thinning fur" },
+      { id: "seven_days", label: "Scratching — since about 7 days" },
+      { id: "one_month", label: "Scratching — since about 1 month" },
+      { id: "sometimes", label: "Scratching — comes and goes" },
+      { id: "fleas_one_day", label: "Fleas/ticks/lice — noticed 1 day ago" },
+      { id: "fleas_seven_days", label: "Fleas/ticks/lice — noticed ~7 days ago" },
+      { id: "fleas_while_ago", label: "Fleas/ticks/lice — noticed a while ago" },
+      { id: "scratch_and_fleas", label: "Both scratching and fleas/ticks/lice" },
     ],
   },
   coat: {
-    lead: "What have you noticed?",
+    lead: "What changed in the fur?",
     options: [
-      { id: "dull", label: "Coat looks dull or dry" },
-      { id: "shedding", label: "Shedding more than usual" },
-      { id: "thin", label: "Fur looks thin or patchy" },
+      { id: "dull", label: "Fur looks dull or dry" },
+      { id: "shedding", label: "Hair fall / shedding more than usual" },
+      { id: "thin", label: "Fur thinning or patchy in places" },
+    ],
+  },
+  eyes: {
+    lead: "How often do you see teary eyes or stains?",
+    options: [
+      { id: "more_than_usual", label: "More than usual" },
+      { id: "once_week", label: "About once a week" },
+      { id: "once_in_a_while", label: "Once in a while" },
+    ],
+  },
+  behaviour: {
+    lead: "What kind of change have you seen?",
+    options: [
+      { id: "meowing", label: "Meowing a lot" },
+      { id: "aggression", label: "Showing aggression" },
+      { id: "trying_out", label: "Trying to go outside" },
+      { id: "hiding", label: "Hiding or avoiding people" },
+      { id: "withdrawn", label: "Quiet — not like their usual self" },
     ],
   },
   hydration: {
     lead: "What did you notice first?",
     options: [
-      { id: "drinking", label: "Emptying the water bowl more" },
-      { id: "peeing", label: "Bigger or more frequent litter clumps" },
-      { id: "both", label: "Both drinking and peeing more" },
+      { id: "drinking", label: "Water bowl finishes faster / drinks more" },
+      { id: "peeing", label: "More pee or bigger clumps in litter" },
+      { id: "both", label: "Both — drinking more and peeing more" },
     ],
   },
   energy: {
-    lead: "Pick the main change you've noticed.",
+    lead: "What is the main change?",
     options: [
       { id: "few_days", label: "Sleeping more than usual" },
-      { id: "one_two_weeks", label: "Less playful or curious" },
-      { id: "gradual", label: "Tiring quickly after small activity" },
-    ],
-  },
-  mood: {
-    lead: "What stands out most?",
-    options: [
-      { id: "hiding", label: "Hiding or avoiding people" },
-      { id: "irritable", label: "More irritable or jumpy" },
-      { id: "withdrawn", label: "Just seems unlike themselves" },
+      { id: "one_two_weeks", label: "Less playful or active" },
+      { id: "gradual", label: "Gets tired quickly after small activity" },
     ],
   },
   dental: {
-    lead: "What have you noticed?",
+    lead: "What have you noticed in the mouth?",
     options: [
-      { id: "breath", label: "Bad breath" },
+      { id: "breath", label: "Strong bad breath" },
       { id: "chewing", label: "Chewing on one side or dropping food" },
-      { id: "pawing", label: "Pawing at the mouth" },
+      { id: "pawing", label: "Pawing at the mouth or face" },
     ],
   },
   mobility: {
-    lead: "What have you seen?",
+    lead: "How is movement affected?",
     options: [
-      { id: "jumping", label: "Not jumping up like before" },
-      { id: "stiff", label: "Stiff or slow when getting up" },
-      { id: "limping", label: "Limping or favouring a leg" },
-    ],
-  },
-  behaviour: {
-    lead: "Pick the main change you've noticed.",
-    options: [
-      { id: "few_days", label: "Sleeping more than usual" },
-      { id: "one_two_weeks", label: "Hiding or avoiding people" },
-      { id: "gradual", label: "Less playful or curious" },
+      { id: "jumping", label: "Not jumping on bed / sofa like before" },
+      { id: "stiff", label: "Stiff or slow while getting up" },
+      { id: "limping", label: "Limping or favouring one leg" },
     ],
   },
 };
@@ -1111,8 +1142,431 @@ const FELICA_PREVENTION_PROGRAM = {
   name: "Felica Prevention Program",
   price: "₹799",
   period: "month",
-  note: "Everything in your plan, delivered monthly. Adjusts as your cat grows.",
+  note: "Includes specialist support.",
 };
+
+const FELICA_WHATSAPP_CONTACT_URL = "https://wa.me/918047285635";
+
+const WELLNESS_ISSUE_IDS = new Set(["skin", "coat", "eyes", "prevention"]);
+
+const WELLNESS_SPECIALISTS = {
+  skin: {
+    shortName: "Dr. Ankita",
+    fullName: "Dr. Ankita Kawale",
+    title: "Veterinary Dermatologist",
+    icon: "👩‍⚕️",
+    specialtyNoun: "veterinary skin specialist",
+    reviewTitle: "Felica veterinary dermatologist",
+    image: "./images/dr-ankita-kawale.png?v=hc28",
+    experience: "8 years treating feline skin disease",
+    catsTreated: "3,000+ cats treated",
+    reviewFrequency: (name) => `Reviews ${name}'s progress every 2 weeks`,
+    replyTime: "Usually replies within 4 hours on WhatsApp.",
+    reassurance: (name, duration) =>
+      `Most cats with these symptoms improve with a structured ${duration} plan. We'll monitor ${name}'s progress together.`,
+  },
+  coat: {
+    shortName: "Dr. Shantanu",
+    fullName: "Dr. Shantanu Kalambi",
+    title: "Feline Coat & Dermatology Specialist",
+    icon: "👨‍⚕️",
+    specialtyNoun: "feline coat specialist",
+    reviewTitle: "Felica coat & skin specialist",
+    image: "./images/dr-shantanu-kalambi.png",
+    experience: "20 years treating feline skin and coat disease",
+    catsTreated: "8,000+ cats treated",
+    reviewFrequency: (name) => `Reviews ${name}'s coat progress every 3 weeks`,
+    replyTime: "Usually replies within 4 hours on WhatsApp.",
+    reassurance: (name, duration) =>
+      `Most cats with dull or thinning fur respond well to a structured ${duration} plan. We'll track ${name}'s coat together.`,
+  },
+  eyes: {
+    shortName: "Dr. Ankita",
+    fullName: "Dr. Ankita Kawale",
+    title: "Feline Eye Health Specialist",
+    icon: "👩‍⚕️",
+    specialtyNoun: "feline eye health specialist",
+    reviewTitle: "Felica eye health specialist",
+    image: "./images/dr-ankita-kawale.png?v=hc28",
+    experience: "8 years treating feline eye and allergy conditions",
+    catsTreated: "3,000+ cats treated",
+    reviewFrequency: (name) => `Reviews ${name}'s eye comfort every 2 weeks`,
+    replyTime: "Usually replies within 4 hours on WhatsApp.",
+    reassurance: (name, duration) =>
+      `Most cats with teary eyes improve with a structured ${duration} plan. We'll monitor ${name}'s comfort together.`,
+  },
+  prevention: {
+    shortName: "Dr. Shantanu",
+    fullName: "Dr. Shantanu Kalambi",
+    title: "Feline Preventive Care Specialist",
+    icon: "👨‍⚕️",
+    specialtyNoun: "feline preventive care specialist",
+    reviewTitle: "Felica preventive care specialist",
+    image: "./images/dr-shantanu-kalambi.png",
+    experience: "20 years in feline preventive medicine",
+    catsTreated: "8,000+ cats treated",
+    reviewFrequency: (name) => `Checks in on ${name}'s wellness every month`,
+    replyTime: "Usually replies within 4 hours on WhatsApp.",
+    reassurance: (name) =>
+      `Most healthy cats stay that way with a steady prevention rhythm. We'll keep ${name} on track together.`,
+  },
+};
+
+const WELLNESS_SPECIALIST_DUTIES = [
+  "Review your answers",
+  "Adjust the plan if needed",
+  "Answer questions on WhatsApp",
+  "Tell you if an in-person visit is necessary",
+];
+
+const WELLNESS_PLANS = {
+  skin: {
+    id: "skin",
+    planName: "Skin Recovery Plan",
+    duration: "8 weeks",
+    beforeImage: "./images/hero-hiding-cat.png",
+    afterImage: "./images/hero-healthy-cat.png",
+    beforeLabel: "Week 0",
+    afterLabel: "Week 8",
+    beforeCaption: "Scratching, fleas, irritated skin",
+    afterCaption: "Calmer skin · monthly prevention on track",
+    likelyCondition: "Allergic dermatitis with flea irritation",
+    fleaCondition: "Flea irritation with secondary scratching",
+    treatmentGoal: "Stop itching within 2 weeks and restore skin over 8 weeks.",
+    medications: ["Monthly flea prevention", "Daily Skin Support sachets", "Omega coat supplement"],
+    tangibleIncludes: [
+      "Monthly flea prevention medication",
+      "Skin Support supplement (daily sachets)",
+      "Specialist review every 2 weeks",
+      "WhatsApp follow-up with your vet",
+    ],
+    timeline: [
+      { week: "Week 1–2", expectation: "Itching should reduce" },
+      { week: "Week 3–5", expectation: "Skin heals" },
+      { week: "Week 6–8", expectation: "Prevent recurrence" },
+    ],
+  },
+  coat: {
+    id: "coat",
+    planName: "Coat Recovery Plan",
+    duration: "12 weeks",
+    beforeImage: "./images/hero-hiding-cat.png",
+    afterImage: "./images/hero-healthy-cat.png",
+    beforeLabel: "Week 0",
+    afterLabel: "Week 12",
+    beforeCaption: "Dull, dry, or thinning fur",
+    afterCaption: "Shinier coat · healthier skin underneath",
+    likelyCondition: "Coat thinning with nutritional deficiency",
+    treatmentGoal: "Reduce shedding within 3 weeks and restore coat shine over 12 weeks.",
+    medications: ["Omega & coat oil (daily)", "Skin Support sachets", "Monthly flea check"],
+    tangibleIncludes: [
+      "Omega & coat supplement (daily)",
+      "Skin Support sachets",
+      "Specialist review every 3 weeks",
+      "WhatsApp follow-up with your vet",
+    ],
+    timeline: [
+      { week: "Week 1–3", expectation: "Shedding should slow" },
+      { week: "Week 4–8", expectation: "Coat feels thicker" },
+      { week: "Week 9–12", expectation: "Shine returns" },
+    ],
+  },
+  eyes: {
+    id: "eyes",
+    planName: "Eye Comfort Plan",
+    duration: "6 weeks",
+    beforeImage: "./images/hero-cat-portrait.png",
+    afterImage: "./images/hero-healthy-cat.png",
+    beforeLabel: "Week 0",
+    afterLabel: "Week 6",
+    beforeCaption: "Teary eyes or visible stains",
+    afterCaption: "Cleaner eyes · fewer stains",
+    likelyCondition: "Tear staining with mild eye irritation",
+    treatmentGoal: "Cleaner eyes within 2 weeks and fewer stains over 6 weeks.",
+    medications: ["Daily eye wipe routine", "Allergy support supplement", "Diet review"],
+    tangibleIncludes: [
+      "Eye care wipes & routine guide",
+      "Allergy support supplement",
+      "Specialist review every 2 weeks",
+      "WhatsApp follow-up with your vet",
+    ],
+    timeline: [
+      { week: "Week 1–2", expectation: "Eyes look cleaner day to day" },
+      { week: "Week 3–4", expectation: "Fewer new stains" },
+      { week: "Week 5–6", expectation: "Steady weekly routine in place" },
+    ],
+  },
+  prevention: {
+    id: "prevention",
+    planName: "Prevention Wellness Plan",
+    duration: "Ongoing",
+    beforeImage: "./images/hero-cat-bed.png",
+    afterImage: "./images/hero-healthy-cat.png",
+    beforeLabel: "Today",
+    afterLabel: "Month 3+",
+    beforeCaption: "No issues — staying ahead",
+    afterCaption: "On track with deworming, fleas, and gut support",
+    likelyCondition: "Healthy cat — preventive care recommended",
+    treatmentGoal: "Stay ahead of fleas, worms, and common issues before they start.",
+    medications: ["Monthly deworming", "Flea prevention", "Gut & omega support"],
+    tangibleIncludes: [
+      "Monthly deworming medication",
+      "Flea prevention treatment",
+      "Gut & omega supplement",
+      "Monthly specialist check-in on WhatsApp",
+    ],
+    timeline: [
+      { week: "Month 1", expectation: "Prevention rhythm started" },
+      { week: "Month 2", expectation: "Habits feel automatic" },
+      { week: "Month 3+", expectation: "On track long-term" },
+    ],
+  },
+};
+
+function getWellnessPlanTitle(name, config) {
+  const displayName = name === "your cat" ? "Your cat" : name;
+  if (name === "your cat") return `Personalised ${config.planName}`;
+  return `${displayName}'s ${config.planName}`;
+}
+
+function getWellnessJourneyTitle(name, config) {
+  const displayName = name === "your cat" ? "Your cat" : name;
+  if (config.id === "prevention") return `${displayName}'s Wellness Journey`;
+  return `${displayName}'s Recovery Journey`;
+}
+
+function getWellnessRecoveryCtaTitle(name, config) {
+  const displayName = name === "your cat" ? "Your cat" : name;
+  if (config.id === "prevention") return `Start ${displayName}'s Wellness Plan`;
+  return `Start ${displayName}'s Recovery Plan`;
+}
+
+function getWellnessSpecialist(planId) {
+  return WELLNESS_SPECIALISTS[planId] || WELLNESS_SPECIALISTS.skin;
+}
+
+function getWellnessRecommendationLead(name, specialist) {
+  const possessive = name === "your cat" ? "your cat's" : `${name}'s`;
+  return `Based on ${possessive} symptoms, this plan was created by a ${specialist.specialtyNoun}.`;
+}
+
+function buildWellnessRecommendationReasons() {
+  const reasons = [];
+  const issues = getSelectedIssueSymptoms();
+  const answers = getYoungDetailAnswers();
+
+  issues.forEach((issue) => {
+    const detail = answers[issue.id];
+    if (issue.id === "skin") {
+      if (
+        !detail ||
+        detail.id === "seven_days" ||
+        detail.id === "one_month" ||
+        detail.id === "sometimes" ||
+        detail.id === "scratch_and_fleas"
+      ) {
+        reasons.push("Excess scratching");
+      }
+    }
+    if (issue.id === "coat") {
+      if (detail?.id === "thin" || detail?.id === "shedding") {
+        reasons.push("Mild hair loss");
+      } else {
+        reasons.push("Dull or dry coat");
+      }
+    }
+    if (issue.id === "eyes") {
+      reasons.push("Teary eyes or visible stains");
+    }
+    if (issue.id === "prevention") {
+      reasons.push("Routine prevention check-in");
+    }
+  });
+
+  if (resolveYoungUrgency() !== "urgent") {
+    reasons.push("No urgent warning signs");
+  }
+
+  if (!reasons.length) {
+    reasons.push("Pattern fits a structured recovery program");
+  }
+
+  return [...new Set(reasons)];
+}
+
+function getWellnessConfirmTitle(name, specialist) {
+  const displayName = name === "your cat" ? "your cat" : name;
+  return `${specialist.shortName}'s recommended plan for ${displayName}`;
+}
+
+function getWellnessReviewCtaLabel(specialist) {
+  return `Get ${specialist.shortName}'s review — free`;
+}
+
+function getWellnessCtaLabel(name) {
+  if (name === "your cat") return "Begin recovery";
+  const displayName = name.charAt(0).toUpperCase() + name.slice(1);
+  return `Start ${displayName}'s treatment`;
+}
+
+function buildWellnessReviewWhatsAppUrl({ name, config, specialist, diagnosis, reasons }) {
+  const displayName = name === "your cat" ? "my cat" : name;
+  const ageLine = quizState.age != null ? `${quizState.age} years old` : "age not shared";
+  const symptomLines = reasons
+    .filter((reason) => reason !== "No urgent warning signs")
+    .join(", ");
+
+  const text = [
+    `Hi Felica — I'd like ${specialist.shortName} to review ${displayName}'s case.`,
+    "",
+    `Cat: ${displayName} (${ageLine})`,
+    `Working assessment: ${diagnosis}`,
+    `Recommended plan: ${config.duration}`,
+    `Goal: ${config.treatmentGoal}`,
+    symptomLines ? `Based on: ${symptomLines}` : "",
+    "",
+    "Can you confirm if this plan is right before we start treatment?",
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  return `${FELICA_WHATSAPP_CONTACT_URL}?text=${encodeURIComponent(text)}`;
+}
+
+function renderWellnessConfirmationJourney(specialist, name) {
+  const possessive = name === "your cat" ? "your cat's" : `${name}'s`;
+  return `
+    <ol class="wellness-confirm-journey">
+      <li class="wellness-confirm-journey-item is-done">
+        <span class="wellness-confirm-journey-step">Today</span>
+        <span class="wellness-confirm-journey-copy">You shared ${escapeHtml(possessive)} symptoms</span>
+      </li>
+      <li class="wellness-confirm-journey-item is-next">
+        <span class="wellness-confirm-journey-step">Next</span>
+        <span class="wellness-confirm-journey-copy">${escapeHtml(specialist.shortName)} confirms on WhatsApp (free)</span>
+      </li>
+      <li class="wellness-confirm-journey-item">
+        <span class="wellness-confirm-journey-step">Then</span>
+        <span class="wellness-confirm-journey-copy">Confirmed plan + treatment ships</span>
+      </li>
+    </ol>`;
+}
+
+function resolveWellnessDiagnosis(config) {
+  const detail = getYoungDetailAnswers()[config.id];
+  if (config.id === "skin") {
+    const fleaIds = new Set([
+      "fleas_one_day",
+      "fleas_seven_days",
+      "fleas_while_ago",
+      "scratch_and_fleas",
+    ]);
+    if (detail && fleaIds.has(detail.id)) return config.fleaCondition || config.likelyCondition;
+  }
+  return config.likelyCondition;
+}
+
+function renderWellnessRxRow(label, value, isList = false, note = "") {
+  const valueHtml = isList
+    ? `<ul class="wellness-rx-list">${value.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>`
+    : `<p class="wellness-rx-value">${escapeHtml(value)}</p>`;
+  const noteHtml = note ? `<p class="wellness-rx-note">${escapeHtml(note)}</p>` : "";
+  return `
+    <div class="wellness-rx-row">
+      <p class="wellness-rx-label">${escapeHtml(label)}</p>
+      ${valueHtml}
+      ${noteHtml}
+    </div>`;
+}
+
+function renderWellnessTimeline(timeline) {
+  return `
+    <ol class="wellness-timeline">
+      ${timeline
+        .map(
+          (item) => `
+        <li class="wellness-timeline-item">
+          <span class="wellness-timeline-week">${escapeHtml(item.week)}</span>
+          <span class="wellness-timeline-expectation">${escapeHtml(item.expectation)}</span>
+        </li>`
+        )
+        .join("")}
+    </ol>`;
+}
+
+function renderWellnessSpecialistRx(specialist, name) {
+  const possessive = name === "your cat" ? "your cat's" : `${name}'s`;
+  return `
+    <section class="wellness-panel wellness-specialist-rx" aria-label="Specialist recommendation">
+      <div class="wellness-specialist-rx-body">
+        <img
+          class="wellness-specialist-rx-photo"
+          src="${specialist.image}"
+          alt="${escapeHtml(specialist.fullName)}"
+          width="72"
+          height="72"
+          loading="lazy"
+          decoding="async"
+        />
+        <div class="wellness-specialist-rx-meta">
+          <p class="wellness-specialist-rx-name">${escapeHtml(specialist.fullName)}</p>
+          <p class="wellness-specialist-rx-title">${escapeHtml(specialist.title)}</p>
+          <p class="wellness-specialist-rx-reply">${escapeHtml(specialist.replyTime)}</p>
+        </div>
+      </div>
+      <p class="wellness-specialist-rx-note">
+        ${escapeHtml(specialist.shortName)} recommends this plan based on ${escapeHtml(possessive)} symptoms.
+        ${escapeHtml(specialist.shortName)} will confirm on WhatsApp before anything ships.
+      </p>
+    </section>`;
+}
+
+function renderWellnessBeforeAfter(config) {
+  return `
+    <div class="wellness-ba-hero" aria-label="Before and after recovery">
+      <div class="wellness-ba-card wellness-ba-card--before">
+        <div class="wellness-ba-image-wrap">
+          <img class="wellness-ba-image" src="${config.beforeImage}" alt="" loading="lazy" decoding="async" />
+          <span class="wellness-ba-tag">${escapeHtml(config.beforeLabel)}</span>
+        </div>
+        <p class="wellness-ba-caption">${escapeHtml(config.beforeCaption)}</p>
+      </div>
+      <div class="wellness-ba-divider" aria-hidden="true">
+        <span class="wellness-ba-arrow"><i data-lucide="arrow-right"></i></span>
+      </div>
+      <div class="wellness-ba-card wellness-ba-card--after">
+        <div class="wellness-ba-image-wrap">
+          <img class="wellness-ba-image" src="${config.afterImage}" alt="" loading="lazy" decoding="async" />
+          <span class="wellness-ba-tag wellness-ba-tag--after">${escapeHtml(config.afterLabel)}</span>
+        </div>
+        <p class="wellness-ba-caption">${escapeHtml(config.afterCaption)}</p>
+      </div>
+    </div>`;
+}
+
+function renderWellnessCheckList(items) {
+  return `
+    <ul class="wellness-checklist">
+      ${items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
+    </ul>`;
+}
+
+function isWellnessPlanEligible() {
+  if (resolveYoungUrgency() === "urgent") return false;
+  const issues = getSelectedIssueSymptoms();
+  if (!issues.length) return isPreventionPath();
+  return issues.every((issue) => WELLNESS_ISSUE_IDS.has(issue.id));
+}
+
+function getWellnessPlanConfig() {
+  const priority = ["skin", "coat", "eyes", "prevention"];
+  const issues = getSelectedIssueSymptoms();
+  for (const id of priority) {
+    if (issues.some((issue) => issue.id === id)) return WELLNESS_PLANS[id];
+  }
+  if (isPreventionPath()) return WELLNESS_PLANS.prevention;
+  return WELLNESS_PLANS.skin;
+}
 
 function getYoungSymptomMeta() {
   const id = getPrimaryYoungSymptom()?.id || "prevention";
@@ -1519,37 +1973,69 @@ function buildYoungCarePlan() {
       },
     },
     skin: {
-      fleas: {
-        summary: `Fleas on ${name} need treating on the cat and in the home environment.`,
+      seven_days: {
+        summary: `${name} has been scratching for about a week — fleas or allergy are the usual causes.`,
         watch: [
-          "Wash bedding on a hot cycle and vacuum soft furnishings.",
-          "Treat all pets in the home — not just the itchy one.",
+          "Check the base of the tail and neck for flea dirt or ticks.",
+          "Avoid new treats, detergents, or floor cleaners this week.",
         ],
-        escalate: "See your vet if scratching continues after flea treatment starts.",
+        escalate: "See your vet if scratching breaks the skin or keeps worsening.",
       },
-      scratching: {
+      one_month: {
+        summary: `${name} has been scratching for a month — this needs a proper look, not just home fixes.`,
+        watch: [
+          "Check all pets in the home for fleas or ticks.",
+          "Note if fur is thinning or skin looks red in any spots.",
+        ],
+        escalate: "Book a vet visit this week — long-term itching rarely settles on its own.",
+      },
+      sometimes: {
+        summary: `${name} scratches on and off — worth watching if it keeps coming back.`,
+        watch: [
+          "Note what time of day or season scratching is worst.",
+          "Check for fleas even if you only see occasional scratching.",
+        ],
+        escalate: "See your vet if scratching becomes daily or skin looks sore.",
+      },
+      fleas_one_day: {
+        summary: `You just spotted fleas or ticks on ${name} — act quickly before they spread in the home.`,
+        watch: [
+          "Wash bedding on a hot cycle and vacuum sofas and corners.",
+          "Treat all pets in the home — not just the one you noticed.",
+        ],
+        escalate: "See your vet within 48 hours to choose the right flea or tick treatment.",
+      },
+      fleas_seven_days: {
+        summary: `Fleas or ticks on ${name} for about a week — the home environment needs treating too.`,
+        watch: [
+          "Comb through the fur with a flea comb over white paper.",
+          "Check if anyone else at home has itchy bites.",
+        ],
+        escalate: "See your vet this week — ticks in particular need proper removal and treatment.",
+      },
+      fleas_while_ago: {
+        summary: `Fleas or ticks on ${name} have been around a while — a full treatment plan is needed.`,
+        watch: [
+          "Treat the cat, bedding, and floors together — not just one.",
+          "Watch for hair loss, scratching, or pale gums from flea load.",
+        ],
+        escalate: "Book a vet visit soon — long-standing parasites affect health and comfort.",
+      },
+      scratch_and_fleas: {
+        summary: `${name} is scratching and has fleas or ticks — treat both the cat and home together.`,
+        watch: [
+          "Start flea treatment on all pets — scratching often means fleas are active.",
+          "Wash bedding and vacuum corners where your cat rests.",
+        ],
+        escalate: "See your vet within 48 hours for the right flea or tick treatment.",
+      },
+      default: {
         summary: `${name} is scratching more than usual — fleas or allergies are the usual causes.`,
         watch: [
           "Check the base of the tail and neck for flea dirt.",
-          "Avoid new treats, detergents, or sprays this week.",
-        ],
-        escalate: "See your vet if skin breaks open or scratching keeps worsening.",
-      },
-      hair_loss: {
-        summary: `Patchy hair loss in ${name} shouldn't wait — parasites, allergy, or infection are common.`,
-        watch: [
-          "Photograph patches to track spread over a few days.",
-          "Stop any new food or treats until reviewed.",
-        ],
-        escalate: "See your vet within a few days — spreading bald patches need a look.",
-      },
-      default: {
-        summary: "Itching and coat changes are common — parasites and allergies are the usual suspects.",
-        watch: [
-          "Check for fleas at the base of the tail and around the neck.",
           "Avoid new treats or detergents until you've spoken with a vet.",
         ],
-        escalate: "See your vet if hair loss spreads or scratching breaks the skin.",
+        escalate: "See your vet if skin breaks open or scratching keeps worsening.",
       },
     },
     coat: {
@@ -1568,6 +2054,90 @@ function buildYoungCarePlan() {
           "Check eating, energy, and litter at the same time.",
         ],
         escalate: "See your vet if the coat keeps thinning or patchy areas spread.",
+      },
+    },
+    eyes: {
+      more_than_usual: {
+        summary: `${name}'s eyes are tearing more than usual — worth checking if something is irritating them.`,
+        watch: [
+          "Gently wipe under the eyes with clean water once a day.",
+          "Check if face rubbing or scratching has increased.",
+        ],
+        escalate: "See your vet if tearing is constant, or the eye looks red or swollen.",
+      },
+      once_week: {
+        summary: `Teary eyes or stains about once a week in ${name} — often mild, but track if it's increasing.`,
+        watch: [
+          "Note if stains are getting darker or spreading below the eye.",
+          "Check for dust, new cleaners, or incense at home.",
+        ],
+        escalate: "See your vet if frequency increases or the eye looks sore.",
+      },
+      once_in_a_while: {
+        summary: `Occasional tear stains in ${name} are common — especially in light-coloured cats.`,
+        watch: [
+          "Wipe gently when you notice wetness under the eyes.",
+          "Photograph once a month to spot any slow changes.",
+        ],
+        escalate: "See your vet if stains suddenly worsen or the eye looks red.",
+      },
+      default: {
+        summary: `Teary eyes or stains in ${name} are common — sudden changes need a closer look.`,
+        watch: [
+          "Gently wipe under the eyes with clean water when needed.",
+          "Note if ${name} is squinting, rubbing the face, or avoiding light.",
+        ],
+        escalate: "See your vet if redness, swelling, or sticky discharge appears.",
+      },
+    },
+    behaviour: {
+      meowing: {
+        summary: `${name} is meowing more than usual — often hunger, pain, or stress.`,
+        watch: [
+          "Check food, water, and litter box are clean and easy to reach.",
+          "Note if meowing is at night or around meal times.",
+        ],
+        escalate: "See your vet if meowing is constant, especially with not eating or hiding.",
+      },
+      aggression: {
+        summary: `${name} seems more aggressive — pain and fear are common causes in cats.`,
+        watch: [
+          "Give quiet space — don't force petting or picking up.",
+          "Note if aggression started after a diet, visitor, or new pet.",
+        ],
+        escalate: "See your vet within a few days — sudden aggression often has a physical cause.",
+      },
+      trying_out: {
+        summary: `${name} keeps trying to go outside — common in unneutered cats or when stressed.`,
+        watch: [
+          "Secure windows and doors — indoor cats can escape quickly.",
+          "Note if this started after a neighbour's cat or a heat cycle.",
+        ],
+        escalate: "Speak to your vet about neutering/spaying if not done — it often helps.",
+      },
+      hiding: {
+        summary: `${name} has been hiding or avoiding people — cats often withdraw when they don't feel right.`,
+        watch: [
+          "Leave food and water near their hiding spot.",
+          "Avoid forcing interaction — watch from a distance.",
+        ],
+        escalate: "Book a vet visit this week — hiding that persists usually has a physical cause.",
+      },
+      withdrawn: {
+        summary: `${name} isn't acting like themselves — personality shifts often mean discomfort.`,
+        watch: [
+          "Offer a quiet resting spot and monitor eating and litter.",
+          "Note whether withdrawal is constant or only around noise.",
+        ],
+        escalate: "See your vet if unusual behaviour lasts more than a few days.",
+      },
+      default: {
+        summary: `${name} seems off — stress, pain, or hormones are common reasons.`,
+        watch: [
+          "Keep food, water, and a quiet resting spot easy to reach.",
+          "Note when the behaviour is worst — day or night.",
+        ],
+        escalate: "See your vet if this lasts more than a few days or eating drops.",
       },
     },
     hydration: {
@@ -1614,16 +2184,6 @@ function buildYoungCarePlan() {
         escalate: "See your vet if low energy lasts more than a few days or meals are skipped.",
       },
     },
-    mood: {
-      default: {
-        summary: `${name} isn't acting like themselves — personality shifts often mean discomfort.`,
-        watch: [
-          "Offer a quiet resting spot and monitor eating and litter.",
-          "Note whether withdrawal is constant or only around noise.",
-        ],
-        escalate: "See your vet if unusual behaviour lasts more than a few days.",
-      },
-    },
     dental: {
       default: {
         summary: `Mouth trouble in ${name} can make eating painful before it's obvious.`,
@@ -1644,40 +2204,6 @@ function buildYoungCarePlan() {
         escalate: "See your vet if limping, stiffness, or reluctance to move continues.",
       },
     },
-    behaviour: {
-      few_days: {
-        summary: `${name} is sleeping more than usual — often the first sign something feels off.`,
-        watch: [
-          "Note whether they rouse for food and favourite sounds.",
-          "Check litter and water while they're resting more.",
-        ],
-        escalate: "See your vet if sleepiness lasts more than a few days or meals are skipped.",
-      },
-      one_two_weeks: {
-        summary: `${name} has been hiding or avoiding people — cats often withdraw when they don't feel right.`,
-        watch: [
-          "Leave food and water near their hiding spot.",
-          "Avoid forcing interaction — watch from a distance.",
-        ],
-        escalate: "Book a vet visit this week — hiding that persists usually has a physical cause.",
-      },
-      gradual: {
-        summary: `${name} seems less playful or curious — gradual changes are easy to normalise.`,
-        watch: [
-          "Compare jumping, grooming, and play to what's normal for them.",
-          "Weigh by feel or scale if possible.",
-        ],
-        escalate: "See your vet if the trend continues over the next fortnight.",
-      },
-      default: {
-        summary: "When cats withdraw, it's often because they don't feel quite right.",
-        watch: [
-          "Offer a quiet resting spot and monitor eating and litter use.",
-          "Note whether hiding is constant or only around noise or visitors.",
-        ],
-        escalate: "See your vet if low energy lasts more than a few days or appetite drops.",
-      },
-    },
     prevention: {
       default: {
         summary: `No urgent flags for ${name} — a steady prevention rhythm is the right next step.`,
@@ -1693,7 +2219,7 @@ function buildYoungCarePlan() {
   const symptomPlans = planBodies[symptomId] || planBodies.prevention;
   const body = symptomPlans[detailId] || symptomPlans.default;
 
-  if (durationId === "today" && !isPrevention && symptomId !== "mood") {
+  if (durationId === "today" && !isPrevention && symptomId !== "behaviour") {
     body.watch = [`Started recently — recheck ${name} closely over the next 24 hours.`, ...body.watch];
   }
   if (durationId === "longer" && !isPrevention) {
@@ -2365,12 +2891,23 @@ function bindYoungPlanHandlers() {
     btn.addEventListener("click", closeFlow);
   });
 
-  assflowMain.querySelector("[data-young-program]")?.addEventListener("click", () => {
+  assflowMain.querySelector("[data-wellness-review]")?.addEventListener("click", () => {
     track("cta_clicked", {
-      location: "young_care_plan",
-      intent: "prevention_program",
+      location: "young_wellness_plan",
+      intent: "specialist_review_whatsapp",
       cat_age: quizState.age,
       symptoms: getSelectedYoungSymptoms().map((s) => s.id),
+      wellness_plan: getWellnessPlanConfig().id,
+    });
+  });
+
+  assflowMain.querySelector("[data-young-program]")?.addEventListener("click", () => {
+    track("cta_clicked", {
+      location: "young_wellness_plan",
+      intent: "start_treatment_reserve",
+      cat_age: quizState.age,
+      symptoms: getSelectedYoungSymptoms().map((s) => s.id),
+      wellness_plan: getWellnessPlanConfig().id,
     });
   });
 }
@@ -2416,8 +2953,8 @@ function renderYoungSymptomStep() {
   assflowMain.innerHTML = `
     <div class="flow-step young-issue-screen">
       <p class="flow-step-label">${formatYoungStepLabel(2)}</p>
-      <h1 class="flow-title" id="assflow-title">What's been different lately?</h1>
-      <p class="flow-lead">Select everything you've noticed.</p>
+      <h1 class="flow-title" id="assflow-title">What have you noticed?</h1>
+      <p class="flow-lead">Tick everything that applies. We'll ask a short follow-up for each.</p>
       ${multiHint}
       <div class="young-issue-list" role="group" aria-label="Changes you've noticed">
         ${YOUNG_SYMPTOMS.map((symptom) => {
@@ -2626,13 +3163,15 @@ function renderYoungConnectStep() {
   const method = quizState.contactMethod || "call";
   const isPrevention = isPreventionPath();
   const connectLeads = {
-    vomiting: "We'll review the pattern you described, then call to close the loop.",
+    vomiting: "We'll review the vomiting pattern you described, then call with next steps.",
     appetite: "We'll review what you shared about eating, then reach out with next steps.",
-    litter: "We'll review the litter changes you noted, then reach out with guidance.",
-    coat: "We'll review what you noticed about the coat, then reach out with a plan.",
-    hydration: "We'll review the drinking and litter changes, then reach out with guidance.",
+    litter: "We'll review the litter and stool changes you noted, then reach out.",
+    skin: "We'll review the scratching or flea issue you described, then reach out with a plan.",
+    coat: "We'll review what you noticed about the fur, then reach out with a plan.",
+    eyes: "We'll review the teary eyes you described, then reach out with guidance.",
+    behaviour: "We'll review the behaviour changes you described, then reach out with next steps.",
+    hydration: "We'll review the drinking and peeing changes, then reach out with guidance.",
     energy: "We'll review the energy changes you described, then reach out.",
-    mood: "We'll review the behaviour changes you described, then reach out.",
     dental: "We'll review the mouth trouble you described, then reach out.",
     mobility: "We'll review how movement has changed, then reach out.",
     prevention: "Leave your number — we'll send your prevention plan on WhatsApp.",
@@ -2830,7 +3369,140 @@ function renderYoungReviewStep() {
   }, 2600);
 }
 
+function renderYoungWellnessPlanStep() {
+  setFlowProgress(getYoungStepCount() - 1, getYoungStepCount());
+  setFlowFooter({ visible: false });
+  setFlowProgramLabel();
+  flowCompleted = true;
+
+  const name = getCatDisplayName();
+  const config = getWellnessPlanConfig();
+  const specialist = getWellnessSpecialist(config.id);
+  const confirmTitle = getWellnessConfirmTitle(name, specialist);
+  const reviewCtaLabel = getWellnessReviewCtaLabel(specialist);
+  const payCtaLabel = getWellnessCtaLabel(name);
+  const diagnosis = resolveWellnessDiagnosis(config);
+  const reasons = buildWellnessRecommendationReasons();
+  const phone = quizState.whatsappNumber || "";
+  const reviewWhatsAppUrl = buildWellnessReviewWhatsAppUrl({
+    name,
+    config,
+    specialist,
+    diagnosis,
+    reasons,
+  });
+
+  track("young_wellness_plan_viewed", {
+    cat_age: quizState.age,
+    symptoms: getSelectedYoungSymptoms().map((s) => s.id),
+    wellness_plan: config.id,
+    specialist: specialist.fullName,
+    diagnosis,
+    phone_collected: !!phone,
+  });
+
+  assflowMain.innerHTML = `
+    <div class="flow-step flow-step-result young-plan-step young-wellness-plan">
+      <div class="young-care-plan wellness-checkout">
+        <h1 class="wellness-checkout-title" id="assflow-title">${escapeHtml(confirmTitle)}</h1>
+        <p class="wellness-checkout-lead">
+          Based on ${escapeHtml(name === "your cat" ? "your cat's" : `${name}'s`)} symptoms,
+          ${escapeHtml(specialist.shortName)} recommends this plan. A specialist confirms it on WhatsApp before treatment starts.
+        </p>
+
+        <div class="wellness-trust-banner" role="status">
+          <i data-lucide="shield"></i>
+          <span>Nothing ships until ${escapeHtml(specialist.shortName)} confirms the plan.</span>
+        </div>
+
+        ${renderWellnessSpecialistRx(specialist, name)}
+
+        <section class="wellness-panel wellness-prescription" aria-labelledby="wellness-prescription-title">
+          <h2 class="wellness-section-title" id="wellness-prescription-title">Provisional care plan</h2>
+          <div class="wellness-rx-rows">
+            ${renderWellnessRxRow(
+              "Working assessment",
+              diagnosis,
+              false,
+              "Not a diagnosis — confirmed on WhatsApp before treatment starts."
+            )}
+            ${renderWellnessRxRow("Treatment goal", config.treatmentGoal)}
+            ${renderWellnessRxRow("Medication & supplements", config.medications, true)}
+            ${renderWellnessRxRow("Duration", config.duration)}
+          </div>
+        </section>
+
+        <section class="wellness-panel wellness-confirm-journey-section" aria-labelledby="wellness-confirm-journey-title">
+          <h2 class="wellness-section-title" id="wellness-confirm-journey-title">What happens next</h2>
+          ${renderWellnessConfirmationJourney(specialist, name)}
+        </section>
+
+        ${renderWellnessBeforeAfter(config)}
+
+        <section class="wellness-panel wellness-timeline-section" aria-labelledby="wellness-timeline-title">
+          <h2 class="wellness-section-title" id="wellness-timeline-title">After confirmation — ${escapeHtml(config.duration)} recovery</h2>
+          <p class="wellness-section-sub">What to expect along the way</p>
+          ${renderWellnessTimeline(config.timeline)}
+        </section>
+
+        <section class="wellness-panel wellness-includes-section" aria-labelledby="wellness-includes-title">
+          <h2 class="wellness-section-title" id="wellness-includes-title">What's included each month</h2>
+          ${renderWellnessCheckList(config.tangibleIncludes)}
+        </section>
+
+        <div class="wellness-price-block">
+          <p class="wellness-price-amount">${FELICA_PREVENTION_PROGRAM.price}<span>/${FELICA_PREVENTION_PROGRAM.period}</span></p>
+          <p class="wellness-price-note">Charged only after ${escapeHtml(specialist.shortName)} confirms. Nothing ships before that.</p>
+        </div>
+
+        <div class="wellness-cta-stack">
+          <a
+            class="wellness-cta-primary"
+            href="${reviewWhatsAppUrl}"
+            target="_blank"
+            rel="noopener noreferrer"
+            data-wellness-review
+          >${escapeHtml(reviewCtaLabel)}</a>
+          <button type="button" class="wellness-cta-secondary" data-young-program>
+            ${escapeHtml(payCtaLabel)} — ${FELICA_PREVENTION_PROGRAM.price}
+          </button>
+        </div>
+
+        <p class="wellness-checkout-guarantee">
+          If ${escapeHtml(specialist.shortName)} finds this isn't the right plan after review, we'll refund you in full.
+        </p>
+
+        ${
+          phone
+            ? `<p class="wellness-contact-phone">We'll reach you at <strong>+91 ${escapeHtml(phone)}</strong> when your case is reviewed.</p>`
+            : ""
+        }
+
+        <section class="wellness-panel wellness-why-section" aria-labelledby="wellness-why-title">
+          <h2 class="wellness-section-title" id="wellness-why-title">Why we recommended this</h2>
+          <p class="wellness-why-lead">Based on your answers:</p>
+          ${renderWellnessCheckList(reasons)}
+          <p class="wellness-reviewed-footnote">
+            Prepared by a ${escapeHtml(specialist.reviewTitle)} · confirmed before treatment starts.
+          </p>
+        </section>
+
+        <button type="button" class="wellness-done-link" data-flow-done>Done for now</button>
+        <p class="score-reassure">Not a diagnosis. Your vet makes every treatment decision.</p>
+      </div>
+    </div>
+  `;
+
+  refreshFlowIcons();
+  bindYoungPlanHandlers();
+}
+
 function renderYoungPlanStep() {
+  if (isWellnessPlanEligible()) {
+    renderYoungWellnessPlanStep();
+    return;
+  }
+
   setFlowProgress(getYoungStepCount() - 1, getYoungStepCount());
   setFlowFooter({ visible: false });
   setFlowProgramLabel();
