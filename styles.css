@@ -877,6 +877,15 @@ html.assflow-open .site-shell {
   margin: 0 auto;
 }
 
+.assflow-footer-hint {
+  max-width: 480px;
+  margin: 0 auto 10px;
+  text-align: center;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--ink-muted);
+}
+
 .flow-step {
   max-width: 480px;
   margin: 0 auto;
@@ -7749,41 +7758,54 @@ body[data-age-theme="geriatric"] .hero-clinic {
   padding-bottom: 8px;
 }
 
+.young-issue-screen .flow-title {
+  margin-bottom: 8px;
+  font-size: clamp(1.5rem, 5.5vw, 1.75rem);
+}
+
+.young-issue-screen .flow-lead {
+  margin-bottom: 18px;
+  color: var(--ink-soft);
+}
+
 .young-issue-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 4px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 0;
 }
 
 .young-issue-card {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 14px;
+  justify-content: center;
+  gap: 10px;
   width: 100%;
+  min-height: 112px;
   margin: 0;
-  padding: 16px 14px;
-  border: 1px solid var(--issue-ring, var(--line));
+  padding: 16px 10px;
+  border: 1.5px solid var(--line);
   border-radius: 16px;
-  background: var(--surface);
-  text-align: left;
+  background: #fff;
+  text-align: center;
   cursor: pointer;
   transition:
     border-color 200ms var(--ease),
-    box-shadow 200ms var(--ease),
-    transform 160ms var(--ease);
+    background 200ms var(--ease),
+    box-shadow 200ms var(--ease);
 }
 
 .young-issue-card:hover {
-  border-color: var(--issue-icon, var(--accent));
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
-  transform: translateY(-1px);
+  border-color: var(--issue-ring, var(--line));
+  box-shadow: 0 6px 18px rgba(47, 43, 53, 0.05);
+  transform: none;
 }
 
-.young-issue-card.is-selected,
-.young-issue-card:active {
-  border-color: var(--issue-icon, var(--accent));
-  box-shadow: 0 0 0 1px var(--issue-icon, var(--accent));
+.young-issue-card.is-selected {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  box-shadow: none;
 }
 
 .young-issue-icon-wrap {
@@ -7791,9 +7813,9 @@ body[data-age-theme="geriatric"] .hero-clinic {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 48px;
-  height: 48px;
-  border-radius: 14px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
   background: var(--issue-bg, var(--accent-soft));
   color: var(--issue-icon, var(--accent));
 }
@@ -7807,15 +7829,16 @@ body[data-age-theme="geriatric"] .hero-clinic {
 .young-issue-copy {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  flex: 1;
+  gap: 0;
+  flex: 0 1 auto;
   min-width: 0;
+  width: 100%;
 }
 
 .young-issue-label {
-  font-size: 0.9375rem;
-  font-weight: 600;
-  line-height: 1.3;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.25;
   color: var(--ink);
 }
 
@@ -7825,14 +7848,16 @@ body[data-age-theme="geriatric"] .hero-clinic {
   color: var(--ink-muted);
 }
 
-.young-issue-card--multi {
+.young-issue-card--multi,
+.young-issue-card--single {
   position: relative;
-  text-align: left;
+  text-align: center;
   font: inherit;
   color: inherit;
 }
 
-.young-issue-card--multi input {
+.young-issue-card--multi input,
+.young-issue-card--single input {
   position: absolute;
   opacity: 0;
   width: 0;
@@ -7841,46 +7866,12 @@ body[data-age-theme="geriatric"] .hero-clinic {
 }
 
 .young-issue-check {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  border: 1.5px solid var(--line);
-  color: transparent;
-  background: var(--surface);
-  transition:
-    border-color 200ms var(--ease),
-    background 200ms var(--ease),
-    color 200ms var(--ease);
-}
-
-.young-issue-check svg {
-  width: 16px;
-  height: 16px;
-  stroke: currentColor;
-}
-
-.young-issue-card--multi.is-selected .young-issue-check {
-  border-color: var(--issue-icon, var(--accent));
-  background: var(--issue-icon, var(--accent));
-  color: #fff;
+  display: none;
 }
 
 .young-issue-card--multi .young-issue-label {
-  font-size: 0.9375rem;
-  line-height: 1.45;
-}
-
-.young-issue-screen .young-issue-list {
-  gap: 12px;
-}
-
-.young-issue-screen .young-issue-card {
-  min-height: 72px;
-  padding: 16px;
+  font-size: 0.8125rem;
+  line-height: 1.25;
 }
 
 .young-detail-screen .young-option-card {
@@ -8080,6 +8071,120 @@ body[data-age-theme="geriatric"] .hero-clinic {
 
 .young-care-plan {
   text-align: left;
+}
+
+.young-call-plan-title {
+  margin: 0 0 10px;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 5vw, 1.85rem);
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--ink);
+}
+
+.young-call-plan-lead {
+  margin: 0 0 20px;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+.young-call-vet {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 0 0 14px;
+  padding: 16px;
+  border-radius: 16px;
+  background: #fff;
+  border: 1px solid var(--line);
+}
+
+.young-call-vet-photo {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center top;
+  border: 2px solid var(--accent-soft);
+  flex-shrink: 0;
+}
+
+.young-call-vet-name {
+  margin: 0 0 2px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.young-call-vet-title {
+  margin: 0 0 4px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.young-call-vet-when {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+
+.young-call-phone {
+  margin: 0 0 18px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid var(--line);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  text-align: center;
+}
+
+.young-call-section {
+  margin: 0 0 16px;
+  padding: 16px;
+  border-radius: 16px;
+  background: #fff;
+  border: 1px solid var(--line);
+}
+
+.young-call-section-title {
+  margin: 0 0 10px;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.young-call-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.young-call-list li {
+  position: relative;
+  padding-left: 1.1rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.young-call-list li + li {
+  margin-top: 8px;
+}
+
+.young-call-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
 }
 
 .young-plan-eyebrow {
@@ -9117,15 +9222,20 @@ body[data-age-theme="geriatric"] .hero-clinic {
 
 @media (min-width: 480px) {
   .young-issue-list {
-    gap: 12px;
+    gap: 14px;
   }
 
   .young-issue-card {
-    padding: 18px 16px;
+    min-height: 118px;
+    padding: 18px 12px;
   }
 
   .young-issue-icon-wrap {
-    width: 52px;
-    height: 52px;
+    width: 48px;
+    height: 48px;
+  }
+
+  .young-issue-label {
+    font-size: 0.875rem;
   }
 }
