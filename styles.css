@@ -7284,12 +7284,43 @@ body[data-age-theme="geriatric"] .hero-clinic {
   place-items: center;
   width: 28px;
   height: 28px;
+  border-radius: 8px;
   color: var(--accent);
 }
 
 .hero-float-card-icon svg {
   width: 18px;
   height: 18px;
+}
+
+.hero-float-card--appetite .hero-float-card-icon {
+  background: #fff0e6;
+  color: #d4782a;
+}
+
+.hero-float-card--energy .hero-float-card-icon {
+  background: #ede8f5;
+  color: #7c5cbf;
+}
+
+.hero-float-card--weight .hero-float-card-icon {
+  background: #dff3ef;
+  color: #2a9d8a;
+}
+
+.hero-float-card--litter .hero-float-card-icon {
+  background: #e5efd9;
+  color: #6b8f3c;
+}
+
+.hero-float-card--coat .hero-float-card-icon {
+  background: #fdf5e0;
+  color: #c4952a;
+}
+
+.hero-float-card--breathing .hero-float-card-icon {
+  background: #e3f0fa;
+  color: #3d8cc4;
 }
 
 .hero-float-card-label {
