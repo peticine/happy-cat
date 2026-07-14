@@ -197,6 +197,65 @@ let catAgeProfile = null;
 // dispatches a DOM CustomEvent ("felica:track"), and forwards funnel events
 // to Meta Pixel (fbq) and Google Ads (gtag) for conversion tracking.
 const FUNNEL_EVENTS = [];
+const GOOGLE_ADS_LEAD_SEND_TO = "AW-18298322041/boF_COGojMscEPn4qJVE";
+let leadConversionFired = false;
+
+/**
+ * Fires Google Ads "Submit lead form" + Meta Lead once, and waits briefly so
+ * beacons can flush before SPA step changes replace the DOM.
+ */
+function flushLeadConversionTags(props = {}) {
+  if (leadConversionFired) return Promise.resolve();
+  leadConversionFired = true;
+
+  const flow = props.flow_track || props.flow || "screening";
+  const contentName =
+    flow === "young" ? "young_cat_screening" : "cat_health_screening";
+
+  try {
+    if (typeof window.fbq === "function") {
+      window.fbq("track", "Lead", {
+        content_name: contentName,
+        content_category: "screening",
+        flow,
+      });
+    }
+  } catch (err) {
+    /* pixel must never break the app */
+  }
+
+  return new Promise((resolve) => {
+    let settled = false;
+    const finish = () => {
+      if (settled) return;
+      settled = true;
+      resolve();
+    };
+    const timeoutId = window.setTimeout(finish, 1200);
+
+    try {
+      if (typeof window.gtag === "function") {
+        window.gtag("event", "conversion", {
+          send_to: GOOGLE_ADS_LEAD_SEND_TO,
+          event_callback: () => {
+            window.clearTimeout(timeoutId);
+            finish();
+          },
+        });
+      } else if (typeof window.gtag_report_conversion === "function") {
+        window.gtag_report_conversion();
+        window.clearTimeout(timeoutId);
+        finish();
+      } else {
+        window.clearTimeout(timeoutId);
+        finish();
+      }
+    } catch (err) {
+      window.clearTimeout(timeoutId);
+      finish();
+    }
+  });
+}
 
 function trackGoogleAds(event, props = {}) {
   if (typeof window.gtag !== "function") return;
@@ -219,8 +278,13 @@ function trackGoogleAds(event, props = {}) {
         });
         break;
       case "whatsapp_number_collected":
-        if (typeof window.gtag_report_conversion === "function") {
-          window.gtag_report_conversion();
+        // Fired via flushLeadConversionTags() so the beacon can complete.
+        break;
+      case "young_cat_lead_submitted":
+        if (props.ok) {
+          gtag("event", "sign_up", {
+            method: "young_cat_screening",
+          });
         }
         break;
       case "screening_score_computed":
@@ -253,9 +317,13 @@ function trackMetaPixel(event, props = {}) {
         });
         break;
       case "screening_step_completed":
+      case "young_step_completed":
+      case "young_symptoms_selected":
         fbq("trackCustom", "ScreeningStepCompleted", {
-          step: props.step,
+          step: props.step || props.question || event,
           step_index: props.step_index,
+          flow: props.flow_track || (event.startsWith("young_") ? "young" : "chronic"),
+          symptom: props.symptom || null,
         });
         break;
       case "screening_score_computed":
@@ -276,9 +344,25 @@ function trackMetaPixel(event, props = {}) {
         }
         break;
       case "whatsapp_number_collected":
-        fbq("track", "Lead", {
-          content_name: "cat_health_screening",
-          content_category: "screening",
+        // Fired via flushLeadConversionTags() so the beacon can complete.
+        break;
+      case "young_cat_lead_submitted":
+        if (props.ok) {
+          fbq("track", "CompleteRegistration", {
+            content_name: "young_cat_screening",
+            status: props.urgency || "submitted",
+          });
+          fbq("trackCustom", "ScreeningCompleted", {
+            flow: "young",
+            urgency: props.urgency,
+            issue_id: props.issue_id,
+          });
+        }
+        break;
+      case "young_plan_viewed":
+        fbq("trackCustom", "YoungPlanViewed", {
+          urgency: props.urgency,
+          specialist: props.specialist,
         });
         break;
       case "screening_closed":
@@ -3019,6 +3103,7 @@ let quizState = {
 };
 
 function resetQuizState() {
+  leadConversionFired = false;
   quizState = {
     step: 1,
     flowTrack: catAge != null && isYoungCatAge(catAge) ? "young" : "chronic",
@@ -3491,14 +3576,15 @@ function bindWhatsAppGateHandlers() {
 
     quizState.whatsappNumber = number;
 
-    track("whatsapp_number_collected", {
-      cat_age: quizState.age,
-    });
-
     if (submitBtn) {
       submitBtn.disabled = true;
       submitBtn.textContent = "Loading your result…";
     }
+
+    track("whatsapp_number_collected", {
+      cat_age: quizState.age,
+    });
+    await flushLeadConversionTags({ flow_track: "chronic" });
 
     try {
       const result = await fetchScreeningResult(number);
@@ -3824,7 +3910,7 @@ function renderYoungConnectStep() {
   trackYoungCatStep("contact", issueId);
 
   const form = assflowMain.querySelector("#young-connect-form");
-  form?.addEventListener("submit", (event) => {
+  form?.addEventListener("submit", async (event) => {
     event.preventDefault();
     const phoneInput = form.querySelector("#young-phone-input");
     const nameInput = form.querySelector("#young-cat-name");
@@ -3854,6 +3940,11 @@ function renderYoungConnectStep() {
       }
     }
 
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Submitting…";
+    }
+
     track("whatsapp_number_collected", {
       cat_age: quizState.age,
       flow_track: "young",
@@ -3862,12 +3953,9 @@ function renderYoungConnectStep() {
       session_id: ensureYoungSessionId(),
     });
 
-    if (submitBtn) {
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Submitting…";
-    }
+    // Wait for Google Ads + Meta Lead beacons before leaving this step.
+    await flushLeadConversionTags({ flow_track: "young" });
 
-    // Show preparing screen immediately; submit lead in the background.
     quizState.step = getYoungReviewStep();
     renderFlowStep();
 
