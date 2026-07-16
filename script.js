@@ -27,19 +27,22 @@ const PRIMARY_CTA_LABEL = "Start My Cat's Health Check";
 //   | "Skipping meals? Free vet-designed cat health check" | "Appetite changes hide illness — screen free"
 //   | "Is your cat eating less? Get a plain-language answer"
 // litter/peeing-outside: "Is your cat peeing outside the litter box?" | "Find out if it's stress — or kidneys, bladder, or pain that needs a vet."
+// dental/bad-breath: "Bad breath is not normal for cats" | "Cat bad breath? Free 2-min dental check"
+//   | "Is bad breath a sign of dental disease? Screen free" | "Cats hide mouth pain — check oral health in 2 min"
+//   | "Smelly cat breath? Find out if it's dental disease"
 const HERO_VARIANTS = {
   water: {
     headlineHook: "Drinking more water than usual?",
-    headline: "Find out if it's normal — or a sign kidneys or thyroid need a vet look.",
-    lead: "Early insights. Expert guidance. Better health for a longer life.",
-    cta: "Check for Early Kidney Disease",
+    headline: "It could be a sign of kidney disease.",
+    lead: "Extra thirst often shows up long before cats look sick — kidneys, thyroid, or diabetes.",
+    cta: "Find Out Before It Gets Worse",
     image: "./images/hero-water.png?v=9",
   },
   drinking: {
     headlineHook: "Drinking more water than usual?",
-    headline: "Find out if it's normal — or a sign kidneys or thyroid need a vet look.",
-    lead: "Early insights. Expert guidance. Better health for a longer life.",
-    cta: "Check for Early Kidney Disease",
+    headline: "It could be a sign of kidney disease.",
+    lead: "Extra thirst often shows up long before cats look sick — kidneys, thyroid, or diabetes.",
+    cta: "Find Out Before It Gets Worse",
     image: "./images/hero-water.png?v=9",
   },
   weight: {
@@ -67,24 +70,36 @@ const HERO_VARIANTS = {
   },
   litter: {
     headlineHook: "Is your cat peeing outside the litter box?",
-    headline:
-      "Find out if it's stress — or kidneys, bladder, or pain that needs a vet.",
-    lead: "Early insights. Expert guidance. Better health for a longer life.",
-    cta: "Find Out If Your Cat Is At Risk",
+    headline: "This is a sign of discomfort.",
+    lead: "Stress, bladder pain, or kidney issues can all show up as litter accidents.",
+    cta: "Find Out Before It Gets Worse",
     image: "./images/hero-litter.png",
   },
   urination: {
     headlineHook: "Is your cat peeing outside the litter box?",
-    headline:
-      "Find out if it's stress — or kidneys, bladder, or pain that needs a vet.",
-    lead: "Early insights. Expert guidance. Better health for a longer life.",
-    cta: "Find Out If Your Cat Is At Risk",
+    headline: "This is a sign of discomfort.",
+    lead: "Stress, bladder pain, or kidney issues can all show up as litter accidents.",
+    cta: "Find Out Before It Gets Worse",
     image: "./images/hero-litter.png",
   },
   quiet: {
     headline: "Let's understand what your cat's quieter behaviour could mean.",
     consequence: "When cats withdraw, it's often because they don't feel well — not because they're being difficult.",
     cta: "Start My Cat's Health Check",
+  },
+  dental: {
+    headlineHook: "Bad breath is not normal for cats.",
+    headline: "It could be a sign of dental disease.",
+    lead: "Cats hide mouth pain. By the time you notice it, it's often advanced.",
+    cta: "Take a Quick Dental Screening",
+    image: "./images/hero-dental.png",
+  },
+  breath: {
+    headlineHook: "Bad breath is not normal for cats.",
+    headline: "It could be a sign of dental disease.",
+    lead: "Cats hide mouth pain. By the time you notice it, it's often advanced.",
+    cta: "Take a Quick Dental Screening",
+    image: "./images/hero-dental.png",
   },
   default: {
     headlineHook: "Cats hide their illnesses.",
@@ -99,6 +114,60 @@ const HERO_BG_IMAGES = {
   drinking: "./images/hero-water.png?v=9",
   litter: "./images/hero-litter.png",
   urination: "./images/hero-litter.png",
+  dental: "./images/hero-dental.png",
+  breath: "./images/hero-dental.png",
+};
+
+// Floating tags around the hero portrait — overridden per concern landing.
+const HERO_FLOAT_TAGS = {
+  dental: [
+    { icon: "wind", label: "Bad breath" },
+    { icon: "stethoscope", label: "Gum inflammation" },
+    { icon: "utensils", label: "Pain while eating" },
+    { icon: "shield", label: "Tooth loss" },
+    { icon: "heart-pulse", label: "Kidney & heart" },
+    { icon: "eye", label: "Hiding pain" },
+  ],
+  breath: [
+    { icon: "wind", label: "Bad breath" },
+    { icon: "stethoscope", label: "Gum inflammation" },
+    { icon: "utensils", label: "Pain while eating" },
+    { icon: "shield", label: "Tooth loss" },
+    { icon: "heart-pulse", label: "Kidney & heart" },
+    { icon: "eye", label: "Hiding pain" },
+  ],
+  litter: [
+    { icon: "toilet", label: "Peeing outside" },
+    { icon: "activity", label: "Straining" },
+    { icon: "droplets", label: "Blood in urine" },
+    { icon: "clock", label: "Going more often" },
+    { icon: "eye", label: "Stress or pain" },
+    { icon: "heart-pulse", label: "Bladder & kidneys" },
+  ],
+  urination: [
+    { icon: "toilet", label: "Peeing outside" },
+    { icon: "activity", label: "Straining" },
+    { icon: "droplets", label: "Blood in urine" },
+    { icon: "clock", label: "Going more often" },
+    { icon: "eye", label: "Stress or pain" },
+    { icon: "heart-pulse", label: "Bladder & kidneys" },
+  ],
+  water: [
+    { icon: "droplets", label: "Extra thirst" },
+    { icon: "toilet", label: "Peeing more" },
+    { icon: "scale", label: "Weight loss" },
+    { icon: "heart-pulse", label: "Kidney disease" },
+    { icon: "zap", label: "Thyroid changes" },
+    { icon: "activity", label: "Diabetes risk" },
+  ],
+  drinking: [
+    { icon: "droplets", label: "Extra thirst" },
+    { icon: "toilet", label: "Peeing more" },
+    { icon: "scale", label: "Weight loss" },
+    { icon: "heart-pulse", label: "Kidney disease" },
+    { icon: "zap", label: "Thyroid changes" },
+    { icon: "activity", label: "Diabetes risk" },
+  ],
 };
 
 const HERO_CONCERN_ALIASES = {
@@ -127,6 +196,16 @@ const HERO_CONCERN_ALIASES = {
   "less-playful": "quiet",
   behaviour: "quiet",
   behavior: "quiet",
+  "bad-breath": "dental",
+  "cat-bad-breath": "dental",
+  "smelly-breath": "dental",
+  "oral-health": "dental",
+  oral: "dental",
+  teeth: "dental",
+  tooth: "dental",
+  mouth: "dental",
+  "dental-disease": "dental",
+  "gum-disease": "dental",
 };
 
 function normalizeHeroConcern(raw) {
@@ -158,6 +237,31 @@ function applySiteCtaLabels(label) {
   });
 }
 
+function applyHeroFloatTags(concern) {
+  const tags = HERO_FLOAT_TAGS[concern];
+  if (!tags) return;
+
+  const list = document.querySelector(".hero-float-cards");
+  if (!list) return;
+
+  list.querySelectorAll(".hero-float-card").forEach((card, index) => {
+    const tag = tags[index];
+    if (!tag) return;
+    const iconWrap = card.querySelector(".hero-float-card-icon");
+    const labelEl = card.querySelector(".hero-float-card-label");
+    if (iconWrap) {
+      iconWrap.innerHTML = `<i data-lucide="${tag.icon}"></i>`;
+    }
+    if (labelEl) {
+      labelEl.textContent = tag.label;
+    }
+  });
+
+  if (typeof window.initFelicaIcons === "function") {
+    window.initFelicaIcons(list);
+  }
+}
+
 function initHeroPersonalization() {
   const concern = getHeroConcernFromUrl();
   const variant = HERO_VARIANTS[concern] || HERO_VARIANTS.default;
@@ -177,6 +281,7 @@ function initHeroPersonalization() {
     heroLead.textContent = variant.lead;
   }
   applySiteCtaLabels(ctaLabel);
+  applyHeroFloatTags(concern);
 
   const heroImg = document.getElementById("hero-cat-image");
   const heroImage =
@@ -1267,6 +1372,7 @@ const YOUNG_SYMPTOM_ALIASES = {
   sleeping: "energy",
   behavior: "behaviour",
   dental: "dental",
+  breath: "dental",
   mobility: "mobility",
   prevention: "prevention",
   wellness: "prevention",
@@ -3399,6 +3505,18 @@ function renderAgeStep() {
       flow_track: quizState.flowTrack,
     });
     quizState.step = 2;
+    // Ad concern landings (?concern=dental, water, etc.): skip the issue
+    // picker and go straight into that issue's follow-up questions.
+    const preselected = isYoungCatAge(years) ? getYoungSymptomFromUrl() : null;
+    if (preselected) {
+      quizState.youngSymptoms = [{ id: preselected.id, label: preselected.label }];
+      quizState.step = 3;
+      track("young_symptoms_selected", {
+        symptoms: [preselected.id],
+        cat_age: years,
+        source: "url_concern",
+      });
+    }
     renderFlowStep();
   });
 
