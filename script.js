@@ -92,14 +92,14 @@ const HERO_VARIANTS = {
     headline: "It could be a sign of dental disease.",
     lead: "Cats hide mouth pain. By the time you notice it, it's often advanced.",
     cta: "Take a Quick Dental Screening",
-    image: "./images/hero-dental.png",
+    image: "./images/hero-dental.jpg",
   },
   breath: {
     headlineHook: "Bad breath is not normal for cats.",
     headline: "It could be a sign of dental disease.",
     lead: "Cats hide mouth pain. By the time you notice it, it's often advanced.",
     cta: "Take a Quick Dental Screening",
-    image: "./images/hero-dental.png",
+    image: "./images/hero-dental.jpg",
   },
   default: {
     headlineHook: "Cats hide their illnesses.",
@@ -114,8 +114,8 @@ const HERO_BG_IMAGES = {
   drinking: "./images/hero-water.png?v=9",
   litter: "./images/hero-litter.png",
   urination: "./images/hero-litter.png",
-  dental: "./images/hero-dental.png",
-  breath: "./images/hero-dental.png",
+  dental: "./images/hero-dental.jpg",
+  breath: "./images/hero-dental.jpg",
 };
 
 // Floating tags around the hero portrait — overridden per concern landing.
