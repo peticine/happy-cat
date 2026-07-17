@@ -1088,7 +1088,8 @@ const SCREENING_QUESTIONS = [
   },
 ];
 
-const YOUNG_CAT_AGE_MAX = 6;
+const YOUNG_CAT_AGE_MAX = 25; // young flow is used for all ages
+
 
 const YOUNG_SYMPTOM_THEMES = {
   appetite: { bg: "#fdf6ec", icon: "#b8721e", ring: "rgba(184, 114, 30, 0.18)" },
@@ -2325,7 +2326,8 @@ function isYoungFlow() {
 }
 
 function isYoungCatAge(years) {
-  return years != null && years <= YOUNG_CAT_AGE_MAX;
+  // All ages use the young (symptom → call) flow.
+  return years != null && years >= 1 && years <= 25;
 }
 
 function isPreventionPath() {
@@ -2430,7 +2432,7 @@ function getYoungSymptomFromUrl() {
 }
 
 function applyUrlConcernYoungPrefill(years) {
-  const preselected = isYoungCatAge(years) ? getYoungSymptomFromUrl() : null;
+  const preselected = getYoungSymptomFromUrl();
   if (!preselected) return false;
 
   const concern = getHeroConcernFromUrl();
@@ -3035,7 +3037,7 @@ function buildYoungCarePlan() {
           "Note the last deworming and flea treatment dates if you have them.",
           "Check for flea dirt at the base of the tail before the call.",
         ],
-        escalate: "We'll remind you when it's time for a full chronic screen at age 7.",
+        escalate: "A feline specialist will call with next steps for ongoing care.",
       },
       nutrition: {
         summary: `No urgent flags for ${name} — we'll cover nutrition on the call.`,
@@ -3043,7 +3045,7 @@ function buildYoungCarePlan() {
           "Note current food brand and how much is eaten daily.",
           "Feel for ribs — they should be easy to feel under a light fat cover.",
         ],
-        escalate: "We'll remind you when it's time for a full chronic screen at age 7.",
+        escalate: "A feline specialist will call with next steps for ongoing care.",
       },
       vaccinations: {
         summary: `No urgent flags for ${name} — we'll review vaccinations on the call.`,
@@ -3051,7 +3053,7 @@ function buildYoungCarePlan() {
           "Have the last vaccine dates ready if you know them.",
           "Note whether ${name} goes outdoors or meets other cats.",
         ],
-        escalate: "We'll remind you when it's time for a full chronic screen at age 7.",
+        escalate: "A feline specialist will call with next steps for ongoing care.",
       },
       dental: {
         summary: `No urgent flags for ${name} — we'll cover dental care on the call.`,
@@ -3059,7 +3061,7 @@ function buildYoungCarePlan() {
           "Note any bad breath or chewing changes.",
           "Have recent dental history ready if you know it.",
         ],
-        escalate: "We'll remind you when it's time for a full chronic screen at age 7.",
+        escalate: "A feline specialist will call with next steps for ongoing care.",
       },
       behaviour: {
         summary: `No urgent flags for ${name} — we'll cover behaviour on the call.`,
@@ -3067,7 +3069,7 @@ function buildYoungCarePlan() {
           "Note when the behaviour is worst — day or night.",
           "Think about recent home changes that might matter.",
         ],
-        escalate: "We'll remind you when it's time for a full chronic screen at age 7.",
+        escalate: "A feline specialist will call with next steps for ongoing care.",
       },
       general: {
         summary: `No urgent flags for ${name} — a general advice check-in is the right next step.`,
@@ -3075,7 +3077,7 @@ function buildYoungCarePlan() {
           "Keep wet food in the weekly routine for hydration.",
           "Note appetite, litter, and energy once a month.",
         ],
-        escalate: "We'll remind you when it's time for a full chronic screen at age 7.",
+        escalate: "A feline specialist will call with next steps for ongoing care.",
       },
       default: {
         summary: `No urgent flags for ${name} — a steady prevention rhythm is the right next step.`,
@@ -3083,7 +3085,7 @@ function buildYoungCarePlan() {
           "Keep wet food in the weekly routine for hydration.",
           "Note appetite, litter, and energy once a month.",
         ],
-        escalate: "We'll remind you when it's time for a full chronic screen at age 7.",
+        escalate: "A feline specialist will call with next steps for ongoing care.",
       },
     },
   };
@@ -3260,7 +3262,7 @@ function clearYoungReviewTimers() {
 
 let quizState = {
   step: 1,
-  flowTrack: "chronic",
+  flowTrack: "young",
   age: null,
   answers: {},
   youngSymptoms: [],
@@ -3280,7 +3282,7 @@ function resetQuizState() {
   clearYoungReviewTimers();
   quizState = {
     step: 1,
-    flowTrack: catAge != null && isYoungCatAge(catAge) ? "young" : "chronic",
+    flowTrack: "young",
     age: catAge != null ? catAge : null,
     answers: {},
     youngSymptoms: [],
@@ -3498,13 +3500,13 @@ function flowBack() {
 function commitAgeAndAdvance(years) {
   quizState.age = years;
   quizState.answers = {};
-  quizState.flowTrack = isYoungCatAge(years) ? "young" : "chronic";
+  quizState.flowTrack = "young";
   quizState.youngSymptoms = [];
   quizState.youngDuration = null;
   quizState.youngDetailAnswers = {};
   quizState.catName = null;
   quizState.youngLeadResult = null;
-  quizState.sessionId = isYoungCatAge(years) ? createYoungSessionId() : null;
+  quizState.sessionId = createYoungSessionId();
   setFlowProgramLabel();
   track("screening_step_completed", {
     step: "age",
