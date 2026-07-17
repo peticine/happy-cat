@@ -1334,11 +1334,12 @@ const YOUNG_SYMPTOM_ALIASES = {
   eating: "appetite",
   appetite: "appetite",
   litter: "litter",
-  urination: "hydration",
-  pee: "hydration",
+  urination: "litter",
+  pee: "litter",
   water: "hydration",
   drinking: "hydration",
   diarrhoea: "litter",
+  diarrhea: "litter",
   skin: "skin",
   scratching: "skin",
   itching: "skin",
@@ -2270,8 +2271,28 @@ function renderFlowTrustStrip() {
     </p>`;
 }
 
+// Concern landings lead with the matching chronic question first.
+const CHRONIC_CONCERN_QUESTION_ORDER = {
+  water: ["water", "urination", "weight", "appetite", "vomiting"],
+  drinking: ["water", "urination", "weight", "appetite", "vomiting"],
+  litter: ["urination", "water", "appetite", "weight", "vomiting"],
+  urination: ["urination", "water", "appetite", "weight", "vomiting"],
+  dental: ["appetite", "weight", "vomiting", "water", "urination"],
+  breath: ["appetite", "weight", "vomiting", "water", "urination"],
+  weight: ["weight", "appetite", "water", "urination", "vomiting"],
+  eating: ["appetite", "weight", "vomiting", "water", "urination"],
+  appetite: ["appetite", "weight", "vomiting", "water", "urination"],
+};
+
+const FLOW_ADVANCE_MS = 80;
+
 function getFlowQuestions() {
-  return SCREENING_QUESTIONS;
+  const concern = getHeroConcernFromUrl();
+  const order = CHRONIC_CONCERN_QUESTION_ORDER[concern];
+  if (!order) return SCREENING_QUESTIONS;
+  const byId = Object.fromEntries(SCREENING_QUESTIONS.map((q) => [q.id, q]));
+  const ordered = order.map((id) => byId[id]).filter(Boolean);
+  return ordered.length ? ordered : SCREENING_QUESTIONS;
 }
 
 function getFlowStepCount() {
@@ -2399,9 +2420,47 @@ const YOUNG_URGENT_CHECKS = [
 
 function getYoungSymptomFromUrl() {
   const concern = getHeroConcernFromUrl();
+  // Peeing-outside ad landings → litter-box issue (not diarrhoea-first confusion)
+  if (concern === "litter" || concern === "urination") {
+    return YOUNG_SYMPTOMS.find((s) => s.id === "litter") || null;
+  }
   const mapped = YOUNG_SYMPTOM_ALIASES[concern];
   if (!mapped) return null;
   return YOUNG_SYMPTOMS.find((s) => s.id === mapped) || null;
+}
+
+function applyUrlConcernYoungPrefill(years) {
+  const preselected = isYoungCatAge(years) ? getYoungSymptomFromUrl() : null;
+  if (!preselected) return false;
+
+  const concern = getHeroConcernFromUrl();
+  quizState.youngSymptoms = [{ id: preselected.id, label: preselected.label }];
+  quizState.step = 3;
+
+  track("young_symptoms_selected", {
+    symptoms: [preselected.id],
+    cat_age: years,
+    source: "url_concern",
+    concern,
+  });
+  return true;
+}
+
+function normalizeIndianMobile(raw) {
+  let digits = String(raw || "").replace(/\D/g, "");
+  if (digits.length >= 12 && digits.startsWith("91")) {
+    digits = digits.slice(-10);
+  } else if (digits.length === 11 && digits.startsWith("0")) {
+    digits = digits.slice(1);
+  } else if (digits.length > 10) {
+    digits = digits.slice(-10);
+  }
+  return digits;
+}
+
+function isValidIndianMobile(raw) {
+  const digits = normalizeIndianMobile(raw);
+  return digits.length === 10 && /^[6-9]\d{9}$/.test(digits);
 }
 
 function getCatDisplayName() {
@@ -3176,6 +3235,29 @@ function scoreQuiz() {
   return score;
 }
 
+function buildClientScreeningResult() {
+  const score = scoreQuiz();
+  const tier = resolveTier(score, quizState.age);
+  return {
+    total_score: score,
+    risk_level: tier.id,
+    risk_label: tier.headline,
+    message: tier.detail,
+    recommendation: tier.action,
+    next_action: tier.action,
+    cat_age: quizState.age,
+    age_band: ageBandLabel(quizState.age),
+    source: "client",
+  };
+}
+
+let youngReviewTimers = [];
+
+function clearYoungReviewTimers() {
+  youngReviewTimers.forEach((id) => window.clearTimeout(id));
+  youngReviewTimers = [];
+}
+
 let quizState = {
   step: 1,
   flowTrack: "chronic",
@@ -3195,6 +3277,7 @@ let quizState = {
 
 function resetQuizState() {
   leadConversionFired = false;
+  clearYoungReviewTimers();
   quizState = {
     step: 1,
     flowTrack: catAge != null && isYoungCatAge(catAge) ? "young" : "chronic",
@@ -3393,6 +3476,7 @@ function openFlow(source = "unknown") {
 }
 
 function closeFlow() {
+  clearYoungReviewTimers();
   track("screening_closed", {
     completed: flowCompleted,
     exited_at_step: quizState.step,
@@ -3406,7 +3490,32 @@ function closeFlow() {
 
 function flowBack() {
   if (quizState.step <= 1) return;
+  clearYoungReviewTimers();
   quizState.step -= 1;
+  renderFlowStep();
+}
+
+function commitAgeAndAdvance(years) {
+  quizState.age = years;
+  quizState.answers = {};
+  quizState.flowTrack = isYoungCatAge(years) ? "young" : "chronic";
+  quizState.youngSymptoms = [];
+  quizState.youngDuration = null;
+  quizState.youngDetailAnswers = {};
+  quizState.catName = null;
+  quizState.youngLeadResult = null;
+  quizState.sessionId = isYoungCatAge(years) ? createYoungSessionId() : null;
+  setFlowProgramLabel();
+  track("screening_step_completed", {
+    step: "age",
+    step_index: 1,
+    cat_age: years,
+    human_age: catToHumanAge(years),
+    age_band: ageBandLabel(years),
+    flow_track: quizState.flowTrack,
+  });
+  quizState.step = 2;
+  applyUrlConcernYoungPrefill(years);
   renderFlowStep();
 }
 
@@ -3471,38 +3580,7 @@ function renderAgeStep() {
       return;
     }
     if (error) error.hidden = true;
-    quizState.age = years;
-    quizState.answers = {};
-    quizState.flowTrack = isYoungCatAge(years) ? "young" : "chronic";
-    quizState.youngSymptoms = [];
-    quizState.youngDuration = null;
-    quizState.youngDetailAnswers = {};
-    quizState.catName = null;
-    quizState.youngLeadResult = null;
-    quizState.sessionId = isYoungCatAge(years) ? createYoungSessionId() : null;
-    setFlowProgramLabel();
-    track("screening_step_completed", {
-      step: "age",
-      step_index: 1,
-      cat_age: years,
-      human_age: catToHumanAge(years),
-      age_band: ageBandLabel(years),
-      flow_track: quizState.flowTrack,
-    });
-    quizState.step = 2;
-    // Ad concern landings (?concern=dental, water, etc.): skip the issue
-    // picker and go straight into that issue's follow-up questions.
-    const preselected = isYoungCatAge(years) ? getYoungSymptomFromUrl() : null;
-    if (preselected) {
-      quizState.youngSymptoms = [{ id: preselected.id, label: preselected.label }];
-      quizState.step = 3;
-      track("young_symptoms_selected", {
-        symptoms: [preselected.id],
-        cat_age: years,
-        source: "url_concern",
-      });
-    }
-    renderFlowStep();
+    commitAgeAndAdvance(years);
   });
 
   trackScreeningStep("catAge");
@@ -3573,7 +3651,7 @@ function renderQuestionStep(qIndex) {
         points: Number(input.dataset.points),
       });
       quizState.step += 1;
-      window.setTimeout(renderFlowStep, 240);
+      window.setTimeout(renderFlowStep, FLOW_ADVANCE_MS);
     });
   });
 
@@ -3648,7 +3726,7 @@ function renderWhatsAppGate(tier) {
             name="whatsapp"
             placeholder="9876543210"
             inputmode="numeric"
-            maxlength="10"
+            maxlength="15"
             autocomplete="tel"
             required
           />
@@ -3664,19 +3742,20 @@ function bindWhatsAppGateHandlers() {
   const form = assflowMain.querySelector("#whatsapp-gate-form");
   if (!form) return;
 
-  form.addEventListener("submit", async (event) => {
+  form.addEventListener("submit", (event) => {
     event.preventDefault();
     const input = form.querySelector("#whatsapp-number-input");
     const submitBtn = form.querySelector('button[type="submit"]');
-    const number = input?.value?.trim();
+    const number = normalizeIndianMobile(input?.value);
 
-    if (!number || number.length !== 10 || !/^\d+$/.test(number)) {
+    if (!isValidIndianMobile(number)) {
       input?.classList.add("error");
       input?.focus();
       setTimeout(() => input?.classList.remove("error"), 2000);
       return;
     }
 
+    if (input) input.value = number;
     quizState.whatsappNumber = number;
 
     if (submitBtn) {
@@ -3689,47 +3768,47 @@ function bindWhatsAppGateHandlers() {
     });
     flushLeadConversionTags({ flow_track: "chronic" });
 
-    try {
-      const result = await fetchScreeningResult(number);
+    const clientResult = buildClientScreeningResult();
+    quizState.screeningResult = clientResult;
+    flowCompleted = true;
+
+    const showResult = (result, source) => {
+      if (!assflow || assflow.hidden) return;
+      if (!assflowMain.querySelector(".flow-step-result, .score-result") && source === "api") {
+        return;
+      }
       quizState.screeningResult = result;
-
-      track("screening_score_computed", {
-        screening_id: result.screening_id || null,
-        score: result.total_score,
-        risk_level: result.risk_level,
-        recommended_action: result.recommendation,
-        next_action: result.next_action || null,
-        cat_age: result.cat_age ?? quizState.age,
-        age_band: result.age_band || ageBandLabel(quizState.age),
-        answers: SCREENING_QUESTIONS.reduce((acc, q) => {
-          acc[q.id] = quizState.answers[q.id]?.id || null;
-          return acc;
-        }, {}),
-        source: "api",
-      });
-
       assflowMain.innerHTML = `
         <div class="flow-step flow-step-result">
           ${renderScoreResult(result)}
         </div>
       `;
-
       bindAgingResultHandlers();
-    } catch (err) {
-      if (submitBtn) {
-        submitBtn.disabled = false;
-        submitBtn.textContent = "Show my result";
-      }
+    };
 
-      let errorEl = form.querySelector(".whatsapp-gate-error");
-      if (!errorEl) {
-        errorEl = document.createElement("p");
-        errorEl.className = "whatsapp-gate-error flow-error";
-        form.appendChild(errorEl);
-      }
-      errorEl.hidden = false;
-      errorEl.textContent = "We couldn't load your result. Please try again.";
-    }
+    showResult(clientResult, "client");
+
+    fetchScreeningResult(number)
+      .then((result) => {
+        track("screening_score_computed", {
+          screening_id: result.screening_id || null,
+          score: result.total_score,
+          risk_level: result.risk_level,
+          recommended_action: result.recommendation,
+          next_action: result.next_action || null,
+          cat_age: result.cat_age ?? quizState.age,
+          age_band: result.age_band || ageBandLabel(quizState.age),
+          answers: SCREENING_QUESTIONS.reduce((acc, q) => {
+            acc[q.id] = quizState.answers[q.id]?.id || null;
+            return acc;
+          }, {}),
+          source: "api",
+        });
+        showResult(result, "api");
+      })
+      .catch(() => {
+        /* Keep the instant client-side result if the API is slow or fails. */
+      });
   });
 }
 
@@ -3861,7 +3940,7 @@ function renderYoungSymptomStep() {
         cat_age: quizState.age,
       });
       quizState.step = 3;
-      window.setTimeout(renderFlowStep, 220);
+      window.setTimeout(renderFlowStep, FLOW_ADVANCE_MS);
     });
   });
 }
@@ -3929,7 +4008,7 @@ function renderYoungIssueDetailStep() {
         ) {
           quizState.step = getYoungReviewStep();
         }
-        window.setTimeout(renderFlowStep, 220);
+        window.setTimeout(renderFlowStep, FLOW_ADVANCE_MS);
       });
     });
 }
@@ -3996,7 +4075,7 @@ function renderYoungConnectStep() {
             id="young-phone-input"
             placeholder="9876543210"
             inputmode="numeric"
-            maxlength="10"
+            maxlength="15"
             autocomplete="tel"
             required
           />
@@ -4013,16 +4092,16 @@ function renderYoungConnectStep() {
   trackYoungCatStep("contact", issueId);
 
   const form = assflowMain.querySelector("#young-connect-form");
-  form?.addEventListener("submit", async (event) => {
+  form?.addEventListener("submit", (event) => {
     event.preventDefault();
     const phoneInput = form.querySelector("#young-phone-input");
     const nameInput = form.querySelector("#young-cat-name");
     const error = form.querySelector("#young-connect-error");
     const submitBtn = form.querySelector('button[type="submit"]');
-    const number = phoneInput?.value?.trim();
+    const number = normalizeIndianMobile(phoneInput?.value);
     const petName = nameInput?.value?.trim();
 
-    if (!number || number.length !== 10 || !/^\d+$/.test(number)) {
+    if (!isValidIndianMobile(number)) {
       phoneInput?.classList.add("error");
       if (error) error.hidden = false;
       phoneInput?.focus();
@@ -4031,6 +4110,7 @@ function renderYoungConnectStep() {
     }
 
     if (error) error.hidden = true;
+    if (phoneInput) phoneInput.value = number;
     quizState.whatsappNumber = number;
     quizState.contactMethod = "call";
     if (petName) {
@@ -4083,75 +4163,15 @@ function renderYoungConnectStep() {
 }
 
 function renderYoungReviewStep() {
-  const reviewStep = getYoungReviewStep();
-  setFlowProgress(reviewStep - 1, getYoungStepCount());
-  flowCompleted = false;
-
-  const name = getCatDisplayName();
-  const issues = getSelectedIssueSymptoms();
-  const isUrgent = resolveYoungUrgency() === "urgent";
-
-  assflowMain.innerHTML = `
-    <div class="flow-step young-review-step${isUrgent ? " young-review-step--urgent" : ""}">
-      <p class="flow-step-label">${formatYoungStepLabel(reviewStep)}</p>
-      <div class="young-review-card" aria-live="polite">
-        <div class="young-review-spinner" aria-hidden="true"></div>
-        <h1 class="flow-title" id="assflow-title">${
-          isUrgent
-            ? "Checking urgency…"
-            : `Preparing ${escapeHtml(name)}'s summary`
-        }</h1>
-        <p class="flow-lead young-review-status">${
-          isUrgent
-            ? "Your answers suggest an in-person vet visit may be needed."
-            : "Reviewing what you shared…"
-        }</p>
-        <ul class="young-review-checklist">
-          ${
-            isPreventionPath()
-              ? `<li class="young-review-item is-done">${escapeHtml(
-                  formatYoungDetailSummary("prevention") || "Routine check-up"
-                )}</li>`
-              : issues
-                  .map((issue) => {
-                    const summary = formatYoungDetailSummary(issue.id);
-                    const short =
-                      issue.shortLabel ||
-                      YOUNG_SYMPTOMS.find((s) => s.id === issue.id)?.shortLabel ||
-                      issue.label;
-                    const label = summary ? `${short} — ${summary}` : short;
-                    return `<li class="young-review-item is-done">${escapeHtml(label)}</li>`;
-                  })
-                  .join("")
-          }
-          ${
-            quizState.youngDuration
-              ? `<li class="young-review-item is-done">Duration: ${escapeHtml(quizState.youngDuration.label)}</li>`
-              : ""
-          }
-          <li class="young-review-item is-pending">Building next steps</li>
-        </ul>
-      </div>
-    </div>
-  `;
-
-  setFlowFooter({ visible: false });
-
-  window.setTimeout(() => {
-    const status = assflowMain.querySelector(".young-review-status");
-    const pending = assflowMain.querySelector(".young-review-item.is-pending");
-    if (status) status.textContent = "Almost ready…";
-    if (pending) pending.classList.replace("is-pending", "is-done");
-  }, 1200);
-
-  window.setTimeout(() => {
-    track("young_review_complete", {
-      cat_age: quizState.age,
-      symptoms: getSelectedYoungSymptoms().map((s) => s.id),
-    });
-    quizState.step = getYoungPlanStep();
-    renderFlowStep();
-  }, 2600);
+  clearYoungReviewTimers();
+  // Skip the old 2.6s fake loading screen — go straight to the plan.
+  track("young_review_complete", {
+    cat_age: quizState.age,
+    symptoms: getSelectedYoungSymptoms().map((s) => s.id),
+    skipped_delay: true,
+  });
+  quizState.step = getYoungPlanStep();
+  renderFlowStep();
 }
 
 function renderYoungWellnessPlanStep() {
