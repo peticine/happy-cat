@@ -306,8 +306,10 @@ const GOOGLE_ADS_LEAD_SEND_TO = "AW-18298322041/boF_COGojMscEPn4qJVE";
 let leadConversionFired = false;
 
 /**
- * Fires Google Ads "Submit lead form" + Meta Lead once, and waits briefly so
- * beacons can flush before SPA step changes replace the DOM.
+ * Fires Google Ads "Submit lead form" + Meta Lead once.
+ * Non-blocking: tags are sent immediately so submit CTAs can advance
+ * without waiting on ad-network callbacks (which often hit the old 1.2s
+ * timeout when blocked or slow, and caused drop-offs).
  */
 function flushLeadConversionTags(props = {}) {
   if (leadConversionFired) return Promise.resolve();
@@ -329,37 +331,20 @@ function flushLeadConversionTags(props = {}) {
     /* pixel must never break the app */
   }
 
-  return new Promise((resolve) => {
-    let settled = false;
-    const finish = () => {
-      if (settled) return;
-      settled = true;
-      resolve();
-    };
-    const timeoutId = window.setTimeout(finish, 1200);
-
-    try {
-      if (typeof window.gtag === "function") {
-        window.gtag("event", "conversion", {
-          send_to: GOOGLE_ADS_LEAD_SEND_TO,
-          event_callback: () => {
-            window.clearTimeout(timeoutId);
-            finish();
-          },
-        });
-      } else if (typeof window.gtag_report_conversion === "function") {
-        window.gtag_report_conversion();
-        window.clearTimeout(timeoutId);
-        finish();
-      } else {
-        window.clearTimeout(timeoutId);
-        finish();
-      }
-    } catch (err) {
-      window.clearTimeout(timeoutId);
-      finish();
+  try {
+    if (typeof window.gtag === "function") {
+      window.gtag("event", "conversion", {
+        send_to: GOOGLE_ADS_LEAD_SEND_TO,
+        transport_type: "beacon",
+      });
+    } else if (typeof window.gtag_report_conversion === "function") {
+      window.gtag_report_conversion();
     }
-  });
+  } catch (err) {
+    /* ads tag must never break the app */
+  }
+
+  return Promise.resolve();
 }
 
 function trackGoogleAds(event, props = {}) {
@@ -3702,7 +3687,7 @@ function bindWhatsAppGateHandlers() {
     track("whatsapp_number_collected", {
       cat_age: quizState.age,
     });
-    await flushLeadConversionTags({ flow_track: "chronic" });
+    flushLeadConversionTags({ flow_track: "chronic" });
 
     try {
       const result = await fetchScreeningResult(number);
@@ -4071,8 +4056,7 @@ function renderYoungConnectStep() {
       session_id: ensureYoungSessionId(),
     });
 
-    // Wait for Google Ads + Meta Lead beacons before leaving this step.
-    await flushLeadConversionTags({ flow_track: "young" });
+    flushLeadConversionTags({ flow_track: "young" });
 
     quizState.step = getYoungReviewStep();
     renderFlowStep();
