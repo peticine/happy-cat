@@ -7412,10 +7412,10 @@ body[data-age-theme="geriatric"] .hero-clinic {
   max-width: calc(50% - 48px);
   padding: 8px 10px;
   border-radius: 12px;
-  background: color-mix(in srgb, var(--surface) 78%, transparent);
-  border: 1px solid rgba(230, 223, 214, 0.55);
-  box-shadow: 0 6px 18px rgba(47, 43, 53, 0.04);
-  opacity: 0.72;
+  background: var(--surface);
+  border: 1px solid rgba(230, 223, 214, 0.85);
+  box-shadow: 0 8px 22px rgba(47, 43, 53, 0.07);
+  opacity: 0.9;
 }
 
 .hero-float-card-icon {
@@ -7426,7 +7426,6 @@ body[data-age-theme="geriatric"] .hero-clinic {
   height: 28px;
   border-radius: 8px;
   color: var(--accent);
-  opacity: 0.85;
 }
 
 .hero-float-card-icon svg {
@@ -7435,40 +7434,40 @@ body[data-age-theme="geriatric"] .hero-clinic {
 }
 
 .hero-float-card--appetite .hero-float-card-icon {
-  background: color-mix(in srgb, #fff0e6 70%, transparent);
-  color: color-mix(in srgb, #d4782a 75%, #999);
+  background: #fff0e6;
+  color: #d4782a;
 }
 
 .hero-float-card--energy .hero-float-card-icon {
-  background: color-mix(in srgb, #ede8f5 70%, transparent);
-  color: color-mix(in srgb, #7c5cbf 75%, #999);
+  background: #ede8f5;
+  color: #7c5cbf;
 }
 
 .hero-float-card--weight .hero-float-card-icon {
-  background: color-mix(in srgb, #dff3ef 70%, transparent);
-  color: color-mix(in srgb, #2a9d8a 75%, #999);
+  background: #dff3ef;
+  color: #2a9d8a;
 }
 
 .hero-float-card--litter .hero-float-card-icon {
-  background: color-mix(in srgb, #e5efd9 70%, transparent);
-  color: color-mix(in srgb, #6b8f3c 75%, #999);
+  background: #e5efd9;
+  color: #6b8f3c;
 }
 
 .hero-float-card--coat .hero-float-card-icon {
-  background: color-mix(in srgb, #fdf5e0 70%, transparent);
-  color: color-mix(in srgb, #c4952a 75%, #999);
+  background: #fdf5e0;
+  color: #c4952a;
 }
 
 .hero-float-card--breathing .hero-float-card-icon {
-  background: color-mix(in srgb, #e3f0fa 70%, transparent);
-  color: color-mix(in srgb, #3d8cc4 75%, #999);
+  background: #e3f0fa;
+  color: #3d8cc4;
 }
 
 .hero-float-card-label {
   font-size: 0.6875rem;
   font-weight: 500;
   line-height: 1.15;
-  color: var(--ink-muted);
+  color: var(--ink-soft);
 }
 
 .hero-float-card--appetite { top: 0; left: 0; }
