@@ -2699,6 +2699,28 @@ body[data-hero-concern="drinking"] .hero.hero-convert {
   font-size: 0.875rem;
 }
 
+.hero-trust--badges {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 4px;
+}
+
+.hero-trust--badges li {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--surface) 88%, var(--ink) 4%);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  color: var(--ink-soft);
+  gap: 0;
+}
+
 .hero-trust--checks .hero-trust-icon {
   display: none;
 }
@@ -5571,6 +5593,100 @@ body[data-age-theme="geriatric"] .hero-clinic {
   color: var(--ink-soft);
 }
 
+/* iPhone-style age wheel */
+.age-wheel {
+  position: relative;
+  height: min(52vh, 380px);
+  margin: 8px 0 4px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scroll-snap-type: y mandatory;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.03), transparent 18%, transparent 82%, rgba(0, 0, 0, 0.03));
+  border: 1px solid var(--line);
+}
+
+.age-wheel-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.age-wheel-spacer {
+  height: calc((min(52vh, 380px) - 52px) / 2);
+  min-height: 140px;
+}
+
+.age-wheel-item {
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  scroll-snap-align: center;
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: var(--ink-muted);
+  opacity: 0.45;
+  transition: color 120ms ease, opacity 120ms ease, transform 120ms ease;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.age-wheel-item.is-selected {
+  color: var(--ink);
+  opacity: 1;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  transform: scale(1.04);
+}
+
+.age-wheel-highlight {
+  pointer-events: none;
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  top: 50%;
+  height: 52px;
+  margin-top: -26px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+  z-index: 1;
+}
+
+.age-wheel-fade {
+  pointer-events: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 96px;
+  z-index: 2;
+}
+
+.age-wheel-fade--top {
+  top: 0;
+  background: linear-gradient(180deg, var(--surface) 0%, transparent 100%);
+}
+
+.age-wheel-fade--bottom {
+  bottom: 0;
+  background: linear-gradient(0deg, var(--surface) 0%, transparent 100%);
+}
+
+.age-wheel-list {
+  position: relative;
+  z-index: 3;
+}
+
+.field-optional {
+  font-weight: 400;
+  color: var(--ink-muted);
+}
+
 /* ---- Healthy aging score: result ------------------------------------------ */
 .score-result {
   text-align: center;
@@ -7110,7 +7226,7 @@ body[data-age-theme="geriatric"] .hero-clinic {
 .hero-landing-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 36px;
+  gap: 20px;
   align-items: center;
 }
 
@@ -7118,11 +7234,15 @@ body[data-age-theme="geriatric"] .hero-clinic {
   max-width: 560px;
 }
 
+.hero-landing-meta {
+  max-width: 560px;
+}
+
 .hero-landing-title {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  margin: 0 0 14px;
+  margin: 0;
   font-family: var(--font-display);
   font-weight: 500;
   letter-spacing: -0.025em;
@@ -7145,16 +7265,35 @@ body[data-age-theme="geriatric"] .hero-clinic {
   letter-spacing: -0.03em;
 }
 
+.hero-landing-subhead {
+  margin: 0;
+  max-width: 560px;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 4.4vw, 2rem);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+}
+
 .hero-landing-lead {
-  margin: 0 0 24px;
+  margin: 0 0 16px;
   max-width: 42ch;
   font-size: 1.0625rem;
   line-height: 1.6;
   color: var(--ink-soft);
 }
 
+.hero-landing-urgency {
+  margin: 0 0 14px;
+  max-width: 40ch;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--ink-muted);
+}
+
 .hero-landing-cta {
-  margin-bottom: 20px;
+  margin: 0;
 }
 
 .hero-landing-cta .btn-hero-primary {
@@ -7174,7 +7313,7 @@ body[data-age-theme="geriatric"] .hero-clinic {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-top: 22px;
+  margin-top: 18px;
 }
 
 .hero-social-proof p {
@@ -7273,9 +7412,10 @@ body[data-age-theme="geriatric"] .hero-clinic {
   max-width: calc(50% - 48px);
   padding: 8px 10px;
   border-radius: 12px;
-  background: var(--surface);
-  border: 1px solid rgba(230, 223, 214, 0.9);
-  box-shadow: 0 8px 24px rgba(47, 43, 53, 0.08);
+  background: color-mix(in srgb, var(--surface) 78%, transparent);
+  border: 1px solid rgba(230, 223, 214, 0.55);
+  box-shadow: 0 6px 18px rgba(47, 43, 53, 0.04);
+  opacity: 0.72;
 }
 
 .hero-float-card-icon {
@@ -7286,6 +7426,7 @@ body[data-age-theme="geriatric"] .hero-clinic {
   height: 28px;
   border-radius: 8px;
   color: var(--accent);
+  opacity: 0.85;
 }
 
 .hero-float-card-icon svg {
@@ -7294,40 +7435,40 @@ body[data-age-theme="geriatric"] .hero-clinic {
 }
 
 .hero-float-card--appetite .hero-float-card-icon {
-  background: #fff0e6;
-  color: #d4782a;
+  background: color-mix(in srgb, #fff0e6 70%, transparent);
+  color: color-mix(in srgb, #d4782a 75%, #999);
 }
 
 .hero-float-card--energy .hero-float-card-icon {
-  background: #ede8f5;
-  color: #7c5cbf;
+  background: color-mix(in srgb, #ede8f5 70%, transparent);
+  color: color-mix(in srgb, #7c5cbf 75%, #999);
 }
 
 .hero-float-card--weight .hero-float-card-icon {
-  background: #dff3ef;
-  color: #2a9d8a;
+  background: color-mix(in srgb, #dff3ef 70%, transparent);
+  color: color-mix(in srgb, #2a9d8a 75%, #999);
 }
 
 .hero-float-card--litter .hero-float-card-icon {
-  background: #e5efd9;
-  color: #6b8f3c;
+  background: color-mix(in srgb, #e5efd9 70%, transparent);
+  color: color-mix(in srgb, #6b8f3c 75%, #999);
 }
 
 .hero-float-card--coat .hero-float-card-icon {
-  background: #fdf5e0;
-  color: #c4952a;
+  background: color-mix(in srgb, #fdf5e0 70%, transparent);
+  color: color-mix(in srgb, #c4952a 75%, #999);
 }
 
 .hero-float-card--breathing .hero-float-card-icon {
-  background: #e3f0fa;
-  color: #3d8cc4;
+  background: color-mix(in srgb, #e3f0fa 70%, transparent);
+  color: color-mix(in srgb, #3d8cc4 75%, #999);
 }
 
 .hero-float-card-label {
   font-size: 0.6875rem;
   font-weight: 500;
   line-height: 1.15;
-  color: var(--ink);
+  color: var(--ink-muted);
 }
 
 .hero-float-card--appetite { top: 0; left: 0; }
@@ -7661,11 +7802,33 @@ body[data-age-theme="geriatric"] .hero-clinic {
 @media (min-width: 768px) {
   .hero-landing-grid {
     grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.95fr);
-    gap: 24px 48px;
+    grid-template-areas:
+      "copy visual"
+      "sub visual"
+      "cta visual"
+      "meta visual";
+    gap: 16px 48px;
+    align-items: center;
+  }
+
+  .hero-landing-copy {
+    grid-area: copy;
+  }
+
+  .hero-landing-subhead {
+    grid-area: sub;
+  }
+
+  .hero-landing-cta {
+    grid-area: cta;
+  }
+
+  .hero-landing-meta {
+    grid-area: meta;
   }
 
   .hero-landing-visual {
-    order: 2;
+    grid-area: visual;
   }
 
   .hero-cat-scene {
@@ -7721,7 +7884,7 @@ body[data-age-theme="geriatric"] .hero-clinic {
   }
 
   .hero-landing-grid {
-    gap: 12px;
+    gap: 16px;
   }
 
   .hero-landing-title {
@@ -7729,12 +7892,18 @@ body[data-age-theme="geriatric"] .hero-clinic {
   }
 
   .hero-landing-title-hook,
-  .hero-landing-title-main {
+  .hero-landing-title-main,
+  .hero-landing-subhead {
     line-height: 1.04;
   }
 
-  .hero-landing-visual {
-    order: -1;
+  /* Mobile follows DOM: hook → image → subhead → CTA → rest */
+  .hero-landing-copy,
+  .hero-landing-visual,
+  .hero-landing-subhead,
+  .hero-landing-cta,
+  .hero-landing-meta {
+    order: initial;
   }
 
   .hero-cat-scene {

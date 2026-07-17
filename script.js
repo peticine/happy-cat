@@ -14,7 +14,7 @@ const CAT_NAME_KEY = "peticine-cat-name";
 const CAT_PROFILE_KEY = "peticine-cat-profile";
 const AGE_DONE_KEY = "peticine-age-done";
 const AGE_THEMES = ["young", "prime", "mature", "senior", "geriatric"];
-const PRIMARY_CTA_LABEL = "Start My Cat's Health Check";
+const PRIMARY_CTA_LABEL = "Start Free Health Check";
 
 // Meta ad headlines per concern (use ?concern= in landing URL):
 // water/drinking: "Cat drinking more water? Free 2-min check" | "Extra water bowls? See if it's worth a vet call"
@@ -34,78 +34,65 @@ const HERO_VARIANTS = {
   water: {
     headlineHook: "Drinking more water than usual?",
     headline: "It could be a sign of kidney disease.",
-    lead: "Extra thirst often shows up long before cats look sick — kidneys, thyroid, or diabetes.",
-    cta: "Find Out Before It Gets Worse",
+    lead: "A quick check, then a free specialist call in 15–30 minutes.",
     image: "./images/hero-water.png?v=9",
   },
   drinking: {
     headlineHook: "Drinking more water than usual?",
     headline: "It could be a sign of kidney disease.",
-    lead: "Extra thirst often shows up long before cats look sick — kidneys, thyroid, or diabetes.",
-    cta: "Find Out Before It Gets Worse",
+    lead: "A quick check, then a free specialist call in 15–30 minutes.",
     image: "./images/hero-water.png?v=9",
   },
   weight: {
     headlineHook: "Has your cat lost weight?",
     headline: "Find out if it's age and appetite — or something a vet should check soon.",
     consequence: "Weight loss is often the first change owners notice — and a sign something may already be progressing.",
-    cta: "Find Out If Your Cat Is At Risk",
   },
   eating: {
     headlineHook: "Eating less than usual?",
     headline: "Find out if it's a passing phase — or a sign something's wrong.",
     consequence: "Appetite changes are easy to dismiss — but cats hide illness until habits shift.",
-    cta: "Find Out If Your Cat Is At Risk",
   },
   appetite: {
     headlineHook: "Eating less than usual?",
     headline: "Find out if it's a passing phase — or a sign something's wrong.",
     consequence: "Appetite changes are easy to dismiss — but cats hide illness until habits shift.",
-    cta: "Find Out If Your Cat Is At Risk",
   },
   sleeping: {
     headline: "Let's understand why your cat is sleeping more.",
     consequence: "More sleep can be age — or an early sign something inside is changing.",
-    cta: "Start My Cat's Health Check",
   },
   litter: {
     headlineHook: "Is your cat peeing outside the litter box?",
     headline: "This is a sign of discomfort.",
-    lead: "Stress, bladder pain, or kidney issues can all show up as litter accidents.",
-    cta: "Find Out Before It Gets Worse",
+    lead: "Answer one quick question — a feline specialist will call you free in 15–30 minutes.",
     image: "./images/hero-litter.png",
   },
   urination: {
     headlineHook: "Is your cat peeing outside the litter box?",
     headline: "This is a sign of discomfort.",
-    lead: "Stress, bladder pain, or kidney issues can all show up as litter accidents.",
-    cta: "Find Out Before It Gets Worse",
+    lead: "Answer one quick question — a feline specialist will call you free in 15–30 minutes.",
     image: "./images/hero-litter.png",
   },
   quiet: {
     headline: "Let's understand what your cat's quieter behaviour could mean.",
     consequence: "When cats withdraw, it's often because they don't feel well — not because they're being difficult.",
-    cta: "Start My Cat's Health Check",
   },
   dental: {
     headlineHook: "Bad breath is not normal for cats.",
     headline: "It could be a sign of dental disease.",
-    lead: "Cats hide mouth pain. By the time you notice it, it's often advanced.",
-    cta: "Take a Quick Dental Screening",
+    lead: "A quick check, then a free specialist call in 15–30 minutes.",
     image: "./images/hero-dental.jpg",
   },
   breath: {
     headlineHook: "Bad breath is not normal for cats.",
     headline: "It could be a sign of dental disease.",
-    lead: "Cats hide mouth pain. By the time you notice it, it's often advanced.",
-    cta: "Take a Quick Dental Screening",
+    lead: "A quick check, then a free specialist call in 15–30 minutes.",
     image: "./images/hero-dental.jpg",
   },
   default: {
-    headlineHook: "Cats hide their illnesses.",
+    headlineHook: "Cats hide pain.",
     headline: "Find out before it gets late.",
-    lead: "Stress-free. At home.",
-    cta: "Start My Cat's Health Check",
   },
 };
 
@@ -120,6 +107,14 @@ const HERO_BG_IMAGES = {
 
 // Floating tags around the hero portrait — overridden per concern landing.
 const HERO_FLOAT_TAGS = {
+  default: [
+    { icon: "heart-pulse", label: "Kidney disease" },
+    { icon: "zap", label: "Hyperthyroidism" },
+    { icon: "scale", label: "Diabetes" },
+    { icon: "toilet", label: "Urinary disease" },
+    { icon: "utensils", label: "Dental disease" },
+    { icon: "moon", label: "Arthritis & pain" },
+  ],
   dental: [
     { icon: "wind", label: "Bad breath" },
     { icon: "stethoscope", label: "Gum inflammation" },
@@ -238,7 +233,7 @@ function applySiteCtaLabels(label) {
 }
 
 function applyHeroFloatTags(concern) {
-  const tags = HERO_FLOAT_TAGS[concern];
+  const tags = HERO_FLOAT_TAGS[concern] || HERO_FLOAT_TAGS.default;
   if (!tags) return;
 
   const list = document.querySelector(".hero-float-cards");
@@ -267,18 +262,24 @@ function initHeroPersonalization() {
   const variant = HERO_VARIANTS[concern] || HERO_VARIANTS.default;
 
   const headline = document.getElementById("hero-headline");
-  const heroLead = document.getElementById("hero-lead");
-  const ctaLabel = variant.cta || PRIMARY_CTA_LABEL;
+  const subhead = document.getElementById("hero-subhead");
+  const ctaLabel = PRIMARY_CTA_LABEL;
 
   if (headline) {
     if (variant.headlineHook) {
-      headline.innerHTML = `<span class="hero-landing-title-hook">${escapeHtml(variant.headlineHook)}</span><span class="hero-landing-title-main">${escapeHtml(variant.headline)}</span>`;
+      headline.innerHTML = `<span class="hero-landing-title-hook">${escapeHtml(variant.headlineHook)}</span>`;
     } else {
-      headline.innerHTML = `<span class="hero-landing-title-main">${escapeHtml(variant.headline)}</span>`;
+      headline.innerHTML = `<span class="hero-landing-title-hook">${escapeHtml(variant.headline)}</span>`;
     }
   }
-  if (heroLead && variant.lead) {
-    heroLead.textContent = variant.lead;
+  if (subhead) {
+    if (variant.headlineHook && variant.headline) {
+      subhead.textContent = variant.headline;
+      subhead.hidden = false;
+    } else {
+      subhead.textContent = "";
+      subhead.hidden = true;
+    }
   }
   applySiteCtaLabels(ctaLabel);
   applyHeroFloatTags(concern);
@@ -507,10 +508,53 @@ function ctaLocation(el) {
 }
 
 function catToHumanAge(years) {
-  if (years <= 0) return 0;
+  if (years == null || years <= 0) return 0;
+  if (years < 1) return Math.max(1, Math.round(15 * years));
   if (years === 1) return 15;
   if (years === 2) return 24;
   return 24 + (years - 2) * 4;
+}
+
+function formatCatAgeLabel(years) {
+  if (years == null || Number.isNaN(years)) return "";
+  if (years < 1) {
+    const months = Math.max(1, Math.round(years * 12));
+    return `${months} ${months === 1 ? "month" : "months"}`;
+  }
+  const whole = Math.round(years);
+  return `${whole} ${whole === 1 ? "year" : "years"}`;
+}
+
+const AGE_WHEEL_OPTIONS = [
+  ...[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((months) => ({
+    id: `m${months}`,
+    years: months / 12,
+    label: `${months} ${months === 1 ? "month" : "months"}`,
+  })),
+  ...Array.from({ length: 25 }, (_, i) => {
+    const years = i + 1;
+    return {
+      id: `y${years}`,
+      years,
+      label: `${years} ${years === 1 ? "year" : "years"}`,
+    };
+  }),
+];
+
+function nearestAgeWheelOption(years) {
+  if (years == null || Number.isNaN(Number(years))) {
+    return AGE_WHEEL_OPTIONS.find((opt) => opt.id === "y5") || AGE_WHEEL_OPTIONS[0];
+  }
+  let best = AGE_WHEEL_OPTIONS[0];
+  let bestDist = Infinity;
+  AGE_WHEEL_OPTIONS.forEach((opt) => {
+    const dist = Math.abs(opt.years - years);
+    if (dist < bestDist) {
+      bestDist = dist;
+      best = opt;
+    }
+  });
+  return best;
 }
 
 function applyAgeTheme(theme) {
@@ -930,7 +974,7 @@ function buildYoungPmsPayload(phoneNational) {
   const answerSummary = answers.map((a) => a.answer).join(" · ");
   const phone = String(phoneNational || quizState.whatsappNumber || "").replace(/\D/g, "");
   const summaryParts = [
-    `${displayName === "your cat" ? "Cat" : displayName}, ${quizState.age}y cat`,
+    `${displayName === "your cat" ? "Cat" : displayName}, ${formatCatAgeLabel(quizState.age)}`,
     answerSummary ? `${shortLabel} — ${answerSummary}` : shortLabel,
     phone ? `Prefer call within 15–30 min at +91 ${phone}` : "Prefer call within 15–30 min",
   ];
@@ -1130,7 +1174,7 @@ const YOUNG_SYMPTOMS = [
   },
   {
     id: "litter",
-    label: "My cat has loose motion (diarrhoea) or is straining in the litter box",
+    label: "My cat is peeing outside the litter box, or has diarrhoea / straining",
     shortLabel: "Litter box changes",
     icon: "Toilet",
     theme: "litter",
@@ -2004,7 +2048,7 @@ function getWellnessCtaLabel(name) {
 
 function buildWellnessReviewWhatsAppUrl({ name, config, specialist, diagnosis, reasons }) {
   const displayName = name === "your cat" ? "my cat" : name;
-  const ageLine = quizState.age != null ? `${quizState.age} years old` : "age not shared";
+  const ageLine = quizState.age != null ? formatCatAgeLabel(quizState.age) : "age not shared";
   const symptomLines = reasons
     .filter((reason) => reason !== "No urgent warning signs")
     .join(", ");
@@ -2327,7 +2371,7 @@ function isYoungFlow() {
 
 function isYoungCatAge(years) {
   // All ages use the young (symptom → call) flow.
-  return years != null && years >= 1 && years <= 25;
+  return years != null && years > 0 && years <= 25;
 }
 
 function isPreventionPath() {
@@ -2570,7 +2614,8 @@ function resolveYoungUrgency() {
   ) {
     return "urgent";
   }
-  if (durationId === "longer" && symptomIds.some((id) => ["vomiting", "appetite", "litter"].includes(id))) {
+  // Litter + "longer" alone stays consult — still collect the phone for a callback.
+  if (durationId === "longer" && symptomIds.some((id) => ["vomiting", "appetite"].includes(id))) {
     return "urgent";
   }
   if (symptomIds.includes("litter") && symptomIds.includes("hydration")) return "urgent";
@@ -2607,11 +2652,11 @@ function buildYoungCarePlan() {
 
   const heard = isPrevention
     ? [
-        `${name} is ${age} ${age === 1 ? "year" : "years"} old`,
+        `${name} is ${formatCatAgeLabel(age)} old`,
         formatYoungDetailSummary("prevention") || "Routine prevention check-in",
       ]
     : [
-        `${name} is ${age} ${age === 1 ? "year" : "years"} old`,
+        `${name} is ${formatCatAgeLabel(age)} old`,
         ...issues.map((issue) => {
           const summary = formatYoungDetailSummary(issue.id);
           const short =
@@ -3127,7 +3172,7 @@ function buildYoungCarePlan() {
       urgency,
       urgentReasons,
       planTitle: "Go to a vet clinic now",
-      summary: `${name} needs an in-person vet visit today. Felica cannot help with urgent cases — please go to a nearby veterinary clinic or emergency vet.`,
+      summary: `${name} may need an in-person vet visit soon. A Felica specialist will still call to help you decide what to do next.`,
       watch: [
         "Leave now for the nearest open veterinary clinic or emergency vet.",
         "If your clinic is closed, go to an emergency vet — don't wait until morning.",
@@ -3160,6 +3205,7 @@ function ageRiskPoints(years) {
 
 function ageBandLabel(years) {
   if (years == null) return "";
+  if (years < 1) return "Kitten";
   if (years < 7) return "Adult";
   if (years <= 10) return "Mature";
   if (years <= 14) return "Senior";
@@ -3366,7 +3412,7 @@ function renderScreeningSummary() {
     quizState.age != null
       ? `<li class="score-summary-item">
           <span class="score-summary-q">Cat's age</span>
-          <span class="score-summary-a">${quizState.age} ${quizState.age === 1 ? "year" : "years"} · ${ageBandLabel(quizState.age)}</span>
+          <span class="score-summary-a">${escapeHtml(formatCatAgeLabel(quizState.age))} · ${ageBandLabel(quizState.age)}</span>
         </li>`
       : "";
 
@@ -3522,71 +3568,129 @@ function commitAgeAndAdvance(years) {
 }
 
 function renderAgeStep() {
-  setFlowProgress(0, getTotalFlowSteps());
-  const prefill = quizState.age != null ? quizState.age : "";
+  setFlowProgress(0, getYoungStepCount());
+  const prefillOpt = nearestAgeWheelOption(quizState.age);
+  const options = AGE_WHEEL_OPTIONS;
+
   assflowMain.innerHTML = `
     <div class="flow-step">
-      <p class="flow-step-label">${formatFlowStepLabel(1, "About your cat")}</p>
+      <p class="flow-step-label">${formatYoungStepLabel(1)}</p>
       <h1 class="flow-title" id="assflow-title">How old is your cat?</h1>
-      <p class="flow-lead">Age helps us choose the right next steps for your cat.</p>
-      <div class="flow-age">
-        <label class="flow-age-label" for="flow-age-input">Age in years</label>
-        <input
-          class="flow-age-input"
-          id="flow-age-input"
-          type="number"
-          inputmode="numeric"
-          min="1"
-          max="25"
-          step="1"
-          value="${prefill}"
-          placeholder="e.g. 11"
-          autocomplete="off"
-        />
-        <div class="flow-age-readout" id="flow-age-readout" aria-live="polite" hidden></div>
+      <p class="flow-lead">Scroll to pick an age — includes months for kittens.</p>
+      <div class="age-wheel" id="age-wheel" role="listbox" aria-label="Cat age">
+        <div class="age-wheel-fade age-wheel-fade--top" aria-hidden="true"></div>
+        <div class="age-wheel-highlight" aria-hidden="true"></div>
+        <ul class="age-wheel-list" id="age-wheel-list">
+          <li class="age-wheel-spacer" aria-hidden="true"></li>
+          ${options
+            .map(
+              (opt) => `
+            <li
+              class="age-wheel-item${opt.id === prefillOpt.id ? " is-selected" : ""}"
+              role="option"
+              data-age-id="${opt.id}"
+              data-years="${opt.years}"
+              aria-selected="${opt.id === prefillOpt.id ? "true" : "false"}"
+            >${escapeHtml(opt.label)}</li>`
+            )
+            .join("")}
+          <li class="age-wheel-spacer" aria-hidden="true"></li>
+        </ul>
+        <div class="age-wheel-fade age-wheel-fade--bottom" aria-hidden="true"></div>
       </div>
-      <p class="flow-error" id="flow-error" hidden>Pop in an age between 1 and 25.</p>
+      <div class="flow-age-readout" id="flow-age-readout" aria-live="polite"></div>
       ${renderFlowTrustStrip()}
     </div>
   `;
 
-  const input = document.getElementById("flow-age-input");
+  const wheel = document.getElementById("age-wheel");
+  const list = document.getElementById("age-wheel-list");
   const readout = document.getElementById("flow-age-readout");
+  const items = Array.from(list.querySelectorAll(".age-wheel-item"));
+  let selectedId = prefillOpt.id;
+  let selectedYears = prefillOpt.years;
+  let scrollEndTimer = null;
 
-  const update = () => {
-    const years = parseInt(input.value, 10);
-    const valid = years >= 1 && years <= 25;
-    if (valid && readout) {
-      readout.hidden = false;
-      readout.innerHTML = `About <strong>${catToHumanAge(years)}</strong> in human years — <span class="flow-age-band">${ageBandLabel(years)}</span> stage.`;
-    } else if (readout) {
-      readout.hidden = true;
-    }
-    setFlowFooter({ visible: true, disabled: !valid, label: "Next" });
+  const optionById = (id) => options.find((opt) => opt.id === id) || options[0];
+
+  const updateReadout = (years) => {
+    if (!readout) return;
+    readout.innerHTML = `About <strong>${catToHumanAge(
+      years
+    )}</strong> in human years — <span class="flow-age-band">${ageBandLabel(
+      years
+    )}</span> stage.`;
   };
 
-  input.addEventListener("input", update);
-  input.addEventListener("keydown", (event) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      assflowContinue?.click();
+  const setSelected = (id, { scroll = false } = {}) => {
+    const opt = optionById(id);
+    selectedId = opt.id;
+    selectedYears = opt.years;
+    items.forEach((item) => {
+      const isSelected = item.dataset.ageId === opt.id;
+      item.classList.toggle("is-selected", isSelected);
+      item.setAttribute("aria-selected", isSelected ? "true" : "false");
+    });
+    updateReadout(opt.years);
+    setFlowFooter({ visible: true, disabled: false, label: "Next" });
+    if (scroll) {
+      const target = items.find((item) => item.dataset.ageId === opt.id);
+      if (target) {
+        wheel.scrollTop = target.offsetTop - wheel.clientHeight / 2 + target.offsetHeight / 2;
+      }
     }
+  };
+
+  const idFromScroll = () => {
+    const center = wheel.scrollTop + wheel.clientHeight / 2;
+    let closest = items[0];
+    let closestDist = Infinity;
+    items.forEach((item) => {
+      const mid = item.offsetTop + item.offsetHeight / 2;
+      const dist = Math.abs(mid - center);
+      if (dist < closestDist) {
+        closestDist = dist;
+        closest = item;
+      }
+    });
+    return closest.dataset.ageId;
+  };
+
+  const snapToNearest = () => {
+    const id = idFromScroll();
+    const target = items.find((item) => item.dataset.ageId === id);
+    if (!target) return;
+    const top = target.offsetTop - wheel.clientHeight / 2 + target.offsetHeight / 2;
+    wheel.scrollTo({ top, behavior: "smooth" });
+    setSelected(id);
+  };
+
+  wheel.addEventListener(
+    "scroll",
+    () => {
+      setSelected(idFromScroll());
+      window.clearTimeout(scrollEndTimer);
+      scrollEndTimer = window.setTimeout(snapToNearest, 90);
+    },
+    { passive: true }
+  );
+
+  items.forEach((item) => {
+    item.addEventListener("click", () => {
+      setSelected(item.dataset.ageId, { scroll: true });
+    });
   });
 
-  update();
+  window.requestAnimationFrame(() => {
+    setSelected(prefillOpt.id, { scroll: true });
+  });
+
   bindFlowContinue(() => {
-    const years = parseInt(input.value, 10);
-    const error = document.getElementById("flow-error");
-    if (!(years >= 1 && years <= 25)) {
-      if (error) error.hidden = false;
-      return;
-    }
-    if (error) error.hidden = true;
-    commitAgeAndAdvance(years);
+    if (!(selectedYears > 0 && selectedYears <= 25)) return;
+    commitAgeAndAdvance(selectedYears);
   });
 
   trackScreeningStep("catAge");
-  window.setTimeout(() => input.focus(), 60);
 }
 
 function renderQuestionStep(qIndex) {
@@ -4004,12 +4108,6 @@ function renderYoungIssueDetailStep() {
           value: input.value,
         });
         quizState.step += 1;
-        if (
-          quizState.step === getYoungConnectStep() &&
-          resolveYoungUrgency() === "urgent"
-        ) {
-          quizState.step = getYoungReviewStep();
-        }
         window.setTimeout(renderFlowStep, FLOW_ADVANCE_MS);
       });
     });
@@ -4049,16 +4147,16 @@ function renderYoungConnectStep() {
       ${
         isLikelyUrgent
           ? `<div class="young-urgent-inline" role="status">
-          <p class="young-urgent-inline-title">This may need an in-person vet today</p>
-          <p class="young-urgent-inline-copy">Based on your answers, we'll direct you to a nearby clinic — Felica cannot help with urgent cases.</p>
+          <p class="young-urgent-inline-title">This may need prompt care</p>
+          <p class="young-urgent-inline-copy">Leave your number — a specialist will call within 15–30 minutes to help you decide next steps.</p>
         </div>`
           : ""
       }
-      <h1 class="flow-title" id="assflow-title">${isPrevention ? "Where should we call you?" : "Where should we call you?"}</h1>
+      <h1 class="flow-title" id="assflow-title">Get your free specialist call</h1>
       <p class="flow-lead">${escapeHtml(connectLead)}</p>
 
       <form class="young-connect-form" id="young-connect-form" novalidate>
-        <label class="flow-age-label" for="young-cat-name">Cat's name</label>
+        <label class="flow-age-label" for="young-cat-name">Cat's name <span class="field-optional">(optional)</span></label>
         <input
           class="flow-age-input young-cat-name-input"
           id="young-cat-name"
@@ -4083,9 +4181,9 @@ function renderYoungConnectStep() {
           />
         </div>
 
-        <p class="young-connect-next">Usually within 15–30 minutes.</p>
+        <p class="young-connect-next">Free · private · no spam · usually within 15–30 minutes</p>
         <p class="flow-error" id="young-connect-error" hidden>Enter a valid 10-digit mobile number.</p>
-        <button type="submit" class="btn btn-block btn-get-started">Continue</button>
+        <button type="submit" class="btn btn-block btn-get-started">Get my free call</button>
       </form>
     </div>
   `;
@@ -4422,7 +4520,7 @@ function renderYoungPlanStep() {
               .map((reason) => `<li>${escapeHtml(reason)}</li>`)
               .join("")}
           </ul>
-          <p class="young-urgent-note">Felica does not provide emergency care or teleconsult for urgent cases.</p>
+          <p class="young-urgent-note">If this looks urgent, please also head to a nearby clinic. We'll still call to help you decide next steps.</p>
         </div>
 
         <div class="young-plan-section">
@@ -4456,11 +4554,6 @@ function renderYoungFlowStep() {
   }
 
   if (step === getYoungConnectStep()) {
-    if (resolveYoungUrgency() === "urgent") {
-      quizState.step = getYoungReviewStep();
-      renderYoungFlowStep();
-      return;
-    }
     renderYoungConnectStep();
     return;
   }
