@@ -4676,21 +4676,32 @@ initLifeJourney();
 
 const menuToggle = document.querySelector(".menu-toggle");
 const siteNav = document.querySelector(".site-nav");
+const siteHeader = document.querySelector(".site-header");
+
+function setMobileNavOpen(isOpen) {
+  if (!menuToggle || !siteNav) return;
+  siteNav.classList.toggle("is-open", isOpen);
+  menuToggle.classList.toggle("is-open", isOpen);
+  siteHeader?.classList.toggle("is-nav-open", isOpen);
+  menuToggle.setAttribute("aria-expanded", String(isOpen));
+  menuToggle.setAttribute("aria-label", isOpen ? "Close menu" : "Open menu");
+  document.body.style.overflow = isOpen ? "hidden" : "";
+}
 
 if (menuToggle && siteNav) {
   menuToggle.addEventListener("click", () => {
-    const isOpen = siteNav.classList.toggle("is-open");
-    menuToggle.classList.toggle("is-open", isOpen);
-    menuToggle.setAttribute("aria-expanded", String(isOpen));
-    document.body.style.overflow = isOpen ? "hidden" : "";
+    setMobileNavOpen(!siteNav.classList.contains("is-open"));
   });
 
   siteNav.querySelectorAll("a").forEach((link) => {
     link.addEventListener("click", () => {
-      siteNav.classList.remove("is-open");
-      menuToggle.classList.remove("is-open");
-      menuToggle.setAttribute("aria-expanded", "false");
-      document.body.style.overflow = "";
+      setMobileNavOpen(false);
     });
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && siteNav.classList.contains("is-open")) {
+      setMobileNavOpen(false);
+    }
   });
 }
