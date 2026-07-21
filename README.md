@@ -23,6 +23,15 @@ python3 -m http.server 8765
 
 Open `http://localhost:8765`.
 
+To test **Razorpay vet-call payments**, use Vercel CLI so `/api/*` routes work with env vars:
+
+```bash
+cp .env.example .env.local   # then set RAZORPAY_KEY_ID / RAZORPAY_KEY_SECRET
+npx vercel dev
+```
+
+Set the same keys in the Vercel project for preview/production deploys. Never commit `.env.local`.
+
 After editing the React age journey (`src/age-journey/`), rebuild:
 
 ```bash

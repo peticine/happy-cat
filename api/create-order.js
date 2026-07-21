@@ -1,0 +1,120 @@
+const VET_CALL_AMOUNT_PAISE = 49900;
+const VET_CALL_CURRENCY = "INR";
+
+function sendJson(res, status, body) {
+  res.statusCode = status;
+  res.setHeader("Content-Type", "application/json");
+  res.setHeader("Cache-Control", "no-store");
+  res.end(JSON.stringify(body));
+}
+
+function readJsonBody(req) {
+  return new Promise((resolve, reject) => {
+    if (req.body && typeof req.body === "object") {
+      resolve(req.body);
+      return;
+    }
+    let raw = "";
+    req.on("data", (chunk) => {
+      raw += chunk;
+      if (raw.length > 1e6) {
+        reject(new Error("Body too large"));
+        req.destroy();
+      }
+    });
+    req.on("end", () => {
+      if (!raw) {
+        resolve({});
+        return;
+      }
+      try {
+        resolve(JSON.parse(raw));
+      } catch (err) {
+        reject(err);
+      }
+    });
+    req.on("error", reject);
+  });
+}
+
+export default async function handler(req, res) {
+  if (req.method === "OPTIONS") {
+    res.statusCode = 204;
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    res.end();
+    return;
+  }
+
+  if (req.method !== "POST") {
+    sendJson(res, 405, { error: "Method not allowed" });
+    return;
+  }
+
+  const keyId = process.env.RAZORPAY_KEY_ID;
+  const keySecret = process.env.RAZORPAY_KEY_SECRET;
+  if (!keyId || !keySecret) {
+    sendJson(res, 500, { error: "Payment not configured" });
+    return;
+  }
+
+  let body;
+  try {
+    body = await readJsonBody(req);
+  } catch {
+    sendJson(res, 400, { error: "Invalid JSON body" });
+    return;
+  }
+
+  const sessionId = String(body.sessionId || "").slice(0, 40);
+  const phone = String(body.phone || "").replace(/\D/g, "").slice(0, 15);
+  const catName = String(body.catName || "").slice(0, 60);
+  const issueId = String(body.issueId || "").slice(0, 40);
+  const receiptBase = sessionId || `vet_${Date.now()}`;
+  const receipt = receiptBase.replace(/[^a-zA-Z0-9_]/g, "_").slice(0, 40);
+
+  const auth = Buffer.from(`${keyId}:${keySecret}`).toString("base64");
+
+  try {
+    const rzpRes = await fetch("https://api.razorpay.com/v1/orders", {
+      method: "POST",
+      headers: {
+        Authorization: `Basic ${auth}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        amount: VET_CALL_AMOUNT_PAISE,
+        currency: VET_CALL_CURRENCY,
+        receipt,
+        notes: {
+          product: "vet_call",
+          session_id: sessionId,
+          phone,
+          cat_name: catName,
+          issue_id: issueId,
+        },
+      }),
+    });
+
+    const data = await rzpRes.json().catch(() => ({}));
+    if (!rzpRes.ok) {
+      sendJson(res, 502, {
+        error: "Could not create payment order",
+        detail: data?.error?.description || data?.error?.code || null,
+      });
+      return;
+    }
+
+    sendJson(res, 200, {
+      orderId: data.id,
+      amount: data.amount,
+      currency: data.currency,
+      keyId,
+      product: "vet_call",
+      label: "Speak to a vet",
+    });
+  } catch (err) {
+    sendJson(res, 502, { error: "Payment provider unavailable" });
+  }
+}

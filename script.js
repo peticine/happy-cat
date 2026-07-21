@@ -14,7 +14,7 @@ const CAT_NAME_KEY = "peticine-cat-name";
 const CAT_PROFILE_KEY = "peticine-cat-profile";
 const AGE_DONE_KEY = "peticine-age-done";
 const AGE_THEMES = ["young", "prime", "mature", "senior", "geriatric"];
-const PRIMARY_CTA_LABEL = "Start Free Health Check";
+const PRIMARY_CTA_LABEL = "Start Health Check";
 
 // Meta ad headlines per concern (use ?concern= in landing URL):
 // water/drinking: "Cat drinking more water? Free 2-min check" | "Extra water bowls? See if it's worth a vet call"
@@ -34,13 +34,13 @@ const HERO_VARIANTS = {
   water: {
     headlineHook: "Drinking more water than usual?",
     headline: "It could be a sign of kidney disease.",
-    lead: "A quick check, then a free specialist call in 15–30 minutes.",
+    lead: "A quick check, then a ₹499 specialist consult — usually within 15–30 minutes.",
     image: "./images/hero-water.png?v=9",
   },
   drinking: {
     headlineHook: "Drinking more water than usual?",
     headline: "It could be a sign of kidney disease.",
-    lead: "A quick check, then a free specialist call in 15–30 minutes.",
+    lead: "A quick check, then a ₹499 specialist consult — usually within 15–30 minutes.",
     image: "./images/hero-water.png?v=9",
   },
   weight: {
@@ -65,13 +65,13 @@ const HERO_VARIANTS = {
   litter: {
     headlineHook: "Is your cat peeing outside the litter box?",
     headline: "This is a sign of discomfort.",
-    lead: "Answer one quick question — a feline specialist will call you free in 15–30 minutes.",
+    lead: "Answer one quick question — then book a ₹499 specialist consult (usually within 15–30 minutes).",
     image: "./images/hero-litter.png",
   },
   urination: {
     headlineHook: "Is your cat peeing outside the litter box?",
     headline: "This is a sign of discomfort.",
-    lead: "Answer one quick question — a feline specialist will call you free in 15–30 minutes.",
+    lead: "Answer one quick question — then book a ₹499 specialist consult (usually within 15–30 minutes).",
     image: "./images/hero-litter.png",
   },
   quiet: {
@@ -81,13 +81,13 @@ const HERO_VARIANTS = {
   dental: {
     headlineHook: "Bad breath is not normal for cats.",
     headline: "It could be a sign of dental disease.",
-    lead: "A quick check, then a free specialist call in 15–30 minutes.",
+    lead: "A quick check, then a ₹499 specialist consult — usually within 15–30 minutes.",
     image: "./images/hero-dental.jpg",
   },
   breath: {
     headlineHook: "Bad breath is not normal for cats.",
     headline: "It could be a sign of dental disease.",
-    lead: "A quick check, then a free specialist call in 15–30 minutes.",
+    lead: "A quick check, then a ₹499 specialist consult — usually within 15–30 minutes.",
     image: "./images/hero-dental.jpg",
   },
   default: {
@@ -973,10 +973,17 @@ function buildYoungPmsPayload(phoneNational) {
   const answers = buildYoungPmsAnswers(issueId);
   const answerSummary = answers.map((a) => a.answer).join(" · ");
   const phone = String(phoneNational || quizState.whatsappNumber || "").replace(/\D/g, "");
+  const paid = !!quizState.vetCallPayment?.paymentId;
   const summaryParts = [
     `${displayName === "your cat" ? "Cat" : displayName}, ${formatCatAgeLabel(quizState.age)}`,
     answerSummary ? `${shortLabel} — ${answerSummary}` : shortLabel,
-    phone ? `Prefer call within 15–30 min at +91 ${phone}` : "Prefer call within 15–30 min",
+    paid
+      ? `Paid vet consult ${VET_CALL_PRODUCT.priceLabel}${
+          phone ? ` — call +91 ${phone}` : ""
+        }`
+      : phone
+        ? `Prefer call within 15–30 min at +91 ${phone}`
+        : "Prefer call within 15–30 min",
   ];
 
   return {
@@ -1012,9 +1019,19 @@ function buildYoungPmsPayload(phoneNational) {
     },
     answers,
     summary_text: summaryParts.join(". ") + ".",
+    payment: paid
+      ? {
+          product: VET_CALL_PRODUCT.id,
+          amount_inr: VET_CALL_PRODUCT.amountPaise / 100,
+          order_id: quizState.vetCallPayment.orderId,
+          payment_id: quizState.vetCallPayment.paymentId,
+          status: "paid",
+        }
+      : null,
     flags: {
       urgent: urgency === "urgent",
       prevention_only: issueId === "prevention",
+      paid_consult: paid,
     },
   };
 }
@@ -1777,6 +1794,15 @@ const FELICA_PREVENTION_PROGRAM = {
   price: "₹799",
   period: "month",
   note: "Includes specialist support.",
+};
+
+const VET_CALL_PRODUCT = {
+  id: "vet_call",
+  name: "Vet consult call",
+  priceLabel: "₹499",
+  amountPaise: 49900,
+  currency: "INR",
+  ctaLabel: "Pay ₹499 & book call",
 };
 
 const FELICA_WHATSAPP_CONTACT_URL = "https://wa.me/918047285635";
@@ -3321,6 +3347,7 @@ let quizState = {
   sessionId: null,
   youngLeadResult: null,
   screeningSessionId: null,
+  vetCallPayment: null,
 };
 
 function resetQuizState() {
@@ -3341,6 +3368,7 @@ function resetQuizState() {
     sessionId: null,
     youngLeadResult: null,
     screeningSessionId: crypto.randomUUID(),
+    vetCallPayment: null,
   };
   setFlowProgramLabel();
 }
@@ -3956,6 +3984,236 @@ function bindYoungPlanHandlers() {
       wellness_plan: getWellnessPlanConfig().id,
     });
   });
+
+  assflowMain.querySelector("[data-vet-call-pay]")?.addEventListener("click", () => {
+    startVetCallPayment();
+  });
+}
+
+function loadRazorpayCheckout() {
+  if (window.Razorpay) return Promise.resolve(window.Razorpay);
+  return new Promise((resolve, reject) => {
+    const existing = document.querySelector('script[data-razorpay-checkout]');
+    if (existing) {
+      existing.addEventListener("load", () => resolve(window.Razorpay), { once: true });
+      existing.addEventListener("error", () => reject(new Error("Razorpay failed to load")), {
+        once: true,
+      });
+      return;
+    }
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+    script.dataset.razorpayCheckout = "1";
+    script.onload = () => resolve(window.Razorpay);
+    script.onerror = () => reject(new Error("Razorpay failed to load"));
+    document.head.appendChild(script);
+  });
+}
+
+function setVetPayButtonState(btn, { busy = false, label = null } = {}) {
+  if (!btn) return;
+  btn.disabled = busy;
+  if (label != null) btn.textContent = label;
+}
+
+function completePaidVetBooking(phoneNational) {
+  const phone = String(phoneNational || quizState.whatsappNumber || "").replace(/\D/g, "");
+
+  track("whatsapp_number_collected", {
+    cat_age: quizState.age,
+    flow_track: "young",
+    symptoms: getSelectedYoungSymptoms().map((s) => s.id),
+    contact_method: "call",
+    session_id: ensureYoungSessionId(),
+    paid: true,
+  });
+
+  flushLeadConversionTags({ flow_track: "young", paid_consult: true });
+
+  quizState.step = getYoungPlanStep();
+  renderFlowStep();
+
+  if (!phone) return;
+
+  submitYoungCatLead(phone)
+    .then(() => {
+      track("young_cat_lead_submitted", {
+        session_id: quizState.sessionId,
+        issue_id: getPrimaryYoungSymptom()?.id,
+        urgency: resolveYoungUrgency(),
+        ok: true,
+        paid: true,
+        payment_id: quizState.vetCallPayment?.paymentId || null,
+      });
+    })
+    .catch((err) => {
+      track("young_cat_lead_submitted", {
+        session_id: quizState.sessionId,
+        issue_id: getPrimaryYoungSymptom()?.id,
+        urgency: resolveYoungUrgency(),
+        ok: false,
+        status: err?.status || null,
+        paid: true,
+      });
+    });
+}
+
+async function startVetCallPayment({ button = null, errorEl = null } = {}) {
+  const btn =
+    button ||
+    assflowMain.querySelector("[data-vet-call-pay]") ||
+    assflowMain.querySelector("#young-connect-form button[type='submit']");
+  const errNode =
+    errorEl ||
+    assflowMain.querySelector("[data-vet-pay-error]") ||
+    assflowMain.querySelector("#young-connect-error");
+  const phone = String(quizState.whatsappNumber || "").replace(/\D/g, "");
+  const sessionId = ensureYoungSessionId();
+  const issueId = getPrimaryYoungSymptom()?.id || "";
+
+  if (!isValidIndianMobile(phone)) {
+    if (errNode) {
+      errNode.hidden = false;
+      errNode.textContent = "Enter a valid 10-digit mobile number before paying.";
+    }
+    return false;
+  }
+
+  if (errNode) {
+    errNode.hidden = true;
+    errNode.textContent = "";
+  }
+
+  setVetPayButtonState(btn, { busy: true, label: "Starting payment…" });
+
+  track("begin_checkout", {
+    item_id: VET_CALL_PRODUCT.id,
+    value: VET_CALL_PRODUCT.amountPaise / 100,
+    currency: VET_CALL_PRODUCT.currency,
+    session_id: sessionId,
+  });
+
+  try {
+    const orderRes = await fetch("/api/create-order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        sessionId,
+        phone,
+        catName: quizState.catName || "",
+        issueId,
+      }),
+    });
+    const order = await orderRes.json().catch(() => ({}));
+    if (!orderRes.ok || !order.orderId || !order.keyId) {
+      throw new Error(order.error || "Could not start payment");
+    }
+
+    const RazorpayCtor = await loadRazorpayCheckout();
+    const paid = await new Promise((resolve, reject) => {
+      const rzp = new RazorpayCtor({
+        key: order.keyId,
+        amount: order.amount,
+        currency: order.currency || VET_CALL_PRODUCT.currency,
+        name: "Felica",
+        description: VET_CALL_PRODUCT.name,
+        order_id: order.orderId,
+        prefill: {
+          contact: phone ? `+91${phone}` : undefined,
+          name: quizState.catName ? `${quizState.catName}'s parent` : undefined,
+        },
+        notes: {
+          product: VET_CALL_PRODUCT.id,
+          session_id: sessionId,
+          issue_id: issueId,
+        },
+        config: {
+          display: {
+            blocks: {
+              upi: {
+                name: "Choose your UPI app",
+                instruments: [{ method: "upi" }],
+              },
+            },
+            sequence: ["block.upi"],
+            preferences: {
+              show_default_blocks: false,
+            },
+          },
+        },
+        webview_intent: true,
+        theme: { color: "#8f87ab" },
+        handler: async (response) => {
+          try {
+            const verifyRes = await fetch("/api/verify-payment", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                ...response,
+                sessionId,
+              }),
+            });
+            const verify = await verifyRes.json().catch(() => ({}));
+            if (!verifyRes.ok || !verify.ok) {
+              throw new Error(verify.error || "Payment verification failed");
+            }
+
+            quizState.vetCallPayment = {
+              orderId: verify.orderId,
+              paymentId: verify.paymentId,
+              paidAt: Date.now(),
+            };
+
+            track("purchase", {
+              transaction_id: verify.paymentId,
+              value: VET_CALL_PRODUCT.amountPaise / 100,
+              currency: VET_CALL_PRODUCT.currency,
+              item_id: VET_CALL_PRODUCT.id,
+              session_id: sessionId,
+            });
+            track("vet_call_paid", {
+              session_id: sessionId,
+              order_id: verify.orderId,
+              payment_id: verify.paymentId,
+              issue_id: issueId,
+            });
+
+            completePaidVetBooking(phone);
+            resolve(true);
+          } catch (err) {
+            reject(err);
+          }
+        },
+        modal: {
+          ondismiss: () => resolve(false),
+        },
+      });
+
+      rzp.on("payment.failed", (response) => {
+        reject(new Error(response?.error?.description || "Payment failed"));
+      });
+
+      rzp.open();
+    });
+
+    return paid;
+  } catch (err) {
+    if (errNode) {
+      errNode.hidden = false;
+      errNode.textContent = err?.message || "Payment could not be completed. Please try again.";
+    }
+    track("vet_call_pay_failed", {
+      session_id: sessionId,
+      message: err?.message || "unknown",
+    });
+    return false;
+  } finally {
+    setVetPayButtonState(btn, {
+      busy: false,
+      label: VET_CALL_PRODUCT.ctaLabel,
+    });
+  }
 }
 
 function renderYoungOptionCards(name, options, savedId, onSelect) {
@@ -4122,23 +4380,23 @@ function renderYoungConnectStep() {
   const name = getCatDisplayName();
   const possessive = name === "your cat" ? "your cat's" : `${name}'s`;
   const connectLeads = {
-    vomiting: `We'll review ${possessive} vomiting pattern, then call with next steps.`,
-    appetite: `We'll review what you shared about ${possessive} eating, then call with next steps.`,
-    litter: `We'll review the litter changes you noted for ${name}, then call you.`,
-    skin: `We'll review ${possessive} scratching or flea issue, then call with a plan.`,
-    coat: `We'll review what you noticed about ${possessive} fur, then call with a plan.`,
-    eyes: `We'll review ${possessive} teary eyes, then call with guidance.`,
-    behaviour: `We'll review the behaviour changes you described, then call with next steps.`,
-    hydration: `We'll review ${possessive} drinking and peeing changes, then call with guidance.`,
-    energy: `We'll review ${possessive} energy changes, then call you.`,
-    dental: `We'll review the mouth trouble you described, then call you.`,
-    mobility: `We'll review how ${possessive} movement has changed, then call you.`,
-    prevention: `Leave your number — a feline specialist will call with ${possessive} prevention plan.`,
+    vomiting: `We'll review ${possessive} vomiting pattern on a paid consult call.`,
+    appetite: `We'll review what you shared about ${possessive} eating on a paid consult call.`,
+    litter: `We'll review the litter changes you noted for ${name} on a paid consult call.`,
+    skin: `We'll review ${possessive} scratching or flea issue on a paid consult call.`,
+    coat: `We'll review what you noticed about ${possessive} fur on a paid consult call.`,
+    eyes: `We'll review ${possessive} teary eyes on a paid consult call.`,
+    behaviour: `We'll review the behaviour changes you described on a paid consult call.`,
+    hydration: `We'll review ${possessive} drinking and peeing changes on a paid consult call.`,
+    energy: `We'll review ${possessive} energy changes on a paid consult call.`,
+    dental: `We'll review the mouth trouble you described on a paid consult call.`,
+    mobility: `We'll review how ${possessive} movement has changed on a paid consult call.`,
+    prevention: `Book a paid consult — a feline specialist will call with ${possessive} prevention plan.`,
   };
   const issueId = getPrimaryYoungSymptom()?.id || "prevention";
   const connectLead = isPrevention
     ? connectLeads.prevention
-    : connectLeads[issueId] || "Someone will review what you shared, then call you.";
+    : connectLeads[issueId] || "Book a paid consult — a specialist will call with next steps.";
   const isLikelyUrgent = !isPrevention && resolveYoungUrgency() === "urgent";
 
   assflowMain.innerHTML = `
@@ -4148,11 +4406,11 @@ function renderYoungConnectStep() {
         isLikelyUrgent
           ? `<div class="young-urgent-inline" role="status">
           <p class="young-urgent-inline-title">This may need prompt care</p>
-          <p class="young-urgent-inline-copy">Leave your number — a specialist will call within 15–30 minutes to help you decide next steps.</p>
+          <p class="young-urgent-inline-copy">Book a ₹499 consult — a specialist usually calls within 15–30 minutes to help you decide next steps. If this looks urgent, also head to a nearby clinic.</p>
         </div>`
           : ""
       }
-      <h1 class="flow-title" id="assflow-title">Get your free specialist call</h1>
+      <h1 class="flow-title" id="assflow-title">Book your vet consult</h1>
       <p class="flow-lead">${escapeHtml(connectLead)}</p>
 
       <form class="young-connect-form" id="young-connect-form" novalidate>
@@ -4181,9 +4439,13 @@ function renderYoungConnectStep() {
           />
         </div>
 
-        <p class="young-connect-next">Free · private · no spam · usually within 15–30 minutes</p>
+        <p class="young-connect-next">${escapeHtml(
+          VET_CALL_PRODUCT.priceLabel
+        )} · UPI / cards · private · usually within 15–30 minutes</p>
         <p class="flow-error" id="young-connect-error" hidden>Enter a valid 10-digit mobile number.</p>
-        <button type="submit" class="btn btn-block btn-get-started">Get my free call</button>
+        <button type="submit" class="btn btn-block btn-get-started">${escapeHtml(
+          VET_CALL_PRODUCT.ctaLabel
+        )}</button>
       </form>
     </div>
   `;
@@ -4192,7 +4454,7 @@ function renderYoungConnectStep() {
   trackYoungCatStep("contact", issueId);
 
   const form = assflowMain.querySelector("#young-connect-form");
-  form?.addEventListener("submit", (event) => {
+  form?.addEventListener("submit", async (event) => {
     event.preventDefault();
     const phoneInput = form.querySelector("#young-phone-input");
     const nameInput = form.querySelector("#young-cat-name");
@@ -4203,7 +4465,10 @@ function renderYoungConnectStep() {
 
     if (!isValidIndianMobile(number)) {
       phoneInput?.classList.add("error");
-      if (error) error.hidden = false;
+      if (error) {
+        error.hidden = false;
+        error.textContent = "Enter a valid 10-digit mobile number.";
+      }
       phoneInput?.focus();
       setTimeout(() => phoneInput?.classList.remove("error"), 2000);
       return;
@@ -4223,42 +4488,7 @@ function renderYoungConnectStep() {
       }
     }
 
-    if (submitBtn) {
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Submitting…";
-    }
-
-    track("whatsapp_number_collected", {
-      cat_age: quizState.age,
-      flow_track: "young",
-      symptoms: getSelectedYoungSymptoms().map((s) => s.id),
-      contact_method: "call",
-      session_id: ensureYoungSessionId(),
-    });
-
-    flushLeadConversionTags({ flow_track: "young" });
-
-    quizState.step = getYoungReviewStep();
-    renderFlowStep();
-
-    submitYoungCatLead(number)
-      .then(() => {
-        track("young_cat_lead_submitted", {
-          session_id: quizState.sessionId,
-          issue_id: getPrimaryYoungSymptom()?.id,
-          urgency: resolveYoungUrgency(),
-          ok: true,
-        });
-      })
-      .catch((err) => {
-        track("young_cat_lead_submitted", {
-          session_id: quizState.sessionId,
-          issue_id: getPrimaryYoungSymptom()?.id,
-          urgency: resolveYoungUrgency(),
-          ok: false,
-          status: err?.status || null,
-        });
-      });
+    await startVetCallPayment({ button: submitBtn, errorEl: error });
   });
 }
 
@@ -4403,6 +4633,12 @@ function renderYoungWellnessPlanStep() {
 }
 
 function renderYoungCallPlanStep() {
+  if (!quizState.vetCallPayment?.paymentId) {
+    quizState.step = getYoungConnectStep();
+    renderFlowStep();
+    return;
+  }
+
   setFlowProgress(getYoungStepCount() - 1, getYoungStepCount());
   setFlowFooter({ visible: false });
   setFlowProgramLabel();
@@ -4423,17 +4659,25 @@ function renderYoungCallPlanStep() {
     symptoms: getSelectedYoungSymptoms().map((s) => s.id),
     specialist: specialist.fullName,
     phone_collected: !!phone,
+    vet_call_paid: true,
   });
 
   assflowMain.innerHTML = `
     <div class="flow-step flow-step-result young-plan-step young-call-plan">
       <div class="young-care-plan young-call-plan-card">
-        <h1 class="young-call-plan-title" id="assflow-title">You're all set</h1>
+        <h1 class="young-call-plan-title" id="assflow-title">Consult booked</h1>
         <p class="young-call-plan-lead">
-          A feline specialist will call about ${escapeHtml(possessive)} ${escapeHtml(
+          Thanks — a feline specialist will call about ${escapeHtml(possessive)} ${escapeHtml(
             String(issueLabel).toLowerCase()
-          )} soon.
+          )} shortly.
         </p>
+
+        <div class="young-pay-success" role="status">
+          <p class="young-pay-success-title">Vet consult confirmed</p>
+          <p class="young-pay-success-copy">Paid ${escapeHtml(
+            VET_CALL_PRODUCT.priceLabel
+          )} · usually within 15–30 minutes</p>
+        </div>
 
         <section class="young-call-vet" aria-label="Your specialist">
           <img
@@ -4520,7 +4764,7 @@ function renderYoungPlanStep() {
               .map((reason) => `<li>${escapeHtml(reason)}</li>`)
               .join("")}
           </ul>
-          <p class="young-urgent-note">If this looks urgent, please also head to a nearby clinic. We'll still call to help you decide next steps.</p>
+          <p class="young-urgent-note">If this looks urgent, please also head to a nearby clinic. Your paid consult call will still help you decide next steps.</p>
         </div>
 
         <div class="young-plan-section">
