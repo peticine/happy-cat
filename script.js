@@ -30,6 +30,8 @@ const PRIMARY_CTA_LABEL = "Start Free Health Check";
 // dental/bad-breath: "Bad breath is not normal for cats" | "Cat bad breath? Free 2-min dental check"
 //   | "Is bad breath a sign of dental disease? Screen free" | "Cats hide mouth pain — check oral health in 2 min"
 //   | "Smelly cat breath? Find out if it's dental disease"
+// senior: "Is your cat over 7? Free senior health check" | "Senior cats hide illness — screen in 2 min"
+//   | "Cat over 7? Kidney, thyroid & arthritis check" | "Ageing cat? Free specialist screening"
 const HERO_VARIANTS = {
   water: {
     headlineHook: "Drinking more water than usual?",
@@ -90,6 +92,15 @@ const HERO_VARIANTS = {
     lead: "A quick check, then a free specialist call in 15–30 minutes.",
     image: "./images/hero-dental.jpg",
   },
+  senior: {
+    headlineHook: "Is your cat over 7?",
+    headline: "Senior cats hide illness until it's late.",
+    lead: "A quick senior check, then a free specialist call in 15–30 minutes.",
+    image: "./images/stage-senior.png?v=hc47",
+    pageTitle: "Felica | Senior cat health screening",
+    pageDescription:
+      "Free 2-minute screening for senior cats. Check kidney disease, hyperthyroidism, diabetes, arthritis, and more — then speak with a feline specialist.",
+  },
   default: {
     headlineHook: "Cats hide pain.",
     headline: "Find out before it gets late.",
@@ -103,6 +114,7 @@ const HERO_BG_IMAGES = {
   urination: "./images/hero-litter.png",
   dental: "./images/hero-dental.jpg",
   breath: "./images/hero-dental.jpg",
+  senior: "./images/stage-senior.png?v=hc47",
 };
 
 // Floating tags around the hero portrait — overridden per concern landing.
@@ -163,6 +175,14 @@ const HERO_FLOAT_TAGS = {
     { icon: "zap", label: "Thyroid changes" },
     { icon: "activity", label: "Diabetes risk" },
   ],
+  senior: [
+    { icon: "heart-pulse", label: "Kidney disease" },
+    { icon: "zap", label: "Hyperthyroidism" },
+    { icon: "scale", label: "Diabetes" },
+    { icon: "moon", label: "Arthritis & pain" },
+    { icon: "utensils", label: "Dental disease" },
+    { icon: "activity", label: "Weight loss" },
+  ],
 };
 
 const HERO_CONCERN_ALIASES = {
@@ -201,6 +221,15 @@ const HERO_CONCERN_ALIASES = {
   mouth: "dental",
   "dental-disease": "dental",
   "gum-disease": "dental",
+  "senior-cat": "senior",
+  "senior-cats": "senior",
+  "older-cat": "senior",
+  "ageing-cat": "senior",
+  "aging-cat": "senior",
+  ageing: "senior",
+  aging: "senior",
+  geriatric: "senior",
+  "geriatric-cat": "senior",
 };
 
 function normalizeHeroConcern(raw) {
@@ -289,6 +318,14 @@ function initHeroPersonalization() {
     variant.image || HERO_BG_IMAGES[concern] || "./images/hero-cat-portrait.png";
   if (heroImg) {
     heroImg.src = heroImage;
+  }
+
+  if (variant.pageTitle) {
+    document.title = variant.pageTitle;
+  }
+  if (variant.pageDescription) {
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) metaDesc.setAttribute("content", variant.pageDescription);
   }
 
   document.body.dataset.heroConcern = concern;
@@ -2327,6 +2364,8 @@ const CHRONIC_CONCERN_QUESTION_ORDER = {
   weight: ["weight", "appetite", "water", "urination", "vomiting"],
   eating: ["appetite", "weight", "vomiting", "water", "urination"],
   appetite: ["appetite", "weight", "vomiting", "water", "urination"],
+  // Senior landing → classic kidney / chronic disease screen
+  senior: ["water", "urination", "weight", "appetite", "vomiting"],
 };
 
 const FLOW_ADVANCE_MS = 80;
@@ -2369,8 +2408,13 @@ function isYoungFlow() {
   return quizState.flowTrack === "young";
 }
 
+function isSeniorScreeningLanding() {
+  return getHeroConcernFromUrl() === "senior";
+}
+
 function isYoungCatAge(years) {
-  // All ages use the young (symptom → call) flow.
+  // All ages use the young (symptom → call) flow — except senior concern
+  // landings, which use the 5-question chronic kidney screen.
   return years != null && years > 0 && years <= 25;
 }
 
@@ -3326,10 +3370,15 @@ let quizState = {
 function resetQuizState() {
   leadConversionFired = false;
   clearYoungReviewTimers();
+  const concern = getHeroConcernFromUrl();
+  const useChronic = concern === "senior";
+  // Senior ad landing: start the age wheel near typical senior age when
+  // the visitor has no saved age yet.
+  const seniorPrefill = useChronic && catAge == null ? 12 : null;
   quizState = {
     step: 1,
-    flowTrack: "young",
-    age: catAge != null ? catAge : null,
+    flowTrack: useChronic ? "chronic" : "young",
+    age: catAge != null ? catAge : seniorPrefill,
     answers: {},
     youngSymptoms: [],
     youngDuration: null,
@@ -3546,13 +3595,16 @@ function flowBack() {
 function commitAgeAndAdvance(years) {
   quizState.age = years;
   quizState.answers = {};
-  quizState.flowTrack = "young";
+  // Senior concern landing → 5-question kidney / chronic screen.
+  // Everything else stays on the young symptom → call flow.
+  const useChronic = isSeniorScreeningLanding();
+  quizState.flowTrack = useChronic ? "chronic" : "young";
   quizState.youngSymptoms = [];
   quizState.youngDuration = null;
   quizState.youngDetailAnswers = {};
   quizState.catName = null;
   quizState.youngLeadResult = null;
-  quizState.sessionId = createYoungSessionId();
+  quizState.sessionId = useChronic ? null : createYoungSessionId();
   setFlowProgramLabel();
   track("screening_step_completed", {
     step: "age",
@@ -3563,20 +3615,30 @@ function commitAgeAndAdvance(years) {
     flow_track: quizState.flowTrack,
   });
   quizState.step = 2;
-  applyUrlConcernYoungPrefill(years);
+  if (!useChronic) {
+    applyUrlConcernYoungPrefill(years);
+  }
   renderFlowStep();
 }
 
 function renderAgeStep() {
-  setFlowProgress(0, getYoungStepCount());
+  const useChronic = !isYoungFlow();
+  setFlowProgress(0, useChronic ? getTotalFlowSteps() : getYoungStepCount());
   const prefillOpt = nearestAgeWheelOption(quizState.age);
   const options = AGE_WHEEL_OPTIONS;
+  const isSeniorLanding = isSeniorScreeningLanding();
+  const ageLead = isSeniorLanding
+    ? "Cats 7+ are at higher risk. Scroll to pick your cat's age."
+    : "Scroll to pick an age — includes months for kittens.";
+  const stepLabel = useChronic
+    ? formatFlowStepLabel(1, "Age")
+    : formatYoungStepLabel(1);
 
   assflowMain.innerHTML = `
     <div class="flow-step">
-      <p class="flow-step-label">${formatYoungStepLabel(1)}</p>
+      <p class="flow-step-label">${stepLabel}</p>
       <h1 class="flow-title" id="assflow-title">How old is your cat?</h1>
-      <p class="flow-lead">Scroll to pick an age — includes months for kittens.</p>
+      <p class="flow-lead">${escapeHtml(ageLead)}</p>
       <div class="age-wheel" id="age-wheel" role="listbox" aria-label="Cat age">
         <div class="age-wheel-fade age-wheel-fade--top" aria-hidden="true"></div>
         <div class="age-wheel-highlight" aria-hidden="true"></div>
