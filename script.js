@@ -2688,9 +2688,8 @@ function getLeadSpamBlockReason({ honeypot = "", phone = "", catNameValue = "", 
 function leadSpamErrorMessage(reason) {
   switch (reason) {
     case "cat_name_multi":
-      return "Use only one name for your cat (no first and last name).";
     case "cat_name":
-      return "Enter your cat's real name (one word).";
+      return "Enter your cat's name.";
     case "too_fast":
       return "Take a moment to finish the questions, then try again.";
     case "rate_phone":
@@ -4049,7 +4048,7 @@ function renderWhatsAppGate(tier) {
           type="text"
           name="cat_name"
           value="${escapeHtml(catPrefill)}"
-          placeholder="e.g. Mochi (one name)"
+          placeholder="e.g. Mochi"
           autocomplete="off"
           maxlength="24"
           required
@@ -4437,7 +4436,7 @@ function renderYoungConnectStep() {
           type="text"
           name="cat_name"
           value="${escapeHtml(catPrefill)}"
-          placeholder="e.g. Mochi (one name)"
+          placeholder="e.g. Mochi"
           autocomplete="off"
           maxlength="24"
           required
