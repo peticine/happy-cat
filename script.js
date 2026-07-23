@@ -14,35 +14,35 @@ const CAT_NAME_KEY = "peticine-cat-name";
 const CAT_PROFILE_KEY = "peticine-cat-profile";
 const AGE_DONE_KEY = "peticine-age-done";
 const AGE_THEMES = ["young", "prime", "mature", "senior", "geriatric"];
-const PRIMARY_CTA_LABEL = "Start Free Health Check";
+const PRIMARY_CTA_LABEL = "Start Health Check";
 
 // Meta ad headlines per concern (use ?concern= in landing URL):
-// water/drinking: "Cat drinking more water? Free 2-min check" | "Extra water bowls? See if it's worth a vet call"
-//   | "Is your cat thirsty lately? Free health screening" | "More drinking can signal kidneys — check free in 2 min"
+// water/drinking: "Cat drinking more water? 2-min check" | "Extra water bowls? See if it's worth a vet call"
+//   | "Is your cat thirsty lately? Health screening" | "More drinking can signal kidneys — check in 2 min"
 //   | "Worried how much your cat drinks? Start here"
-// weight: "Cat losing weight? Free 2-minute screening" | "Thinner lately? Normal or a warning sign"
-//   | "Weight loss in cats is easy to miss — check free" | "Cat getting skinnier? Vet-designed screening, ₹0"
+// weight: "Cat losing weight? 2-minute screening" | "Thinner lately? Normal or a warning sign"
+//   | "Weight loss in cats is easy to miss — check" | "Cat getting skinnier? Vet-designed screening, ₹0"
 //   | "Notice your cat feels lighter? Clear read in 2 min"
-// eating/appetite: "Cat not eating much? Free screening in 2 minutes" | "Pickier appetite lately? Know if you should worry"
-//   | "Skipping meals? Free vet-designed cat health check" | "Appetite changes hide illness — screen free"
+// eating/appetite: "Cat not eating much? Screening in 2 minutes" | "Pickier appetite lately? Know if you should worry"
+//   | "Skipping meals? Vet-designed cat health check" | "Appetite changes hide illness — screen"
 //   | "Is your cat eating less? Get a plain-language answer"
 // litter/peeing-outside: "Is your cat peeing outside the litter box?" | "Find out if it's stress — or kidneys, bladder, or pain that needs a vet."
-// dental/bad-breath: "Bad breath is not normal for cats" | "Cat bad breath? Free 2-min dental check"
-//   | "Is bad breath a sign of dental disease? Screen free" | "Cats hide mouth pain — check oral health in 2 min"
+// dental/bad-breath: "Bad breath is not normal for cats" | "Cat bad breath? 2-min dental check"
+//   | "Is bad breath a sign of dental disease? Screen" | "Cats hide mouth pain — check oral health in 2 min"
 //   | "Smelly cat breath? Find out if it's dental disease"
-// senior: "Is your cat over 7? Free senior health check" | "Senior cats hide illness — screen in 2 min"
-//   | "Cat over 7? Kidney, thyroid & arthritis check" | "Ageing cat? Free specialist screening"
+// senior: "Is your cat over 7? Senior health check" | "Senior cats hide illness — screen in 2 min"
+//   | "Cat over 7? Kidney, thyroid & arthritis check" | "Ageing cat? Specialist screening"
 const HERO_VARIANTS = {
   water: {
     headlineHook: "Drinking more water than usual?",
     headline: "It could be a sign of kidney disease.",
-    lead: "A quick check, then a free specialist call in 15–30 minutes.",
+    lead: "A quick check, then a specialist call in 15–30 minutes.",
     image: "./images/hero-water.png?v=9",
   },
   drinking: {
     headlineHook: "Drinking more water than usual?",
     headline: "It could be a sign of kidney disease.",
-    lead: "A quick check, then a free specialist call in 15–30 minutes.",
+    lead: "A quick check, then a specialist call in 15–30 minutes.",
     image: "./images/hero-water.png?v=9",
   },
   weight: {
@@ -67,13 +67,13 @@ const HERO_VARIANTS = {
   litter: {
     headlineHook: "Is your cat peeing outside the litter box?",
     headline: "This is a sign of discomfort.",
-    lead: "Answer one quick question — a feline specialist will call you free in 15–30 minutes.",
+    lead: "Answer one quick question — a feline specialist will call you in 15–30 minutes.",
     image: "./images/hero-litter.png",
   },
   urination: {
     headlineHook: "Is your cat peeing outside the litter box?",
     headline: "This is a sign of discomfort.",
-    lead: "Answer one quick question — a feline specialist will call you free in 15–30 minutes.",
+    lead: "Answer one quick question — a feline specialist will call you in 15–30 minutes.",
     image: "./images/hero-litter.png",
   },
   quiet: {
@@ -83,23 +83,23 @@ const HERO_VARIANTS = {
   dental: {
     headlineHook: "Bad breath is not normal for cats.",
     headline: "It could be a sign of dental disease.",
-    lead: "A quick check, then a free specialist call in 15–30 minutes.",
+    lead: "A quick check, then a specialist call in 15–30 minutes.",
     image: "./images/hero-dental.jpg",
   },
   breath: {
     headlineHook: "Bad breath is not normal for cats.",
     headline: "It could be a sign of dental disease.",
-    lead: "A quick check, then a free specialist call in 15–30 minutes.",
+    lead: "A quick check, then a specialist call in 15–30 minutes.",
     image: "./images/hero-dental.jpg",
   },
   senior: {
     headlineHook: "Is your cat over 7?",
     headline: "Senior cats hide illness until it's late.",
-    lead: "A quick senior check, then a free specialist call in 15–30 minutes.",
+    lead: "A quick senior check, then a specialist call in 15–30 minutes.",
     image: "./images/stage-senior.png?v=hc47",
     pageTitle: "Felica | Senior cat health screening",
     pageDescription:
-      "Free 2-minute screening for senior cats. Check kidney disease, hyperthyroidism, diabetes, arthritis, and more — then speak with a feline specialist.",
+      "2-minute screening for senior cats. Check kidney disease, hyperthyroidism, diabetes, arthritis, and more — then speak with a feline specialist.",
   },
   default: {
     headlineHook: "Cats hide pain.",
@@ -2074,7 +2074,7 @@ function getWellnessConfirmTitle(name, specialist) {
 }
 
 function getWellnessReviewCtaLabel(specialist) {
-  return `Get ${specialist.shortName}'s review — free`;
+  return `Get ${specialist.shortName}'s review`;
 }
 
 function getWellnessCtaLabel(name) {
@@ -2117,7 +2117,7 @@ function renderWellnessConfirmationJourney(specialist, name) {
       </li>
       <li class="wellness-confirm-journey-item is-next">
         <span class="wellness-confirm-journey-step">Next</span>
-        <span class="wellness-confirm-journey-copy">${escapeHtml(specialist.shortName)} confirms on WhatsApp (free)</span>
+        <span class="wellness-confirm-journey-copy">${escapeHtml(specialist.shortName)} confirms on WhatsApp</span>
       </li>
       <li class="wellness-confirm-journey-item">
         <span class="wellness-confirm-journey-step">Then</span>
@@ -4072,7 +4072,7 @@ function renderWhatsAppGate(tier) {
           <label for="gate-company">Company</label>
           <input type="text" id="gate-company" name="company" tabindex="-1" autocomplete="off" />
         </div>
-        <p class="whatsapp-gate-hint">Free · private · no spam</p>
+        <p class="whatsapp-gate-hint">Private · no spam</p>
         <p class="flow-error" id="whatsapp-gate-error" hidden></p>
         <button type="submit" class="btn btn-block btn-get-started">Show my result</button>
       </form>
@@ -4425,7 +4425,7 @@ function renderYoungConnectStep() {
         </div>`
           : ""
       }
-      <h1 class="flow-title" id="assflow-title">Get your free specialist call</h1>
+      <h1 class="flow-title" id="assflow-title">Get your specialist call</h1>
       <p class="flow-lead">${escapeHtml(connectLead)}</p>
 
       <form class="young-connect-form" id="young-connect-form" novalidate>
@@ -4462,9 +4462,9 @@ function renderYoungConnectStep() {
           <input type="text" id="young-company" name="company" tabindex="-1" autocomplete="off" />
         </div>
 
-        <p class="young-connect-next">Free · private · no spam · usually within 15–30 minutes</p>
+        <p class="young-connect-next">Private · no spam · usually within 15–30 minutes</p>
         <p class="flow-error" id="young-connect-error" hidden>Enter a valid 10-digit mobile number.</p>
-        <button type="submit" class="btn btn-block btn-get-started">Get my free call</button>
+        <button type="submit" class="btn btn-block btn-get-started">Get my call</button>
       </form>
     </div>
   `;
