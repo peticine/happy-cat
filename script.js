@@ -2553,6 +2553,161 @@ function isValidIndianMobile(raw) {
   return digits.length === 10 && /^[6-9]\d{9}$/.test(digits);
 }
 
+const JUNK_PHONE_NUMBERS = new Set([
+  "9999999999",
+  "8888888888",
+  "7777777777",
+  "6666666666",
+  "9876543210",
+  "9123456789",
+  "9000000000",
+  "9898989898",
+  "9090909090",
+]);
+
+const JUNK_CAT_NAMES = new Set([
+  "test",
+  "testing",
+  "asdf",
+  "asdfg",
+  "qwerty",
+  "abc",
+  "abcd",
+  "name",
+  "cat",
+  "xxx",
+  "aaaa",
+  "bbbb",
+  "none",
+  "na",
+  "n/a",
+  "null",
+  "undefined",
+]);
+
+/** Minimum time from flow open → lead submit. Real parents take longer. */
+const LEAD_MIN_ELAPSED_MS = 20000;
+const LEAD_RATE_KEY = "felica-lead-rate-v1";
+const LEAD_RATE_WINDOW_MS = 24 * 60 * 60 * 1000;
+
+function isPlausibleIndianMobile(raw) {
+  const digits = normalizeIndianMobile(raw);
+  if (!isValidIndianMobile(digits)) return false;
+  if (JUNK_PHONE_NUMBERS.has(digits)) return false;
+  if (/^(\d)\1{9}$/.test(digits)) return false; // all same digit
+  const ascending = "01234567890123456789";
+  const descending = "98765432109876543210";
+  if (ascending.includes(digits) || descending.includes(digits)) return false;
+  return true;
+}
+
+function normalizeCatNameInput(raw) {
+  return String(raw || "").trim().replace(/\s+/g, " ");
+}
+
+/** Single given name only — no first + last. */
+function isPlausibleCatName(raw) {
+  const name = normalizeCatNameInput(raw);
+  if (!name || name.length < 2 || name.length > 24) return false;
+  if (/\s/.test(name)) return false; // two names not allowed
+  if (!/^[A-Za-z][A-Za-z.'-]*$/.test(name)) return false;
+  if (JUNK_CAT_NAMES.has(name.toLowerCase())) return false;
+  if (/^(.)\1+$/i.test(name.replace(/[.'-]/g, ""))) return false; // "aaa", "xxxx"
+  return true;
+}
+
+function getCatNameBlockReason(raw) {
+  const name = normalizeCatNameInput(raw);
+  if (!name) return "cat_name";
+  if (/\s/.test(name)) return "cat_name_multi";
+  if (!isPlausibleCatName(name)) return "cat_name";
+  return null;
+}
+
+function readLeadRateStore() {
+  try {
+    const raw = localStorage.getItem(LEAD_RATE_KEY);
+    const data = raw ? JSON.parse(raw) : { phones: {}, deviceAt: 0 };
+    const phones = data?.phones && typeof data.phones === "object" ? data.phones : {};
+    const now = Date.now();
+    const pruned = {};
+    Object.keys(phones).forEach((phone) => {
+      const at = Number(phones[phone]) || 0;
+      if (at && now - at < LEAD_RATE_WINDOW_MS) pruned[phone] = at;
+    });
+    const deviceAt = Number(data?.deviceAt) || 0;
+    return {
+      phones: pruned,
+      deviceAt: deviceAt && now - deviceAt < LEAD_RATE_WINDOW_MS ? deviceAt : 0,
+    };
+  } catch {
+    return { phones: {}, deviceAt: 0 };
+  }
+}
+
+function writeLeadRateStore(store) {
+  try {
+    localStorage.setItem(LEAD_RATE_KEY, JSON.stringify(store));
+  } catch {
+    /* ignore quota / private mode */
+  }
+}
+
+/** Site-only stand-in for IP+phone rate limit (same browser / same phone, 1 per 24h). */
+function getLeadRateLimitReason(phone) {
+  const digits = normalizeIndianMobile(phone);
+  const store = readLeadRateStore();
+  if (store.deviceAt) return "rate_device";
+  if (digits && store.phones[digits]) return "rate_phone";
+  return null;
+}
+
+function rememberLeadSubmission(phone) {
+  const digits = normalizeIndianMobile(phone);
+  const store = readLeadRateStore();
+  const now = Date.now();
+  store.deviceAt = now;
+  if (digits) store.phones[digits] = now;
+  writeLeadRateStore(store);
+}
+
+function getLeadSpamBlockReason({ honeypot = "", phone = "", catNameValue = "", requireCatName = false } = {}) {
+  if (String(honeypot || "").trim()) return "bot_honeypot";
+  const openedAt = quizState.openedAt || 0;
+  if (openedAt && Date.now() - openedAt < LEAD_MIN_ELAPSED_MS) return "too_fast";
+  if (requireCatName) {
+    const nameReason = getCatNameBlockReason(catNameValue);
+    if (nameReason) return nameReason;
+  }
+  if (!isPlausibleIndianMobile(phone)) return "phone";
+  const rateReason = getLeadRateLimitReason(phone);
+  if (rateReason) return rateReason;
+  return null;
+}
+
+function leadSpamErrorMessage(reason) {
+  switch (reason) {
+    case "cat_name_multi":
+      return "Use only one name for your cat (no first and last name).";
+    case "cat_name":
+      return "Enter your cat's real name (one word).";
+    case "too_fast":
+      return "Take a moment to finish the questions, then try again.";
+    case "rate_phone":
+      return "We already have a request from this number. A specialist will call you soon.";
+    case "rate_device":
+      return "You've already submitted recently. A specialist will call you soon.";
+    case "bot_honeypot":
+      return "Something went wrong. Please try again.";
+    default:
+      return "Enter a valid 10-digit mobile number.";
+  }
+}
+
+function isCatNameBlockReason(reason) {
+  return reason === "cat_name" || reason === "cat_name_multi";
+}
+
 function getCatDisplayName() {
   const name = quizState.catName?.trim();
   return name || "your cat";
@@ -3365,6 +3520,7 @@ let quizState = {
   sessionId: null,
   youngLeadResult: null,
   screeningSessionId: null,
+  openedAt: null,
 };
 
 function resetQuizState() {
@@ -3390,6 +3546,7 @@ function resetQuizState() {
     sessionId: null,
     youngLeadResult: null,
     screeningSessionId: crypto.randomUUID(),
+    openedAt: Date.now(),
   };
   setFlowProgramLabel();
 }
@@ -3878,12 +4035,25 @@ function renderWhatsAppGate(tier) {
     tier && tier.id !== "low"
       ? "A feline specialist will call within 24 hours."
       : "See your full result on the next screen.";
+  const catPrefill = quizState.catName || catName || "";
 
   return `
     <div class="whatsapp-gate">
       ${preview}
       <p class="whatsapp-gate-lead">${leadLine}</p>
       <form class="whatsapp-gate-form" id="whatsapp-gate-form" novalidate>
+        <label class="whatsapp-gate-label" for="gate-cat-name">Cat's name</label>
+        <input
+          class="flow-age-input young-cat-name-input"
+          id="gate-cat-name"
+          type="text"
+          name="cat_name"
+          value="${escapeHtml(catPrefill)}"
+          placeholder="e.g. Mochi (one name)"
+          autocomplete="off"
+          maxlength="24"
+          required
+        />
         <label class="whatsapp-gate-label" for="whatsapp-number-input">Mobile number</label>
         <div class="whatsapp-gate-input-wrap">
           <span class="whatsapp-gate-prefix" aria-hidden="true">🇮🇳 +91</span>
@@ -3899,7 +4069,12 @@ function renderWhatsAppGate(tier) {
             required
           />
         </div>
+        <div class="lead-honeypot" aria-hidden="true">
+          <label for="gate-company">Company</label>
+          <input type="text" id="gate-company" name="company" tabindex="-1" autocomplete="off" />
+        </div>
         <p class="whatsapp-gate-hint">Free · private · no spam</p>
+        <p class="flow-error" id="whatsapp-gate-error" hidden></p>
         <button type="submit" class="btn btn-block btn-get-started">Show my result</button>
       </form>
     </div>
@@ -3913,18 +4088,54 @@ function bindWhatsAppGateHandlers() {
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     const input = form.querySelector("#whatsapp-number-input");
+    const nameInput = form.querySelector("#gate-cat-name");
+    const honeypot = form.querySelector("#gate-company");
+    const error = form.querySelector("#whatsapp-gate-error");
     const submitBtn = form.querySelector('button[type="submit"]');
     const number = normalizeIndianMobile(input?.value);
+    const petName = normalizeCatNameInput(nameInput?.value);
 
-    if (!isValidIndianMobile(number)) {
-      input?.classList.add("error");
-      input?.focus();
-      setTimeout(() => input?.classList.remove("error"), 2000);
+    const blockReason = getLeadSpamBlockReason({
+      honeypot: honeypot?.value,
+      phone: number,
+      catNameValue: petName,
+      requireCatName: true,
+    });
+    if (blockReason) {
+      track("lead_spam_blocked", {
+        reason: blockReason,
+        flow_track: "chronic",
+        session_id: quizState.screeningSessionId,
+      });
+      if (error) {
+        error.hidden = false;
+        error.textContent = leadSpamErrorMessage(blockReason);
+      }
+      if (isCatNameBlockReason(blockReason)) {
+        nameInput?.classList.add("error");
+        nameInput?.focus();
+        setTimeout(() => nameInput?.classList.remove("error"), 2000);
+      } else {
+        input?.classList.add("error");
+        input?.focus();
+        setTimeout(() => input?.classList.remove("error"), 2000);
+      }
       return;
     }
 
+    if (error) error.hidden = true;
     if (input) input.value = number;
     quizState.whatsappNumber = number;
+    quizState.catName = petName;
+    catName = petName;
+    try {
+      localStorage.setItem(CAT_NAME_KEY, petName);
+    } catch (err) {
+      /* ignore */
+    }
+
+    // Record before network calls so spam cannot retry-flood PMS from this browser.
+    rememberLeadSubmission(number);
 
     if (submitBtn) {
       submitBtn.disabled = true;
@@ -3933,6 +4144,7 @@ function bindWhatsAppGateHandlers() {
 
     track("whatsapp_number_collected", {
       cat_age: quizState.age,
+      has_cat_name: true,
     });
     flushLeadConversionTags({ flow_track: "chronic" });
 
@@ -4218,14 +4430,17 @@ function renderYoungConnectStep() {
       <p class="flow-lead">${escapeHtml(connectLead)}</p>
 
       <form class="young-connect-form" id="young-connect-form" novalidate>
-        <label class="flow-age-label" for="young-cat-name">Cat's name <span class="field-optional">(optional)</span></label>
+        <label class="flow-age-label" for="young-cat-name">Cat's name</label>
         <input
           class="flow-age-input young-cat-name-input"
           id="young-cat-name"
           type="text"
+          name="cat_name"
           value="${escapeHtml(catPrefill)}"
-          placeholder="e.g. Mochi"
+          placeholder="e.g. Mochi (one name)"
           autocomplete="off"
+          maxlength="24"
+          required
         />
 
         <label class="whatsapp-gate-label" for="young-phone-input">Mobile number</label>
@@ -4243,6 +4458,11 @@ function renderYoungConnectStep() {
           />
         </div>
 
+        <div class="lead-honeypot" aria-hidden="true">
+          <label for="young-company">Company</label>
+          <input type="text" id="young-company" name="company" tabindex="-1" autocomplete="off" />
+        </div>
+
         <p class="young-connect-next">Free · private · no spam · usually within 15–30 minutes</p>
         <p class="flow-error" id="young-connect-error" hidden>Enter a valid 10-digit mobile number.</p>
         <button type="submit" class="btn btn-block btn-get-started">Get my free call</button>
@@ -4258,16 +4478,38 @@ function renderYoungConnectStep() {
     event.preventDefault();
     const phoneInput = form.querySelector("#young-phone-input");
     const nameInput = form.querySelector("#young-cat-name");
+    const honeypot = form.querySelector("#young-company");
     const error = form.querySelector("#young-connect-error");
     const submitBtn = form.querySelector('button[type="submit"]');
     const number = normalizeIndianMobile(phoneInput?.value);
-    const petName = nameInput?.value?.trim();
+    const petName = normalizeCatNameInput(nameInput?.value);
 
-    if (!isValidIndianMobile(number)) {
-      phoneInput?.classList.add("error");
-      if (error) error.hidden = false;
-      phoneInput?.focus();
-      setTimeout(() => phoneInput?.classList.remove("error"), 2000);
+    const blockReason = getLeadSpamBlockReason({
+      honeypot: honeypot?.value,
+      phone: number,
+      catNameValue: petName,
+      requireCatName: true,
+    });
+    if (blockReason) {
+      track("lead_spam_blocked", {
+        reason: blockReason,
+        flow_track: "young",
+        session_id: ensureYoungSessionId(),
+      });
+      // Never flush Meta Lead or POST to PMS when spam checks fail.
+      if (error) {
+        error.hidden = false;
+        error.textContent = leadSpamErrorMessage(blockReason);
+      }
+      if (isCatNameBlockReason(blockReason)) {
+        nameInput?.classList.add("error");
+        nameInput?.focus();
+        setTimeout(() => nameInput?.classList.remove("error"), 2000);
+      } else {
+        phoneInput?.classList.add("error");
+        phoneInput?.focus();
+        setTimeout(() => phoneInput?.classList.remove("error"), 2000);
+      }
       return;
     }
 
@@ -4275,15 +4517,16 @@ function renderYoungConnectStep() {
     if (phoneInput) phoneInput.value = number;
     quizState.whatsappNumber = number;
     quizState.contactMethod = "call";
-    if (petName) {
-      quizState.catName = petName;
-      catName = petName;
-      try {
-        localStorage.setItem(CAT_NAME_KEY, petName);
-      } catch (err) {
-        /* ignore */
-      }
+    quizState.catName = petName;
+    catName = petName;
+    try {
+      localStorage.setItem(CAT_NAME_KEY, petName);
+    } catch (err) {
+      /* ignore */
     }
+
+    // Record before PMS so the same phone/browser cannot flood /young-cat.
+    rememberLeadSubmission(number);
 
     if (submitBtn) {
       submitBtn.disabled = true;
@@ -4296,6 +4539,7 @@ function renderYoungConnectStep() {
       symptoms: getSelectedYoungSymptoms().map((s) => s.id),
       contact_method: "call",
       session_id: ensureYoungSessionId(),
+      has_cat_name: true,
     });
 
     flushLeadConversionTags({ flow_track: "young" });

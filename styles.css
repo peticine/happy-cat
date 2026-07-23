@@ -8161,6 +8161,21 @@ body[data-age-theme="geriatric"] .hero-clinic {
   margin-bottom: 4px;
 }
 
+.young-cat-name-input.error {
+  border-color: #c45c5c;
+}
+
+.lead-honeypot {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
 .young-connect-method-label {
   margin: 4px 0 0;
   font-size: 0.8125rem;
