@@ -37,13 +37,13 @@ const HERO_VARIANTS = {
     headlineHook: "Drinking more water than usual?",
     headline: "It could be a sign of kidney disease.",
     lead: "A quick check, then a specialist call in 15–30 minutes.",
-    image: "./images/hero-water.png?v=9",
+    image: "./images/hero-water.webp?v=hc138",
   },
   drinking: {
     headlineHook: "Drinking more water than usual?",
     headline: "It could be a sign of kidney disease.",
     lead: "A quick check, then a specialist call in 15–30 minutes.",
-    image: "./images/hero-water.png?v=9",
+    image: "./images/hero-water.webp?v=hc138",
   },
   weight: {
     headlineHook: "Has your cat lost weight?",
@@ -68,13 +68,13 @@ const HERO_VARIANTS = {
     headlineHook: "Is your cat peeing outside the litter box?",
     headline: "This is a sign of discomfort.",
     lead: "Answer one quick question — a feline specialist will call you in 15–30 minutes.",
-    image: "./images/hero-litter.png",
+    image: "./images/hero-litter.webp?v=hc138",
   },
   urination: {
     headlineHook: "Is your cat peeing outside the litter box?",
     headline: "This is a sign of discomfort.",
     lead: "Answer one quick question — a feline specialist will call you in 15–30 minutes.",
-    image: "./images/hero-litter.png",
+    image: "./images/hero-litter.webp?v=hc138",
   },
   quiet: {
     headline: "Let's understand what your cat's quieter behaviour could mean.",
@@ -84,19 +84,19 @@ const HERO_VARIANTS = {
     headlineHook: "Bad breath is not normal for cats.",
     headline: "It could be a sign of dental disease.",
     lead: "A quick check, then a specialist call in 15–30 minutes.",
-    image: "./images/hero-dental.jpg",
+    image: "./images/hero-dental.webp?v=hc138",
   },
   breath: {
     headlineHook: "Bad breath is not normal for cats.",
     headline: "It could be a sign of dental disease.",
     lead: "A quick check, then a specialist call in 15–30 minutes.",
-    image: "./images/hero-dental.jpg",
+    image: "./images/hero-dental.webp?v=hc138",
   },
   senior: {
     headlineHook: "Is your cat over 7?",
     headline: "Senior cats hide illness until it's late.",
     lead: "A quick senior check, then a specialist call in 15–30 minutes.",
-    image: "./images/stage-senior.png?v=hc47",
+    image: "./images/stage-senior.webp?v=hc138",
     pageTitle: "Felica | Senior cat health screening",
     pageDescription:
       "2-minute screening for senior cats. Check kidney disease, hyperthyroidism, diabetes, arthritis, and more — then speak with a feline specialist.",
@@ -108,13 +108,13 @@ const HERO_VARIANTS = {
 };
 
 const HERO_BG_IMAGES = {
-  water: "./images/hero-water.png?v=9",
-  drinking: "./images/hero-water.png?v=9",
-  litter: "./images/hero-litter.png",
-  urination: "./images/hero-litter.png",
-  dental: "./images/hero-dental.jpg",
-  breath: "./images/hero-dental.jpg",
-  senior: "./images/stage-senior.png?v=hc47",
+  water: "./images/hero-water.webp?v=hc138",
+  drinking: "./images/hero-water.webp?v=hc138",
+  litter: "./images/hero-litter.webp?v=hc138",
+  urination: "./images/hero-litter.webp?v=hc138",
+  dental: "./images/hero-dental.webp?v=hc138",
+  breath: "./images/hero-dental.webp?v=hc138",
+  senior: "./images/stage-senior.webp?v=hc138",
 };
 
 // Floating tags around the hero portrait — overridden per concern landing.
@@ -315,9 +315,13 @@ function initHeroPersonalization() {
 
   const heroImg = document.getElementById("hero-cat-image");
   const heroImage =
-    variant.image || HERO_BG_IMAGES[concern] || "./images/hero-cat-portrait.png";
+    variant.image || HERO_BG_IMAGES[concern] || "./images/hero-cat-portrait.webp?v=hc138";
   if (heroImg) {
-    heroImg.src = heroImage;
+    const webpSrc = heroImage.replace(/\.(png|jpe?g)(\?.*)?$/i, ".webp$2");
+    const fallbackSrc = webpSrc.replace(/\.webp(\?.*)?$/i, ".jpg$1");
+    const source = heroImg.parentElement?.querySelector('source[type="image/webp"]');
+    if (source) source.srcset = webpSrc;
+    heroImg.src = fallbackSrc.includes(".jpg") ? fallbackSrc : heroImage;
   }
 
   if (variant.pageTitle) {
@@ -713,7 +717,7 @@ const AGE_CAROUSEL_STAGES = [
       "Chronic conditions frequently diagnosed now",
       "Nausea, weight loss, and hiding increase",
     ],
-    image: "./images/stage-senior.png?v=hc47",
+    image: "./images/stage-senior.webp?v=hc138",
     imageAlt: "Real senior cat portrait",
   },
   {
@@ -1946,7 +1950,7 @@ const WELLNESS_PLANS = {
     id: "eyes",
     planName: "Eye Comfort Plan",
     duration: "6 weeks",
-    beforeImage: "./images/hero-cat-portrait.png",
+    beforeImage: "./images/hero-cat-portrait.webp",
     afterImage: "./images/hero-healthy-cat.png",
     beforeLabel: "Week 0",
     afterLabel: "Week 6",
