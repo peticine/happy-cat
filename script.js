@@ -37,13 +37,13 @@ const HERO_VARIANTS = {
     headlineHook: "Drinking more water than usual?",
     headline: "It could be a sign of kidney disease.",
     lead: "A quick check, then a specialist call in 15–30 minutes.",
-    image: "./images/hero-water.webp?v=hc138",
+    image: "./images/hero-water.webp?v=hc139",
   },
   drinking: {
     headlineHook: "Drinking more water than usual?",
     headline: "It could be a sign of kidney disease.",
     lead: "A quick check, then a specialist call in 15–30 minutes.",
-    image: "./images/hero-water.webp?v=hc138",
+    image: "./images/hero-water.webp?v=hc139",
   },
   weight: {
     headlineHook: "Has your cat lost weight?",
@@ -68,13 +68,13 @@ const HERO_VARIANTS = {
     headlineHook: "Is your cat peeing outside the litter box?",
     headline: "This is a sign of discomfort.",
     lead: "Answer one quick question — a feline specialist will call you in 15–30 minutes.",
-    image: "./images/hero-litter.webp?v=hc138",
+    image: "./images/hero-litter.webp?v=hc139",
   },
   urination: {
     headlineHook: "Is your cat peeing outside the litter box?",
     headline: "This is a sign of discomfort.",
     lead: "Answer one quick question — a feline specialist will call you in 15–30 minutes.",
-    image: "./images/hero-litter.webp?v=hc138",
+    image: "./images/hero-litter.webp?v=hc139",
   },
   quiet: {
     headline: "Let's understand what your cat's quieter behaviour could mean.",
@@ -84,19 +84,19 @@ const HERO_VARIANTS = {
     headlineHook: "Bad breath is not normal for cats.",
     headline: "It could be a sign of dental disease.",
     lead: "A quick check, then a specialist call in 15–30 minutes.",
-    image: "./images/hero-dental.webp?v=hc138",
+    image: "./images/hero-dental.webp?v=hc139",
   },
   breath: {
     headlineHook: "Bad breath is not normal for cats.",
     headline: "It could be a sign of dental disease.",
     lead: "A quick check, then a specialist call in 15–30 minutes.",
-    image: "./images/hero-dental.webp?v=hc138",
+    image: "./images/hero-dental.webp?v=hc139",
   },
   senior: {
     headlineHook: "Is your cat over 7?",
     headline: "Senior cats hide illness until it's late.",
     lead: "A quick senior check, then a specialist call in 15–30 minutes.",
-    image: "./images/stage-senior.webp?v=hc138",
+    image: "./images/stage-senior.webp?v=hc139",
     pageTitle: "Felica | Senior cat health screening",
     pageDescription:
       "2-minute screening for senior cats. Check kidney disease, hyperthyroidism, diabetes, arthritis, and more — then speak with a feline specialist.",
@@ -108,13 +108,13 @@ const HERO_VARIANTS = {
 };
 
 const HERO_BG_IMAGES = {
-  water: "./images/hero-water.webp?v=hc138",
-  drinking: "./images/hero-water.webp?v=hc138",
-  litter: "./images/hero-litter.webp?v=hc138",
-  urination: "./images/hero-litter.webp?v=hc138",
-  dental: "./images/hero-dental.webp?v=hc138",
-  breath: "./images/hero-dental.webp?v=hc138",
-  senior: "./images/stage-senior.webp?v=hc138",
+  water: "./images/hero-water.webp?v=hc139",
+  drinking: "./images/hero-water.webp?v=hc139",
+  litter: "./images/hero-litter.webp?v=hc139",
+  urination: "./images/hero-litter.webp?v=hc139",
+  dental: "./images/hero-dental.webp?v=hc139",
+  breath: "./images/hero-dental.webp?v=hc139",
+  senior: "./images/stage-senior.webp?v=hc139",
 };
 
 // Floating tags around the hero portrait — overridden per concern landing.
@@ -315,7 +315,7 @@ function initHeroPersonalization() {
 
   const heroImg = document.getElementById("hero-cat-image");
   const heroImage =
-    variant.image || HERO_BG_IMAGES[concern] || "./images/hero-cat-portrait.webp?v=hc138";
+    variant.image || HERO_BG_IMAGES[concern] || "./images/hero-cat-portrait.webp?v=hc139";
   if (heroImg) {
     const webpSrc = heroImage.replace(/\.(png|jpe?g)(\?.*)?$/i, ".webp$2");
     const fallbackSrc = webpSrc.replace(/\.webp(\?.*)?$/i, ".jpg$1");
@@ -675,7 +675,7 @@ const AGE_CAROUSEL_STAGES = [
       "Congenital issues may show up now",
       "Growth problems can signal metabolic issues",
     ],
-    image: "./images/stage-young.png?v=hc47",
+    image: "./images/stage-young.webp?v=hc139",
     imageAlt: "Real kitten portrait",
   },
   {
@@ -689,7 +689,7 @@ const AGE_CAROUSEL_STAGES = [
       "Tartar and gum disease start building",
       "Ideal time to set baseline bloodwork",
     ],
-    image: "./images/stage-prime.png?v=hc47",
+    image: "./images/stage-prime.webp?v=hc139",
     imageAlt: "Real adult cat portrait",
   },
   {
@@ -703,7 +703,7 @@ const AGE_CAROUSEL_STAGES = [
       "Dental disease accelerates systemic problems",
       "Drinking or litter box changes are easy to miss",
     ],
-    image: "./images/stage-mature.png?v=hc47",
+    image: "./images/stage-mature.webp?v=hc139",
     imageAlt: "Real mature cat portrait",
   },
   {
@@ -717,7 +717,7 @@ const AGE_CAROUSEL_STAGES = [
       "Chronic conditions frequently diagnosed now",
       "Nausea, weight loss, and hiding increase",
     ],
-    image: "./images/stage-senior.webp?v=hc138",
+    image: "./images/stage-senior.webp?v=hc139",
     imageAlt: "Real senior cat portrait",
   },
   {
@@ -731,7 +731,7 @@ const AGE_CAROUSEL_STAGES = [
       "Refusing food for 24+ hours needs attention",
       "Weakness or disorientation can appear suddenly",
     ],
-    image: "./images/stage-geriatric.png?v=hc47",
+    image: "./images/stage-geriatric.webp?v=hc139",
     imageAlt: "Real geriatric cat portrait",
   },
 ];
@@ -1832,7 +1832,7 @@ const WELLNESS_SPECIALISTS = {
     icon: "👩‍⚕️",
     specialtyNoun: "veterinary skin specialist",
     reviewTitle: "Felica veterinary dermatologist",
-    image: "./images/dr-ankita-kawale.png?v=hc28",
+    image: "./images/dr-ankita-kawale.webp?v=hc139",
     experience: "8 years treating feline skin disease",
     catsTreated: "3,000+ cats treated",
     reviewFrequency: (name) => `Reviews ${name}'s progress every 2 weeks`,
@@ -1847,7 +1847,7 @@ const WELLNESS_SPECIALISTS = {
     icon: "👨‍⚕️",
     specialtyNoun: "feline coat specialist",
     reviewTitle: "Felica coat & skin specialist",
-    image: "./images/dr-shantanu-kalambi.png",
+    image: "./images/dr-shantanu-kalambi.webp?v=hc139",
     experience: "20 years treating feline skin and coat disease",
     catsTreated: "8,000+ cats treated",
     reviewFrequency: (name) => `Reviews ${name}'s coat progress every 3 weeks`,
@@ -1862,7 +1862,7 @@ const WELLNESS_SPECIALISTS = {
     icon: "👩‍⚕️",
     specialtyNoun: "feline eye health specialist",
     reviewTitle: "Felica eye health specialist",
-    image: "./images/dr-ankita-kawale.png?v=hc28",
+    image: "./images/dr-ankita-kawale.webp?v=hc139",
     experience: "8 years treating feline eye and allergy conditions",
     catsTreated: "3,000+ cats treated",
     reviewFrequency: (name) => `Reviews ${name}'s eye comfort every 2 weeks`,
@@ -1877,7 +1877,7 @@ const WELLNESS_SPECIALISTS = {
     icon: "👨‍⚕️",
     specialtyNoun: "feline preventive care specialist",
     reviewTitle: "Felica preventive care specialist",
-    image: "./images/dr-shantanu-kalambi.png",
+    image: "./images/dr-shantanu-kalambi.webp?v=hc139",
     experience: "20 years in feline preventive medicine",
     catsTreated: "8,000+ cats treated",
     reviewFrequency: (name) => `Checks in on ${name}'s wellness every month`,
@@ -2027,7 +2027,7 @@ function getYoungCallSpecialist() {
     shortName: "Dr. Ankita",
     fullName: "Dr. Ankita Kawale",
     title: "Feline Specialist",
-    image: "./images/dr-ankita-kawale.png?v=hc128",
+    image: "./images/dr-ankita-kawale.webp?v=hc139",
   };
 }
 
@@ -4981,7 +4981,27 @@ window.addEventListener("pageshow", (event) => {
 initHeroPersonalization();
 initAgeGate();
 initAssessment();
-initLifeJourney();
+
+// Defer life-stage carousel until near viewport so Lighthouse/mobile
+// don't download ~1MB of stage photos during initial load.
+(function deferLifeJourney() {
+  const mount = document.getElementById("journey");
+  if (!mount) return;
+  const start = () => initLifeJourney();
+  if (!("IntersectionObserver" in window)) {
+    window.addEventListener("load", start, { once: true });
+    return;
+  }
+  const io = new IntersectionObserver(
+    (entries) => {
+      if (!entries.some((e) => e.isIntersecting)) return;
+      io.disconnect();
+      start();
+    },
+    { rootMargin: "200px 0px" }
+  );
+  io.observe(mount);
+})();
 
 const menuToggle = document.querySelector(".menu-toggle");
 const siteNav = document.querySelector(".site-nav");
