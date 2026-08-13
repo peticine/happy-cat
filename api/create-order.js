@@ -1,4 +1,4 @@
-const VET_CALL_AMOUNT_PAISE = 49900;
+const VET_CALL_AMOUNT_PAISE = 29900;
 const VET_CALL_CURRENCY = "INR";
 
 function sendJson(res, status, body) {

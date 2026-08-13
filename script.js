@@ -34,13 +34,13 @@ const HERO_VARIANTS = {
   water: {
     headlineHook: "Drinking more water than usual?",
     headline: "It could be a sign of kidney disease.",
-    lead: "A quick check, then a ₹499 specialist consult — usually within 15–30 minutes.",
+    lead: "A quick check, then a ₹299 specialist consult — usually within 15–30 minutes.",
     image: "./images/hero-water.png?v=9",
   },
   drinking: {
     headlineHook: "Drinking more water than usual?",
     headline: "It could be a sign of kidney disease.",
-    lead: "A quick check, then a ₹499 specialist consult — usually within 15–30 minutes.",
+    lead: "A quick check, then a ₹299 specialist consult — usually within 15–30 minutes.",
     image: "./images/hero-water.png?v=9",
   },
   weight: {
@@ -65,13 +65,13 @@ const HERO_VARIANTS = {
   litter: {
     headlineHook: "Is your cat peeing outside the litter box?",
     headline: "This is a sign of discomfort.",
-    lead: "Answer one quick question — then book a ₹499 specialist consult (usually within 15–30 minutes).",
+    lead: "Answer one quick question — then book a ₹299 specialist consult (usually within 15–30 minutes).",
     image: "./images/hero-litter.png",
   },
   urination: {
     headlineHook: "Is your cat peeing outside the litter box?",
     headline: "This is a sign of discomfort.",
-    lead: "Answer one quick question — then book a ₹499 specialist consult (usually within 15–30 minutes).",
+    lead: "Answer one quick question — then book a ₹299 specialist consult (usually within 15–30 minutes).",
     image: "./images/hero-litter.png",
   },
   quiet: {
@@ -81,13 +81,13 @@ const HERO_VARIANTS = {
   dental: {
     headlineHook: "Bad breath is not normal for cats.",
     headline: "It could be a sign of dental disease.",
-    lead: "A quick check, then a ₹499 specialist consult — usually within 15–30 minutes.",
+    lead: "A quick check, then a ₹299 specialist consult — usually within 15–30 minutes.",
     image: "./images/hero-dental.jpg",
   },
   breath: {
     headlineHook: "Bad breath is not normal for cats.",
     headline: "It could be a sign of dental disease.",
-    lead: "A quick check, then a ₹499 specialist consult — usually within 15–30 minutes.",
+    lead: "A quick check, then a ₹299 specialist consult — usually within 15–30 minutes.",
     image: "./images/hero-dental.jpg",
   },
   default: {
@@ -1799,10 +1799,10 @@ const FELICA_PREVENTION_PROGRAM = {
 const VET_CALL_PRODUCT = {
   id: "vet_call",
   name: "Vet consult call",
-  priceLabel: "₹499",
-  amountPaise: 49900,
+  priceLabel: "₹299",
+  amountPaise: 29900,
   currency: "INR",
-  ctaLabel: "Pay ₹499 & book call",
+  ctaLabel: "Pay ₹299 & book call",
 };
 
 const FELICA_WHATSAPP_CONTACT_URL = "https://wa.me/918047285635";
@@ -4446,7 +4446,7 @@ function renderYoungConnectStep() {
         isLikelyUrgent
           ? `<div class="young-urgent-inline" role="status">
           <p class="young-urgent-inline-title">This may need prompt care</p>
-          <p class="young-urgent-inline-copy">Book a ₹499 consult — ${escapeHtml(
+          <p class="young-urgent-inline-copy">Book a ₹299 consult — ${escapeHtml(
             specialist.shortName
           )} usually calls within 15–30 minutes to help you decide next steps. If this looks urgent, also head to a nearby clinic.</p>
         </div>`
