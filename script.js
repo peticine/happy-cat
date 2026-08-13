@@ -2016,6 +2016,53 @@ function getYoungCallSpecialist() {
   };
 }
 
+/**
+ * Vet call hours in IST: Mon–Sat before 7pm.
+ * Sundays and after 7pm daily → next call is tomorrow 10am
+ * (Saturday after 7pm skips Sunday → Monday 10am).
+ */
+function getVetCallSchedule(now = new Date()) {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Asia/Kolkata",
+    weekday: "short",
+    hour: "2-digit",
+    hourCycle: "h23",
+  }).formatToParts(now);
+  const weekday = parts.find((p) => p.type === "weekday")?.value || "";
+  const hourRaw = parts.find((p) => p.type === "hour")?.value;
+  const hour = Number.parseInt(hourRaw, 10);
+  const isSunday = weekday === "Sun";
+  const isAfterHours = Number.isFinite(hour) && hour >= 19;
+  const availableNow = !isSunday && !isAfterHours;
+
+  if (availableNow) {
+    return {
+      availableNow: true,
+      callDayLabel: null,
+      callWhenShort: "usually within 15–30 minutes",
+      callWhenCard: "You'll speak with her on this call · usually within 15–30 minutes",
+      offlineNoticeTitle: null,
+      offlineNoticeCopy: null,
+    };
+  }
+
+  // Sunday → tomorrow (Mon); Sat after 7pm → Monday; else after 7pm → tomorrow
+  const callDayLabel = !isSunday && weekday === "Sat" ? "Monday" : "tomorrow";
+  const reason =
+    isSunday
+      ? "Our vet isn’t available on Sundays."
+      : "Our vet isn’t available after 7pm.";
+
+  return {
+    availableNow: false,
+    callDayLabel,
+    callWhenShort: `${callDayLabel} at 10am`,
+    callWhenCard: `Not available right now · she'll call ${callDayLabel} at 10am`,
+    offlineNoticeTitle: "Vet not available right now",
+    offlineNoticeCopy: `${reason} You can still book — she’ll call ${callDayLabel} at 10am.`,
+  };
+}
+
 /** Shared doctor trust card — used before pay and on the booked confirmation. */
 function renderYoungCallVetCard(specialist, { whenText, showCredentials = false } = {}) {
   const when = whenText || "Usually calls within 15–30 minutes";
@@ -4438,6 +4485,10 @@ function renderYoungConnectStep() {
     : connectLeads[issueId] || "Book a paid consult — a specialist will call with next steps.";
   const isLikelyUrgent = !isPrevention && resolveYoungUrgency() === "urgent";
   const specialist = getYoungCallSpecialist();
+  const schedule = getVetCallSchedule();
+  const urgentTiming = schedule.availableNow
+    ? `${specialist.shortName} usually calls within 15–30 minutes`
+    : `${specialist.shortName} will call ${schedule.callDayLabel} at 10am`;
 
   assflowMain.innerHTML = `
     <div class="flow-step young-connect-step">
@@ -4447,8 +4498,16 @@ function renderYoungConnectStep() {
           ? `<div class="young-urgent-inline" role="status">
           <p class="young-urgent-inline-title">This may need prompt care</p>
           <p class="young-urgent-inline-copy">Book a ₹299 consult — ${escapeHtml(
-            specialist.shortName
-          )} usually calls within 15–30 minutes to help you decide next steps. If this looks urgent, also head to a nearby clinic.</p>
+            urgentTiming
+          )} to help you decide next steps. If this looks urgent, also head to a nearby clinic.</p>
+        </div>`
+          : ""
+      }
+      ${
+        !schedule.availableNow
+          ? `<div class="young-vet-offline" role="status">
+          <p class="young-vet-offline-title">${escapeHtml(schedule.offlineNoticeTitle)}</p>
+          <p class="young-vet-offline-copy">${escapeHtml(schedule.offlineNoticeCopy)}</p>
         </div>`
           : ""
       }
@@ -4456,7 +4515,7 @@ function renderYoungConnectStep() {
       <p class="flow-lead">${escapeHtml(connectLead)}</p>
 
       ${renderYoungCallVetCard(specialist, {
-        whenText: "You'll speak with her on this call · usually within 15–30 minutes",
+        whenText: schedule.callWhenCard,
         showCredentials: true,
       })}
 
@@ -4488,7 +4547,7 @@ function renderYoungConnectStep() {
 
         <p class="young-connect-next">${escapeHtml(
           VET_CALL_PRODUCT.priceLabel
-        )} · UPI · private · usually within 15–30 minutes</p>
+        )} · UPI · private · ${escapeHtml(schedule.callWhenShort)}</p>
         <p class="flow-error" id="young-connect-error" hidden>Enter a valid 10-digit mobile number.</p>
         <button type="submit" class="btn btn-block btn-get-started">${escapeHtml(
           VET_CALL_PRODUCT.ctaLabel
@@ -4694,6 +4753,7 @@ function renderYoungCallPlanStep() {
   const name = getCatDisplayName();
   const possessive = name === "your cat" ? "your cat's" : `${name}'s`;
   const specialist = getYoungCallSpecialist();
+  const schedule = getVetCallSchedule();
   const phone = quizState.whatsappNumber || "";
   const issue = getPrimaryYoungSymptom();
   const issueLabel =
@@ -4707,6 +4767,7 @@ function renderYoungCallPlanStep() {
     specialist: specialist.fullName,
     phone_collected: !!phone,
     vet_call_paid: true,
+    vet_call_available_now: schedule.availableNow,
   });
 
   assflowMain.innerHTML = `
@@ -4714,19 +4775,27 @@ function renderYoungCallPlanStep() {
       <div class="young-care-plan young-call-plan-card">
         <h1 class="young-call-plan-title" id="assflow-title">Consult booked</h1>
         <p class="young-call-plan-lead">
-          Thanks — a feline specialist will call about ${escapeHtml(possessive)} ${escapeHtml(
-            String(issueLabel).toLowerCase()
-          )} shortly.
+          Thanks — ${escapeHtml(specialist.shortName)} will call about ${escapeHtml(
+            possessive
+          )} ${escapeHtml(String(issueLabel).toLowerCase())}${
+            schedule.availableNow
+              ? " shortly"
+              : ` ${escapeHtml(schedule.callDayLabel)} at 10am`
+          }.
         </p>
 
         <div class="young-pay-success" role="status">
           <p class="young-pay-success-title">Vet consult confirmed</p>
           <p class="young-pay-success-copy">Paid ${escapeHtml(
             VET_CALL_PRODUCT.priceLabel
-          )} · usually within 15–30 minutes</p>
+          )} · ${escapeHtml(schedule.callWhenShort)}</p>
         </div>
 
-        ${renderYoungCallVetCard(specialist)}
+        ${renderYoungCallVetCard(specialist, {
+          whenText: schedule.availableNow
+            ? "Usually calls within 15–30 minutes"
+            : `She'll call ${schedule.callDayLabel} at 10am`,
+        })}
 
         ${
           phone
@@ -4736,21 +4805,12 @@ function renderYoungCallPlanStep() {
             : ""
         }
 
-        <section class="young-call-section" aria-labelledby="young-call-on-title">
-          <h2 class="young-call-section-title" id="young-call-on-title">On the call</h2>
+        <section class="young-call-section" aria-labelledby="young-call-next-title">
+          <h2 class="young-call-section-title" id="young-call-next-title">What happens next</h2>
           <ul class="young-call-list">
             <li>${escapeHtml(specialist.shortName)} reviews what you shared about ${escapeHtml(name)}</li>
             <li>Explains what may be going on in plain language</li>
             <li>Tells you what to do next — at home, or with your local vet</li>
-          </ul>
-        </section>
-
-        <section class="young-call-section" aria-labelledby="young-call-after-title">
-          <h2 class="young-call-section-title" id="young-call-after-title">After the call</h2>
-          <ul class="young-call-list">
-            <li>You'll get a clear next step for ${escapeHtml(name)}</li>
-            <li>If treatment is needed, ${escapeHtml(specialist.shortName)} will walk you through it</li>
-            <li>You can ask follow-up questions on the same call</li>
           </ul>
         </section>
 

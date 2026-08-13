@@ -8568,6 +8568,28 @@ body[data-age-theme="geriatric"] .hero-clinic {
   color: #7a2a22;
 }
 
+.young-vet-offline {
+  margin-bottom: 16px;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--line));
+  background: color-mix(in srgb, var(--accent-soft) 55%, #fff);
+}
+
+.young-vet-offline-title {
+  margin: 0 0 6px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.young-vet-offline-copy {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
 .young-detail-progress {
   margin: 0 0 6px;
   font-size: 0.75rem;
