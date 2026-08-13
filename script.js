@@ -4128,9 +4128,20 @@ async function startVetCallPayment({ button = null, errorEl = null } = {}) {
           session_id: sessionId,
           issue_id: issueId,
         },
-        // Default Razorpay methods (UPI + cards). A UPI-only block with
-        // show_default_blocks:false causes "No appropriate payment method found"
-        // when UPI intent isn't available in that browser/session.
+        // UPI only: hide other default methods instead of a custom UPI block
+        // (custom blocks + show_default_blocks:false can empty the checkout).
+        config: {
+          display: {
+            hide: [
+              { method: "card" },
+              { method: "netbanking" },
+              { method: "wallet" },
+              { method: "emi" },
+              { method: "paylater" },
+              { method: "cardless_emi" },
+            ],
+          },
+        },
         theme: { color: "#8f87ab" },
         handler: async (response) => {
           try {
