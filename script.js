@@ -2016,6 +2016,46 @@ function getYoungCallSpecialist() {
   };
 }
 
+/** Shared doctor trust card — used before pay and on the booked confirmation. */
+function renderYoungCallVetCard(specialist, { whenText, showCredentials = false } = {}) {
+  const when = whenText || "Usually calls within 15–30 minutes";
+  const credentials =
+    showCredentials && (specialist.experience || specialist.catsTreated)
+      ? `<ul class="young-call-vet-creds">
+          ${
+            specialist.experience
+              ? `<li>${escapeHtml(specialist.experience)}</li>`
+              : ""
+          }
+          ${
+            specialist.catsTreated
+              ? `<li>${escapeHtml(specialist.catsTreated)}</li>`
+              : ""
+          }
+        </ul>`
+      : "";
+
+  return `
+    <section class="young-call-vet" aria-label="Your specialist">
+      <img
+        class="young-call-vet-photo"
+        src="${specialist.image}"
+        alt="${escapeHtml(specialist.fullName)}"
+        width="72"
+        height="72"
+        loading="lazy"
+        decoding="async"
+      />
+      <div class="young-call-vet-meta">
+        <p class="young-call-vet-name">${escapeHtml(specialist.fullName)}</p>
+        <p class="young-call-vet-title">${escapeHtml(specialist.title)}</p>
+        <p class="young-call-vet-when">${escapeHtml(when)}</p>
+        ${credentials}
+      </div>
+    </section>
+  `;
+}
+
 function getWellnessRecommendationLead(name, specialist) {
   const possessive = name === "your cat" ? "your cat's" : `${name}'s`;
   return `Based on ${possessive} symptoms, this plan was created by a ${specialist.specialtyNoun}.`;
@@ -4397,6 +4437,7 @@ function renderYoungConnectStep() {
     ? connectLeads.prevention
     : connectLeads[issueId] || "Book a paid consult — a specialist will call with next steps.";
   const isLikelyUrgent = !isPrevention && resolveYoungUrgency() === "urgent";
+  const specialist = getYoungCallSpecialist();
 
   assflowMain.innerHTML = `
     <div class="flow-step young-connect-step">
@@ -4405,12 +4446,19 @@ function renderYoungConnectStep() {
         isLikelyUrgent
           ? `<div class="young-urgent-inline" role="status">
           <p class="young-urgent-inline-title">This may need prompt care</p>
-          <p class="young-urgent-inline-copy">Book a ₹499 consult — a specialist usually calls within 15–30 minutes to help you decide next steps. If this looks urgent, also head to a nearby clinic.</p>
+          <p class="young-urgent-inline-copy">Book a ₹499 consult — ${escapeHtml(
+            specialist.shortName
+          )} usually calls within 15–30 minutes to help you decide next steps. If this looks urgent, also head to a nearby clinic.</p>
         </div>`
           : ""
       }
       <h1 class="flow-title" id="assflow-title">Book your vet consult</h1>
       <p class="flow-lead">${escapeHtml(connectLead)}</p>
+
+      ${renderYoungCallVetCard(specialist, {
+        whenText: "You'll speak with her on this call · usually within 15–30 minutes",
+        showCredentials: true,
+      })}
 
       <form class="young-connect-form" id="young-connect-form" novalidate>
         <label class="flow-age-label" for="young-cat-name">Cat's name <span class="field-optional">(optional)</span></label>
@@ -4440,7 +4488,7 @@ function renderYoungConnectStep() {
 
         <p class="young-connect-next">${escapeHtml(
           VET_CALL_PRODUCT.priceLabel
-        )} · UPI / cards · private · usually within 15–30 minutes</p>
+        )} · UPI · private · usually within 15–30 minutes</p>
         <p class="flow-error" id="young-connect-error" hidden>Enter a valid 10-digit mobile number.</p>
         <button type="submit" class="btn btn-block btn-get-started">${escapeHtml(
           VET_CALL_PRODUCT.ctaLabel
@@ -4678,22 +4726,7 @@ function renderYoungCallPlanStep() {
           )} · usually within 15–30 minutes</p>
         </div>
 
-        <section class="young-call-vet" aria-label="Your specialist">
-          <img
-            class="young-call-vet-photo"
-            src="${specialist.image}"
-            alt="${escapeHtml(specialist.fullName)}"
-            width="72"
-            height="72"
-            loading="lazy"
-            decoding="async"
-          />
-          <div class="young-call-vet-meta">
-            <p class="young-call-vet-name">${escapeHtml(specialist.fullName)}</p>
-            <p class="young-call-vet-title">${escapeHtml(specialist.title)}</p>
-            <p class="young-call-vet-when">Usually calls within 15–30 minutes</p>
-          </div>
-        </section>
+        ${renderYoungCallVetCard(specialist)}
 
         ${
           phone
