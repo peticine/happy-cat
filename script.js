@@ -17,33 +17,31 @@ const AGE_THEMES = ["young", "prime", "mature", "senior", "geriatric"];
 const PRIMARY_CTA_LABEL = "Start Health Check";
 
 // Meta ad headlines per concern (use ?concern= in landing URL):
-// water/drinking: "Cat drinking more water? 2-min check" | "Extra water bowls? See if it's worth a vet call"
-//   | "Is your cat thirsty lately? Health screening" | "More drinking can signal kidneys — check in 2 min"
+// water/drinking: "Cat drinking more water? Free 2-min check" | "Extra water bowls? See if it's worth a vet call"
+//   | "Is your cat thirsty lately? Free health screening" | "More drinking can signal kidneys — check free in 2 min"
 //   | "Worried how much your cat drinks? Start here"
-// weight: "Cat losing weight? 2-minute screening" | "Thinner lately? Normal or a warning sign"
-//   | "Weight loss in cats is easy to miss — check" | "Cat getting skinnier? Vet-designed screening, ₹0"
+// weight: "Cat losing weight? Free 2-minute screening" | "Thinner lately? Normal or a warning sign"
+//   | "Weight loss in cats is easy to miss — check free" | "Cat getting skinnier? Vet-designed screening, ₹0"
 //   | "Notice your cat feels lighter? Clear read in 2 min"
-// eating/appetite: "Cat not eating much? Screening in 2 minutes" | "Pickier appetite lately? Know if you should worry"
-//   | "Skipping meals? Vet-designed cat health check" | "Appetite changes hide illness — screen"
+// eating/appetite: "Cat not eating much? Free screening in 2 minutes" | "Pickier appetite lately? Know if you should worry"
+//   | "Skipping meals? Free vet-designed cat health check" | "Appetite changes hide illness — screen free"
 //   | "Is your cat eating less? Get a plain-language answer"
 // litter/peeing-outside: "Is your cat peeing outside the litter box?" | "Find out if it's stress — or kidneys, bladder, or pain that needs a vet."
-// dental/bad-breath: "Bad breath is not normal for cats" | "Cat bad breath? 2-min dental check"
-//   | "Is bad breath a sign of dental disease? Screen" | "Cats hide mouth pain — check oral health in 2 min"
+// dental/bad-breath: "Bad breath is not normal for cats" | "Cat bad breath? Free 2-min dental check"
+//   | "Is bad breath a sign of dental disease? Screen free" | "Cats hide mouth pain — check oral health in 2 min"
 //   | "Smelly cat breath? Find out if it's dental disease"
-// senior: "Is your cat over 7? Senior health check" | "Senior cats hide illness — screen in 2 min"
-//   | "Cat over 7? Kidney, thyroid & arthritis check" | "Ageing cat? Specialist screening"
 const HERO_VARIANTS = {
   water: {
     headlineHook: "Drinking more water than usual?",
     headline: "It could be a sign of kidney disease.",
-    lead: "A quick check, then a specialist call in 15–30 minutes.",
-    image: "./images/hero-water.webp?v=hc139",
+    lead: "A quick check, then a ₹299 specialist consult — usually within 15–30 minutes.",
+    image: "./images/hero-water.webp?v=hc140",
   },
   drinking: {
     headlineHook: "Drinking more water than usual?",
     headline: "It could be a sign of kidney disease.",
-    lead: "A quick check, then a specialist call in 15–30 minutes.",
-    image: "./images/hero-water.webp?v=hc139",
+    lead: "A quick check, then a ₹299 specialist consult — usually within 15–30 minutes.",
+    image: "./images/hero-water.webp?v=hc140",
   },
   weight: {
     headlineHook: "Has your cat lost weight?",
@@ -67,14 +65,14 @@ const HERO_VARIANTS = {
   litter: {
     headlineHook: "Is your cat peeing outside the litter box?",
     headline: "This is a sign of discomfort.",
-    lead: "Answer one quick question — a feline specialist will call you in 15–30 minutes.",
-    image: "./images/hero-litter.webp?v=hc139",
+    lead: "Answer one quick question — then book a ₹299 specialist consult (usually within 15–30 minutes).",
+    image: "./images/hero-litter.webp?v=hc140",
   },
   urination: {
     headlineHook: "Is your cat peeing outside the litter box?",
     headline: "This is a sign of discomfort.",
-    lead: "Answer one quick question — a feline specialist will call you in 15–30 minutes.",
-    image: "./images/hero-litter.webp?v=hc139",
+    lead: "Answer one quick question — then book a ₹299 specialist consult (usually within 15–30 minutes).",
+    image: "./images/hero-litter.webp?v=hc140",
   },
   quiet: {
     headline: "Let's understand what your cat's quieter behaviour could mean.",
@@ -83,20 +81,20 @@ const HERO_VARIANTS = {
   dental: {
     headlineHook: "Bad breath is not normal for cats.",
     headline: "It could be a sign of dental disease.",
-    lead: "A quick check, then a specialist call in 15–30 minutes.",
-    image: "./images/hero-dental.webp?v=hc139",
+    lead: "A quick check, then a ₹299 specialist consult — usually within 15–30 minutes.",
+    image: "./images/hero-dental.webp?v=hc140",
   },
   breath: {
     headlineHook: "Bad breath is not normal for cats.",
     headline: "It could be a sign of dental disease.",
-    lead: "A quick check, then a specialist call in 15–30 minutes.",
-    image: "./images/hero-dental.webp?v=hc139",
+    lead: "A quick check, then a ₹299 specialist consult — usually within 15–30 minutes.",
+    image: "./images/hero-dental.webp?v=hc140",
   },
   senior: {
     headlineHook: "Is your cat over 7?",
     headline: "Senior cats hide illness until it's late.",
-    lead: "A quick senior check, then a specialist call in 15–30 minutes.",
-    image: "./images/stage-senior.webp?v=hc139",
+    lead: "A quick senior check, then a ₹299 specialist consult — usually within 15–30 minutes.",
+    image: "./images/stage-senior.webp?v=hc140",
     pageTitle: "Felica | Senior cat health screening",
     pageDescription:
       "2-minute screening for senior cats. Check kidney disease, hyperthyroidism, diabetes, arthritis, and more — then speak with a feline specialist.",
@@ -108,13 +106,13 @@ const HERO_VARIANTS = {
 };
 
 const HERO_BG_IMAGES = {
-  water: "./images/hero-water.webp?v=hc139",
-  drinking: "./images/hero-water.webp?v=hc139",
-  litter: "./images/hero-litter.webp?v=hc139",
-  urination: "./images/hero-litter.webp?v=hc139",
-  dental: "./images/hero-dental.webp?v=hc139",
-  breath: "./images/hero-dental.webp?v=hc139",
-  senior: "./images/stage-senior.webp?v=hc139",
+  water: "./images/hero-water.webp?v=hc140",
+  drinking: "./images/hero-water.webp?v=hc140",
+  litter: "./images/hero-litter.webp?v=hc140",
+  urination: "./images/hero-litter.webp?v=hc140",
+  dental: "./images/hero-dental.webp?v=hc140",
+  breath: "./images/hero-dental.webp?v=hc140",
+  senior: "./images/stage-senior.webp?v=hc140",
 };
 
 // Floating tags around the hero portrait — overridden per concern landing.
@@ -315,21 +313,9 @@ function initHeroPersonalization() {
 
   const heroImg = document.getElementById("hero-cat-image");
   const heroImage =
-    variant.image || HERO_BG_IMAGES[concern] || "./images/hero-cat-portrait.webp?v=hc139";
+    variant.image || HERO_BG_IMAGES[concern] || "./images/hero-cat-portrait.png";
   if (heroImg) {
-    const webpSrc = heroImage.replace(/\.(png|jpe?g)(\?.*)?$/i, ".webp$2");
-    const fallbackSrc = webpSrc.replace(/\.webp(\?.*)?$/i, ".jpg$1");
-    const source = heroImg.parentElement?.querySelector('source[type="image/webp"]');
-    if (source) source.srcset = webpSrc;
-    heroImg.src = fallbackSrc.includes(".jpg") ? fallbackSrc : heroImage;
-  }
-
-  if (variant.pageTitle) {
-    document.title = variant.pageTitle;
-  }
-  if (variant.pageDescription) {
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) metaDesc.setAttribute("content", variant.pageDescription);
+    heroImg.src = heroImage;
   }
 
   document.body.dataset.heroConcern = concern;
@@ -675,7 +661,7 @@ const AGE_CAROUSEL_STAGES = [
       "Congenital issues may show up now",
       "Growth problems can signal metabolic issues",
     ],
-    image: "./images/stage-young.webp?v=hc139",
+    image: "./images/stage-young.png?v=hc47",
     imageAlt: "Real kitten portrait",
   },
   {
@@ -689,7 +675,7 @@ const AGE_CAROUSEL_STAGES = [
       "Tartar and gum disease start building",
       "Ideal time to set baseline bloodwork",
     ],
-    image: "./images/stage-prime.webp?v=hc139",
+    image: "./images/stage-prime.png?v=hc47",
     imageAlt: "Real adult cat portrait",
   },
   {
@@ -703,7 +689,7 @@ const AGE_CAROUSEL_STAGES = [
       "Dental disease accelerates systemic problems",
       "Drinking or litter box changes are easy to miss",
     ],
-    image: "./images/stage-mature.webp?v=hc139",
+    image: "./images/stage-mature.png?v=hc47",
     imageAlt: "Real mature cat portrait",
   },
   {
@@ -717,7 +703,7 @@ const AGE_CAROUSEL_STAGES = [
       "Chronic conditions frequently diagnosed now",
       "Nausea, weight loss, and hiding increase",
     ],
-    image: "./images/stage-senior.webp?v=hc139",
+    image: "./images/stage-senior.png?v=hc47",
     imageAlt: "Real senior cat portrait",
   },
   {
@@ -731,7 +717,7 @@ const AGE_CAROUSEL_STAGES = [
       "Refusing food for 24+ hours needs attention",
       "Weakness or disorientation can appear suddenly",
     ],
-    image: "./images/stage-geriatric.webp?v=hc139",
+    image: "./images/stage-geriatric.png?v=hc47",
     imageAlt: "Real geriatric cat portrait",
   },
 ];
@@ -1014,10 +1000,17 @@ function buildYoungPmsPayload(phoneNational) {
   const answers = buildYoungPmsAnswers(issueId);
   const answerSummary = answers.map((a) => a.answer).join(" · ");
   const phone = String(phoneNational || quizState.whatsappNumber || "").replace(/\D/g, "");
+  const paid = !!quizState.vetCallPayment?.paymentId;
   const summaryParts = [
     `${displayName === "your cat" ? "Cat" : displayName}, ${formatCatAgeLabel(quizState.age)}`,
     answerSummary ? `${shortLabel} — ${answerSummary}` : shortLabel,
-    phone ? `Prefer call within 15–30 min at +91 ${phone}` : "Prefer call within 15–30 min",
+    paid
+      ? `Paid vet consult ${VET_CALL_PRODUCT.priceLabel}${
+          phone ? ` — call +91 ${phone}` : ""
+        }`
+      : phone
+        ? `Prefer call within 15–30 min at +91 ${phone}`
+        : "Prefer call within 15–30 min",
   ];
 
   return {
@@ -1053,9 +1046,19 @@ function buildYoungPmsPayload(phoneNational) {
     },
     answers,
     summary_text: summaryParts.join(". ") + ".",
+    payment: paid
+      ? {
+          product: VET_CALL_PRODUCT.id,
+          amount_inr: VET_CALL_PRODUCT.amountPaise / 100,
+          order_id: quizState.vetCallPayment.orderId,
+          payment_id: quizState.vetCallPayment.paymentId,
+          status: "paid",
+        }
+      : null,
     flags: {
       urgent: urgency === "urgent",
       prevention_only: issueId === "prevention",
+      paid_consult: paid,
     },
   };
 }
@@ -1820,6 +1823,15 @@ const FELICA_PREVENTION_PROGRAM = {
   note: "Includes specialist support.",
 };
 
+const VET_CALL_PRODUCT = {
+  id: "vet_call",
+  name: "Vet consult call",
+  priceLabel: "₹299",
+  amountPaise: 29900,
+  currency: "INR",
+  ctaLabel: "Pay ₹299 & book call",
+};
+
 const FELICA_WHATSAPP_CONTACT_URL = "https://wa.me/918047285635";
 
 const WELLNESS_ISSUE_IDS = new Set(["skin", "coat", "eyes", "prevention"]);
@@ -1832,7 +1844,7 @@ const WELLNESS_SPECIALISTS = {
     icon: "👩‍⚕️",
     specialtyNoun: "veterinary skin specialist",
     reviewTitle: "Felica veterinary dermatologist",
-    image: "./images/dr-ankita-kawale.webp?v=hc139",
+    image: "./images/dr-ankita-kawale.webp?v=hc140",
     experience: "8 years treating feline skin disease",
     catsTreated: "3,000+ cats treated",
     reviewFrequency: (name) => `Reviews ${name}'s progress every 2 weeks`,
@@ -1847,7 +1859,7 @@ const WELLNESS_SPECIALISTS = {
     icon: "👨‍⚕️",
     specialtyNoun: "feline coat specialist",
     reviewTitle: "Felica coat & skin specialist",
-    image: "./images/dr-shantanu-kalambi.webp?v=hc139",
+    image: "./images/dr-shantanu-kalambi.webp?v=hc140",
     experience: "20 years treating feline skin and coat disease",
     catsTreated: "8,000+ cats treated",
     reviewFrequency: (name) => `Reviews ${name}'s coat progress every 3 weeks`,
@@ -1862,7 +1874,7 @@ const WELLNESS_SPECIALISTS = {
     icon: "👩‍⚕️",
     specialtyNoun: "feline eye health specialist",
     reviewTitle: "Felica eye health specialist",
-    image: "./images/dr-ankita-kawale.webp?v=hc139",
+    image: "./images/dr-ankita-kawale.webp?v=hc140",
     experience: "8 years treating feline eye and allergy conditions",
     catsTreated: "3,000+ cats treated",
     reviewFrequency: (name) => `Reviews ${name}'s eye comfort every 2 weeks`,
@@ -1877,7 +1889,7 @@ const WELLNESS_SPECIALISTS = {
     icon: "👨‍⚕️",
     specialtyNoun: "feline preventive care specialist",
     reviewTitle: "Felica preventive care specialist",
-    image: "./images/dr-shantanu-kalambi.webp?v=hc139",
+    image: "./images/dr-shantanu-kalambi.webp?v=hc140",
     experience: "20 years in feline preventive medicine",
     catsTreated: "8,000+ cats treated",
     reviewFrequency: (name) => `Checks in on ${name}'s wellness every month`,
@@ -1950,7 +1962,7 @@ const WELLNESS_PLANS = {
     id: "eyes",
     planName: "Eye Comfort Plan",
     duration: "6 weeks",
-    beforeImage: "./images/hero-cat-portrait.webp",
+    beforeImage: "./images/hero-cat-portrait.png",
     afterImage: "./images/hero-healthy-cat.png",
     beforeLabel: "Week 0",
     afterLabel: "Week 6",
@@ -2027,8 +2039,95 @@ function getYoungCallSpecialist() {
     shortName: "Dr. Ankita",
     fullName: "Dr. Ankita Kawale",
     title: "Feline Specialist",
-    image: "./images/dr-ankita-kawale.webp?v=hc139",
+    image: "./images/dr-ankita-kawale.webp?v=hc140",
   };
+}
+
+/**
+ * Vet call hours in IST: Mon–Sat before 7pm.
+ * Sundays and after 7pm daily → next call is tomorrow 10am
+ * (Saturday after 7pm skips Sunday → Monday 10am).
+ */
+function getVetCallSchedule(now = new Date()) {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Asia/Kolkata",
+    weekday: "short",
+    hour: "2-digit",
+    hourCycle: "h23",
+  }).formatToParts(now);
+  const weekday = parts.find((p) => p.type === "weekday")?.value || "";
+  const hourRaw = parts.find((p) => p.type === "hour")?.value;
+  const hour = Number.parseInt(hourRaw, 10);
+  const isSunday = weekday === "Sun";
+  const isAfterHours = Number.isFinite(hour) && hour >= 19;
+  const availableNow = !isSunday && !isAfterHours;
+
+  if (availableNow) {
+    return {
+      availableNow: true,
+      callDayLabel: null,
+      callWhenShort: "usually within 15–30 minutes",
+      callWhenCard: "You'll speak with her on this call · usually within 15–30 minutes",
+      offlineNoticeTitle: null,
+      offlineNoticeCopy: null,
+    };
+  }
+
+  // Sunday → tomorrow (Mon); Sat after 7pm → Monday; else after 7pm → tomorrow
+  const callDayLabel = !isSunday && weekday === "Sat" ? "Monday" : "tomorrow";
+  const reason =
+    isSunday
+      ? "Our vet isn’t available on Sundays."
+      : "Our vet isn’t available after 7pm.";
+
+  return {
+    availableNow: false,
+    callDayLabel,
+    callWhenShort: `${callDayLabel} at 10am`,
+    callWhenCard: `Not available right now · she'll call ${callDayLabel} at 10am`,
+    offlineNoticeTitle: "Vet not available right now",
+    offlineNoticeCopy: `${reason} You can still book — she’ll call ${callDayLabel} at 10am.`,
+  };
+}
+
+/** Shared doctor trust card — used before pay and on the booked confirmation. */
+function renderYoungCallVetCard(specialist, { whenText, showCredentials = false } = {}) {
+  const when = whenText || "Usually calls within 15–30 minutes";
+  const credentials =
+    showCredentials && (specialist.experience || specialist.catsTreated)
+      ? `<ul class="young-call-vet-creds">
+          ${
+            specialist.experience
+              ? `<li>${escapeHtml(specialist.experience)}</li>`
+              : ""
+          }
+          ${
+            specialist.catsTreated
+              ? `<li>${escapeHtml(specialist.catsTreated)}</li>`
+              : ""
+          }
+        </ul>`
+      : "";
+
+  return `
+    <section class="young-call-vet" aria-label="Your specialist">
+      <img
+        class="young-call-vet-photo"
+        src="${specialist.image}"
+        alt="${escapeHtml(specialist.fullName)}"
+        width="72"
+        height="72"
+        loading="lazy"
+        decoding="async"
+      />
+      <div class="young-call-vet-meta">
+        <p class="young-call-vet-name">${escapeHtml(specialist.fullName)}</p>
+        <p class="young-call-vet-title">${escapeHtml(specialist.title)}</p>
+        <p class="young-call-vet-when">${escapeHtml(when)}</p>
+        ${credentials}
+      </div>
+    </section>
+  `;
 }
 
 function getWellnessRecommendationLead(name, specialist) {
@@ -2078,7 +2177,7 @@ function getWellnessConfirmTitle(name, specialist) {
 }
 
 function getWellnessReviewCtaLabel(specialist) {
-  return `Get ${specialist.shortName}'s review`;
+  return `Get ${specialist.shortName}'s review — free`;
 }
 
 function getWellnessCtaLabel(name) {
@@ -2121,7 +2220,7 @@ function renderWellnessConfirmationJourney(specialist, name) {
       </li>
       <li class="wellness-confirm-journey-item is-next">
         <span class="wellness-confirm-journey-step">Next</span>
-        <span class="wellness-confirm-journey-copy">${escapeHtml(specialist.shortName)} confirms on WhatsApp</span>
+        <span class="wellness-confirm-journey-copy">${escapeHtml(specialist.shortName)} confirms on WhatsApp (free)</span>
       </li>
       <li class="wellness-confirm-journey-item">
         <span class="wellness-confirm-journey-step">Then</span>
@@ -2368,8 +2467,6 @@ const CHRONIC_CONCERN_QUESTION_ORDER = {
   weight: ["weight", "appetite", "water", "urination", "vomiting"],
   eating: ["appetite", "weight", "vomiting", "water", "urination"],
   appetite: ["appetite", "weight", "vomiting", "water", "urination"],
-  // Senior landing → classic kidney / chronic disease screen
-  senior: ["water", "urination", "weight", "appetite", "vomiting"],
 };
 
 const FLOW_ADVANCE_MS = 80;
@@ -2412,13 +2509,8 @@ function isYoungFlow() {
   return quizState.flowTrack === "young";
 }
 
-function isSeniorScreeningLanding() {
-  return getHeroConcernFromUrl() === "senior";
-}
-
 function isYoungCatAge(years) {
-  // All ages use the young (symptom → call) flow — except senior concern
-  // landings, which use the 5-question chronic kidney screen.
+  // All ages use the young (symptom → call) flow.
   return years != null && years > 0 && years <= 25;
 }
 
@@ -2555,160 +2647,6 @@ function normalizeIndianMobile(raw) {
 function isValidIndianMobile(raw) {
   const digits = normalizeIndianMobile(raw);
   return digits.length === 10 && /^[6-9]\d{9}$/.test(digits);
-}
-
-const JUNK_PHONE_NUMBERS = new Set([
-  "9999999999",
-  "8888888888",
-  "7777777777",
-  "6666666666",
-  "9876543210",
-  "9123456789",
-  "9000000000",
-  "9898989898",
-  "9090909090",
-]);
-
-const JUNK_CAT_NAMES = new Set([
-  "test",
-  "testing",
-  "asdf",
-  "asdfg",
-  "qwerty",
-  "abc",
-  "abcd",
-  "name",
-  "cat",
-  "xxx",
-  "aaaa",
-  "bbbb",
-  "none",
-  "na",
-  "n/a",
-  "null",
-  "undefined",
-]);
-
-/** Minimum time from flow open → lead submit. Real parents take longer. */
-const LEAD_MIN_ELAPSED_MS = 20000;
-const LEAD_RATE_KEY = "felica-lead-rate-v1";
-const LEAD_RATE_WINDOW_MS = 24 * 60 * 60 * 1000;
-
-function isPlausibleIndianMobile(raw) {
-  const digits = normalizeIndianMobile(raw);
-  if (!isValidIndianMobile(digits)) return false;
-  if (JUNK_PHONE_NUMBERS.has(digits)) return false;
-  if (/^(\d)\1{9}$/.test(digits)) return false; // all same digit
-  const ascending = "01234567890123456789";
-  const descending = "98765432109876543210";
-  if (ascending.includes(digits) || descending.includes(digits)) return false;
-  return true;
-}
-
-function normalizeCatNameInput(raw) {
-  return String(raw || "").trim().replace(/\s+/g, " ");
-}
-
-/** Single given name only — no first + last. */
-function isPlausibleCatName(raw) {
-  const name = normalizeCatNameInput(raw);
-  if (!name || name.length < 2 || name.length > 24) return false;
-  if (/\s/.test(name)) return false; // two names not allowed
-  if (!/^[A-Za-z][A-Za-z.'-]*$/.test(name)) return false;
-  if (JUNK_CAT_NAMES.has(name.toLowerCase())) return false;
-  if (/^(.)\1+$/i.test(name.replace(/[.'-]/g, ""))) return false; // "aaa", "xxxx"
-  return true;
-}
-
-function getCatNameBlockReason(raw) {
-  const name = normalizeCatNameInput(raw);
-  if (!name) return "cat_name";
-  if (/\s/.test(name)) return "cat_name_multi";
-  if (!isPlausibleCatName(name)) return "cat_name";
-  return null;
-}
-
-function readLeadRateStore() {
-  try {
-    const raw = localStorage.getItem(LEAD_RATE_KEY);
-    const data = raw ? JSON.parse(raw) : { phones: {}, deviceAt: 0 };
-    const phones = data?.phones && typeof data.phones === "object" ? data.phones : {};
-    const now = Date.now();
-    const pruned = {};
-    Object.keys(phones).forEach((phone) => {
-      const at = Number(phones[phone]) || 0;
-      if (at && now - at < LEAD_RATE_WINDOW_MS) pruned[phone] = at;
-    });
-    const deviceAt = Number(data?.deviceAt) || 0;
-    return {
-      phones: pruned,
-      deviceAt: deviceAt && now - deviceAt < LEAD_RATE_WINDOW_MS ? deviceAt : 0,
-    };
-  } catch {
-    return { phones: {}, deviceAt: 0 };
-  }
-}
-
-function writeLeadRateStore(store) {
-  try {
-    localStorage.setItem(LEAD_RATE_KEY, JSON.stringify(store));
-  } catch {
-    /* ignore quota / private mode */
-  }
-}
-
-/** Site-only stand-in for IP+phone rate limit (same browser / same phone, 1 per 24h). */
-function getLeadRateLimitReason(phone) {
-  const digits = normalizeIndianMobile(phone);
-  const store = readLeadRateStore();
-  if (store.deviceAt) return "rate_device";
-  if (digits && store.phones[digits]) return "rate_phone";
-  return null;
-}
-
-function rememberLeadSubmission(phone) {
-  const digits = normalizeIndianMobile(phone);
-  const store = readLeadRateStore();
-  const now = Date.now();
-  store.deviceAt = now;
-  if (digits) store.phones[digits] = now;
-  writeLeadRateStore(store);
-}
-
-function getLeadSpamBlockReason({ honeypot = "", phone = "", catNameValue = "", requireCatName = false } = {}) {
-  if (String(honeypot || "").trim()) return "bot_honeypot";
-  const openedAt = quizState.openedAt || 0;
-  if (openedAt && Date.now() - openedAt < LEAD_MIN_ELAPSED_MS) return "too_fast";
-  if (requireCatName) {
-    const nameReason = getCatNameBlockReason(catNameValue);
-    if (nameReason) return nameReason;
-  }
-  if (!isPlausibleIndianMobile(phone)) return "phone";
-  const rateReason = getLeadRateLimitReason(phone);
-  if (rateReason) return rateReason;
-  return null;
-}
-
-function leadSpamErrorMessage(reason) {
-  switch (reason) {
-    case "cat_name_multi":
-    case "cat_name":
-      return "Enter your cat's name.";
-    case "too_fast":
-      return "Take a moment to finish the questions, then try again.";
-    case "rate_phone":
-      return "We already have a request from this number. A specialist will call you soon.";
-    case "rate_device":
-      return "You've already submitted recently. A specialist will call you soon.";
-    case "bot_honeypot":
-      return "Something went wrong. Please try again.";
-    default:
-      return "Enter a valid 10-digit mobile number.";
-  }
-}
-
-function isCatNameBlockReason(reason) {
-  return reason === "cat_name" || reason === "cat_name_multi";
 }
 
 function getCatDisplayName() {
@@ -3523,6 +3461,7 @@ let quizState = {
   sessionId: null,
   youngLeadResult: null,
   screeningSessionId: null,
+  vetCallPayment: null,
   openedAt: null,
 };
 
@@ -3549,6 +3488,7 @@ function resetQuizState() {
     sessionId: null,
     youngLeadResult: null,
     screeningSessionId: crypto.randomUUID(),
+    vetCallPayment: null,
     openedAt: Date.now(),
   };
   setFlowProgramLabel();
@@ -3755,16 +3695,13 @@ function flowBack() {
 function commitAgeAndAdvance(years) {
   quizState.age = years;
   quizState.answers = {};
-  // Senior concern landing → 5-question kidney / chronic screen.
-  // Everything else stays on the young symptom → call flow.
-  const useChronic = isSeniorScreeningLanding();
-  quizState.flowTrack = useChronic ? "chronic" : "young";
+  quizState.flowTrack = "young";
   quizState.youngSymptoms = [];
   quizState.youngDuration = null;
   quizState.youngDetailAnswers = {};
   quizState.catName = null;
   quizState.youngLeadResult = null;
-  quizState.sessionId = useChronic ? null : createYoungSessionId();
+  quizState.sessionId = createYoungSessionId();
   setFlowProgramLabel();
   track("screening_step_completed", {
     step: "age",
@@ -3775,30 +3712,20 @@ function commitAgeAndAdvance(years) {
     flow_track: quizState.flowTrack,
   });
   quizState.step = 2;
-  if (!useChronic) {
-    applyUrlConcernYoungPrefill(years);
-  }
+  applyUrlConcernYoungPrefill(years);
   renderFlowStep();
 }
 
 function renderAgeStep() {
-  const useChronic = !isYoungFlow();
-  setFlowProgress(0, useChronic ? getTotalFlowSteps() : getYoungStepCount());
+  setFlowProgress(0, getYoungStepCount());
   const prefillOpt = nearestAgeWheelOption(quizState.age);
   const options = AGE_WHEEL_OPTIONS;
-  const isSeniorLanding = isSeniorScreeningLanding();
-  const ageLead = isSeniorLanding
-    ? "Cats 7+ are at higher risk. Scroll to pick your cat's age."
-    : "Scroll to pick an age — includes months for kittens.";
-  const stepLabel = useChronic
-    ? formatFlowStepLabel(1, "Age")
-    : formatYoungStepLabel(1);
 
   assflowMain.innerHTML = `
     <div class="flow-step">
-      <p class="flow-step-label">${stepLabel}</p>
+      <p class="flow-step-label">${formatYoungStepLabel(1)}</p>
       <h1 class="flow-title" id="assflow-title">How old is your cat?</h1>
-      <p class="flow-lead">${escapeHtml(ageLead)}</p>
+      <p class="flow-lead">Scroll to pick an age — includes months for kittens.</p>
       <div class="age-wheel" id="age-wheel" role="listbox" aria-label="Cat age">
         <div class="age-wheel-fade age-wheel-fade--top" aria-hidden="true"></div>
         <div class="age-wheel-highlight" aria-hidden="true"></div>
@@ -4038,25 +3965,12 @@ function renderWhatsAppGate(tier) {
     tier && tier.id !== "low"
       ? "A feline specialist will call within 24 hours."
       : "See your full result on the next screen.";
-  const catPrefill = quizState.catName || catName || "";
 
   return `
     <div class="whatsapp-gate">
       ${preview}
       <p class="whatsapp-gate-lead">${leadLine}</p>
       <form class="whatsapp-gate-form" id="whatsapp-gate-form" novalidate>
-        <label class="whatsapp-gate-label" for="gate-cat-name">Cat's name</label>
-        <input
-          class="flow-age-input young-cat-name-input"
-          id="gate-cat-name"
-          type="text"
-          name="cat_name"
-          value="${escapeHtml(catPrefill)}"
-          placeholder="e.g. Mochi"
-          autocomplete="off"
-          maxlength="24"
-          required
-        />
         <label class="whatsapp-gate-label" for="whatsapp-number-input">Mobile number</label>
         <div class="whatsapp-gate-input-wrap">
           <span class="whatsapp-gate-prefix" aria-hidden="true">🇮🇳 +91</span>
@@ -4072,12 +3986,7 @@ function renderWhatsAppGate(tier) {
             required
           />
         </div>
-        <div class="lead-honeypot" aria-hidden="true">
-          <label for="gate-company">Company</label>
-          <input type="text" id="gate-company" name="company" tabindex="-1" autocomplete="off" />
-        </div>
-        <p class="whatsapp-gate-hint">Private · no spam</p>
-        <p class="flow-error" id="whatsapp-gate-error" hidden></p>
+        <p class="whatsapp-gate-hint">Free · private · no spam</p>
         <button type="submit" class="btn btn-block btn-get-started">Show my result</button>
       </form>
     </div>
@@ -4091,54 +4000,18 @@ function bindWhatsAppGateHandlers() {
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     const input = form.querySelector("#whatsapp-number-input");
-    const nameInput = form.querySelector("#gate-cat-name");
-    const honeypot = form.querySelector("#gate-company");
-    const error = form.querySelector("#whatsapp-gate-error");
     const submitBtn = form.querySelector('button[type="submit"]');
     const number = normalizeIndianMobile(input?.value);
-    const petName = normalizeCatNameInput(nameInput?.value);
 
-    const blockReason = getLeadSpamBlockReason({
-      honeypot: honeypot?.value,
-      phone: number,
-      catNameValue: petName,
-      requireCatName: true,
-    });
-    if (blockReason) {
-      track("lead_spam_blocked", {
-        reason: blockReason,
-        flow_track: "chronic",
-        session_id: quizState.screeningSessionId,
-      });
-      if (error) {
-        error.hidden = false;
-        error.textContent = leadSpamErrorMessage(blockReason);
-      }
-      if (isCatNameBlockReason(blockReason)) {
-        nameInput?.classList.add("error");
-        nameInput?.focus();
-        setTimeout(() => nameInput?.classList.remove("error"), 2000);
-      } else {
-        input?.classList.add("error");
-        input?.focus();
-        setTimeout(() => input?.classList.remove("error"), 2000);
-      }
+    if (!isValidIndianMobile(number)) {
+      input?.classList.add("error");
+      input?.focus();
+      setTimeout(() => input?.classList.remove("error"), 2000);
       return;
     }
 
-    if (error) error.hidden = true;
     if (input) input.value = number;
     quizState.whatsappNumber = number;
-    quizState.catName = petName;
-    catName = petName;
-    try {
-      localStorage.setItem(CAT_NAME_KEY, petName);
-    } catch (err) {
-      /* ignore */
-    }
-
-    // Record before network calls so spam cannot retry-flood PMS from this browser.
-    rememberLeadSubmission(number);
 
     if (submitBtn) {
       submitBtn.disabled = true;
@@ -4147,7 +4020,6 @@ function bindWhatsAppGateHandlers() {
 
     track("whatsapp_number_collected", {
       cat_age: quizState.age,
-      has_cat_name: true,
     });
     flushLeadConversionTags({ flow_track: "chronic" });
 
@@ -4233,6 +4105,235 @@ function bindYoungPlanHandlers() {
       wellness_plan: getWellnessPlanConfig().id,
     });
   });
+
+  assflowMain.querySelector("[data-vet-call-pay]")?.addEventListener("click", () => {
+    startVetCallPayment();
+  });
+}
+
+function loadRazorpayCheckout() {
+  if (window.Razorpay) return Promise.resolve(window.Razorpay);
+  return new Promise((resolve, reject) => {
+    const existing = document.querySelector('script[data-razorpay-checkout]');
+    if (existing) {
+      existing.addEventListener("load", () => resolve(window.Razorpay), { once: true });
+      existing.addEventListener("error", () => reject(new Error("Razorpay failed to load")), {
+        once: true,
+      });
+      return;
+    }
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+    script.dataset.razorpayCheckout = "1";
+    script.onload = () => resolve(window.Razorpay);
+    script.onerror = () => reject(new Error("Razorpay failed to load"));
+    document.head.appendChild(script);
+  });
+}
+
+function setVetPayButtonState(btn, { busy = false, label = null } = {}) {
+  if (!btn) return;
+  btn.disabled = busy;
+  if (label != null) btn.textContent = label;
+}
+
+function completePaidVetBooking(phoneNational) {
+  const phone = String(phoneNational || quizState.whatsappNumber || "").replace(/\D/g, "");
+
+  track("whatsapp_number_collected", {
+    cat_age: quizState.age,
+    flow_track: "young",
+    symptoms: getSelectedYoungSymptoms().map((s) => s.id),
+    contact_method: "call",
+    session_id: ensureYoungSessionId(),
+    paid: true,
+  });
+
+  flushLeadConversionTags({ flow_track: "young", paid_consult: true });
+
+  quizState.step = getYoungPlanStep();
+  renderFlowStep();
+
+  if (!phone) return;
+
+  submitYoungCatLead(phone)
+    .then(() => {
+      track("young_cat_lead_submitted", {
+        session_id: quizState.sessionId,
+        issue_id: getPrimaryYoungSymptom()?.id,
+        urgency: resolveYoungUrgency(),
+        ok: true,
+        paid: true,
+        payment_id: quizState.vetCallPayment?.paymentId || null,
+      });
+    })
+    .catch((err) => {
+      track("young_cat_lead_submitted", {
+        session_id: quizState.sessionId,
+        issue_id: getPrimaryYoungSymptom()?.id,
+        urgency: resolveYoungUrgency(),
+        ok: false,
+        status: err?.status || null,
+        paid: true,
+      });
+    });
+}
+
+async function startVetCallPayment({ button = null, errorEl = null } = {}) {
+  const btn =
+    button ||
+    assflowMain.querySelector("[data-vet-call-pay]") ||
+    assflowMain.querySelector("#young-connect-form button[type='submit']");
+  const errNode =
+    errorEl ||
+    assflowMain.querySelector("[data-vet-pay-error]") ||
+    assflowMain.querySelector("#young-connect-error");
+  const phone = String(quizState.whatsappNumber || "").replace(/\D/g, "");
+  const sessionId = ensureYoungSessionId();
+  const issueId = getPrimaryYoungSymptom()?.id || "";
+
+  if (!isValidIndianMobile(phone)) {
+    if (errNode) {
+      errNode.hidden = false;
+      errNode.textContent = "Enter a valid 10-digit mobile number before paying.";
+    }
+    return false;
+  }
+
+  if (errNode) {
+    errNode.hidden = true;
+    errNode.textContent = "";
+  }
+
+  setVetPayButtonState(btn, { busy: true, label: "Starting payment…" });
+
+  track("begin_checkout", {
+    item_id: VET_CALL_PRODUCT.id,
+    value: VET_CALL_PRODUCT.amountPaise / 100,
+    currency: VET_CALL_PRODUCT.currency,
+    session_id: sessionId,
+  });
+
+  try {
+    const orderRes = await fetch("/api/create-order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        sessionId,
+        phone,
+        catName: quizState.catName || "",
+        issueId,
+      }),
+    });
+    const order = await orderRes.json().catch(() => ({}));
+    if (!orderRes.ok || !order.orderId || !order.keyId) {
+      throw new Error(order.error || "Could not start payment");
+    }
+
+    const RazorpayCtor = await loadRazorpayCheckout();
+    const paid = await new Promise((resolve, reject) => {
+      const rzp = new RazorpayCtor({
+        key: order.keyId,
+        amount: order.amount,
+        currency: order.currency || VET_CALL_PRODUCT.currency,
+        name: "Felica",
+        description: VET_CALL_PRODUCT.name,
+        order_id: order.orderId,
+        prefill: {
+          contact: phone ? `+91${phone}` : undefined,
+          name: quizState.catName ? `${quizState.catName}'s parent` : undefined,
+        },
+        notes: {
+          product: VET_CALL_PRODUCT.id,
+          session_id: sessionId,
+          issue_id: issueId,
+        },
+        // UPI only: hide other default methods instead of a custom UPI block
+        // (custom blocks + show_default_blocks:false can empty the checkout).
+        config: {
+          display: {
+            hide: [
+              { method: "card" },
+              { method: "netbanking" },
+              { method: "wallet" },
+              { method: "emi" },
+              { method: "paylater" },
+              { method: "cardless_emi" },
+            ],
+          },
+        },
+        theme: { color: "#8f87ab" },
+        handler: async (response) => {
+          try {
+            const verifyRes = await fetch("/api/verify-payment", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                ...response,
+                sessionId,
+              }),
+            });
+            const verify = await verifyRes.json().catch(() => ({}));
+            if (!verifyRes.ok || !verify.ok) {
+              throw new Error(verify.error || "Payment verification failed");
+            }
+
+            quizState.vetCallPayment = {
+              orderId: verify.orderId,
+              paymentId: verify.paymentId,
+              paidAt: Date.now(),
+            };
+
+            track("purchase", {
+              transaction_id: verify.paymentId,
+              value: VET_CALL_PRODUCT.amountPaise / 100,
+              currency: VET_CALL_PRODUCT.currency,
+              item_id: VET_CALL_PRODUCT.id,
+              session_id: sessionId,
+            });
+            track("vet_call_paid", {
+              session_id: sessionId,
+              order_id: verify.orderId,
+              payment_id: verify.paymentId,
+              issue_id: issueId,
+            });
+
+            completePaidVetBooking(phone);
+            resolve(true);
+          } catch (err) {
+            reject(err);
+          }
+        },
+        modal: {
+          ondismiss: () => resolve(false),
+        },
+      });
+
+      rzp.on("payment.failed", (response) => {
+        reject(new Error(response?.error?.description || "Payment failed"));
+      });
+
+      rzp.open();
+    });
+
+    return paid;
+  } catch (err) {
+    if (errNode) {
+      errNode.hidden = false;
+      errNode.textContent = err?.message || "Payment could not be completed. Please try again.";
+    }
+    track("vet_call_pay_failed", {
+      session_id: sessionId,
+      message: err?.message || "unknown",
+    });
+    return false;
+  } finally {
+    setVetPayButtonState(btn, {
+      busy: false,
+      label: VET_CALL_PRODUCT.ctaLabel,
+    });
+  }
 }
 
 function renderYoungOptionCards(name, options, savedId, onSelect) {
@@ -4399,24 +4500,29 @@ function renderYoungConnectStep() {
   const name = getCatDisplayName();
   const possessive = name === "your cat" ? "your cat's" : `${name}'s`;
   const connectLeads = {
-    vomiting: `We'll review ${possessive} vomiting pattern, then call with next steps.`,
-    appetite: `We'll review what you shared about ${possessive} eating, then call with next steps.`,
-    litter: `We'll review the litter changes you noted for ${name}, then call you.`,
-    skin: `We'll review ${possessive} scratching or flea issue, then call with a plan.`,
-    coat: `We'll review what you noticed about ${possessive} fur, then call with a plan.`,
-    eyes: `We'll review ${possessive} teary eyes, then call with guidance.`,
-    behaviour: `We'll review the behaviour changes you described, then call with next steps.`,
-    hydration: `We'll review ${possessive} drinking and peeing changes, then call with guidance.`,
-    energy: `We'll review ${possessive} energy changes, then call you.`,
-    dental: `We'll review the mouth trouble you described, then call you.`,
-    mobility: `We'll review how ${possessive} movement has changed, then call you.`,
-    prevention: `Leave your number — a feline specialist will call with ${possessive} prevention plan.`,
+    vomiting: `We'll review ${possessive} vomiting pattern on a paid consult call.`,
+    appetite: `We'll review what you shared about ${possessive} eating on a paid consult call.`,
+    litter: `We'll review the litter changes you noted for ${name} on a paid consult call.`,
+    skin: `We'll review ${possessive} scratching or flea issue on a paid consult call.`,
+    coat: `We'll review what you noticed about ${possessive} fur on a paid consult call.`,
+    eyes: `We'll review ${possessive} teary eyes on a paid consult call.`,
+    behaviour: `We'll review the behaviour changes you described on a paid consult call.`,
+    hydration: `We'll review ${possessive} drinking and peeing changes on a paid consult call.`,
+    energy: `We'll review ${possessive} energy changes on a paid consult call.`,
+    dental: `We'll review the mouth trouble you described on a paid consult call.`,
+    mobility: `We'll review how ${possessive} movement has changed on a paid consult call.`,
+    prevention: `Book a paid consult — a feline specialist will call with ${possessive} prevention plan.`,
   };
   const issueId = getPrimaryYoungSymptom()?.id || "prevention";
   const connectLead = isPrevention
     ? connectLeads.prevention
-    : connectLeads[issueId] || "Someone will review what you shared, then call you.";
+    : connectLeads[issueId] || "Book a paid consult — a specialist will call with next steps.";
   const isLikelyUrgent = !isPrevention && resolveYoungUrgency() === "urgent";
+  const specialist = getYoungCallSpecialist();
+  const schedule = getVetCallSchedule();
+  const urgentTiming = schedule.availableNow
+    ? `${specialist.shortName} usually calls within 15–30 minutes`
+    : `${specialist.shortName} will call ${schedule.callDayLabel} at 10am`;
 
   assflowMain.innerHTML = `
     <div class="flow-step young-connect-step">
@@ -4425,25 +4531,37 @@ function renderYoungConnectStep() {
         isLikelyUrgent
           ? `<div class="young-urgent-inline" role="status">
           <p class="young-urgent-inline-title">This may need prompt care</p>
-          <p class="young-urgent-inline-copy">Leave your number — a specialist will call within 15–30 minutes to help you decide next steps.</p>
+          <p class="young-urgent-inline-copy">Book a ₹299 consult — ${escapeHtml(
+            urgentTiming
+          )} to help you decide next steps. If this looks urgent, also head to a nearby clinic.</p>
         </div>`
           : ""
       }
-      <h1 class="flow-title" id="assflow-title">Get your specialist call</h1>
+      ${
+        !schedule.availableNow
+          ? `<div class="young-vet-offline" role="status">
+          <p class="young-vet-offline-title">${escapeHtml(schedule.offlineNoticeTitle)}</p>
+          <p class="young-vet-offline-copy">${escapeHtml(schedule.offlineNoticeCopy)}</p>
+        </div>`
+          : ""
+      }
+      <h1 class="flow-title" id="assflow-title">Book your vet consult</h1>
       <p class="flow-lead">${escapeHtml(connectLead)}</p>
 
+      ${renderYoungCallVetCard(specialist, {
+        whenText: schedule.callWhenCard,
+        showCredentials: true,
+      })}
+
       <form class="young-connect-form" id="young-connect-form" novalidate>
-        <label class="flow-age-label" for="young-cat-name">Cat's name</label>
+        <label class="flow-age-label" for="young-cat-name">Cat's name <span class="field-optional">(optional)</span></label>
         <input
           class="flow-age-input young-cat-name-input"
           id="young-cat-name"
           type="text"
-          name="cat_name"
           value="${escapeHtml(catPrefill)}"
           placeholder="e.g. Mochi"
           autocomplete="off"
-          maxlength="24"
-          required
         />
 
         <label class="whatsapp-gate-label" for="young-phone-input">Mobile number</label>
@@ -4461,14 +4579,13 @@ function renderYoungConnectStep() {
           />
         </div>
 
-        <div class="lead-honeypot" aria-hidden="true">
-          <label for="young-company">Company</label>
-          <input type="text" id="young-company" name="company" tabindex="-1" autocomplete="off" />
-        </div>
-
-        <p class="young-connect-next">Private · no spam · usually within 15–30 minutes</p>
+        <p class="young-connect-next">${escapeHtml(
+          VET_CALL_PRODUCT.priceLabel
+        )} · UPI · private · ${escapeHtml(schedule.callWhenShort)}</p>
         <p class="flow-error" id="young-connect-error" hidden>Enter a valid 10-digit mobile number.</p>
-        <button type="submit" class="btn btn-block btn-get-started">Get my call</button>
+        <button type="submit" class="btn btn-block btn-get-started">${escapeHtml(
+          VET_CALL_PRODUCT.ctaLabel
+        )}</button>
       </form>
     </div>
   `;
@@ -4477,42 +4594,23 @@ function renderYoungConnectStep() {
   trackYoungCatStep("contact", issueId);
 
   const form = assflowMain.querySelector("#young-connect-form");
-  form?.addEventListener("submit", (event) => {
+  form?.addEventListener("submit", async (event) => {
     event.preventDefault();
     const phoneInput = form.querySelector("#young-phone-input");
     const nameInput = form.querySelector("#young-cat-name");
-    const honeypot = form.querySelector("#young-company");
     const error = form.querySelector("#young-connect-error");
     const submitBtn = form.querySelector('button[type="submit"]');
     const number = normalizeIndianMobile(phoneInput?.value);
-    const petName = normalizeCatNameInput(nameInput?.value);
+    const petName = nameInput?.value?.trim();
 
-    const blockReason = getLeadSpamBlockReason({
-      honeypot: honeypot?.value,
-      phone: number,
-      catNameValue: petName,
-      requireCatName: true,
-    });
-    if (blockReason) {
-      track("lead_spam_blocked", {
-        reason: blockReason,
-        flow_track: "young",
-        session_id: ensureYoungSessionId(),
-      });
-      // Never flush Meta Lead or POST to PMS when spam checks fail.
+    if (!isValidIndianMobile(number)) {
+      phoneInput?.classList.add("error");
       if (error) {
         error.hidden = false;
-        error.textContent = leadSpamErrorMessage(blockReason);
+        error.textContent = "Enter a valid 10-digit mobile number.";
       }
-      if (isCatNameBlockReason(blockReason)) {
-        nameInput?.classList.add("error");
-        nameInput?.focus();
-        setTimeout(() => nameInput?.classList.remove("error"), 2000);
-      } else {
-        phoneInput?.classList.add("error");
-        phoneInput?.focus();
-        setTimeout(() => phoneInput?.classList.remove("error"), 2000);
-      }
+      phoneInput?.focus();
+      setTimeout(() => phoneInput?.classList.remove("error"), 2000);
       return;
     }
 
@@ -4520,54 +4618,17 @@ function renderYoungConnectStep() {
     if (phoneInput) phoneInput.value = number;
     quizState.whatsappNumber = number;
     quizState.contactMethod = "call";
-    quizState.catName = petName;
-    catName = petName;
-    try {
-      localStorage.setItem(CAT_NAME_KEY, petName);
-    } catch (err) {
-      /* ignore */
+    if (petName) {
+      quizState.catName = petName;
+      catName = petName;
+      try {
+        localStorage.setItem(CAT_NAME_KEY, petName);
+      } catch (err) {
+        /* ignore */
+      }
     }
 
-    // Record before PMS so the same phone/browser cannot flood /young-cat.
-    rememberLeadSubmission(number);
-
-    if (submitBtn) {
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Submitting…";
-    }
-
-    track("whatsapp_number_collected", {
-      cat_age: quizState.age,
-      flow_track: "young",
-      symptoms: getSelectedYoungSymptoms().map((s) => s.id),
-      contact_method: "call",
-      session_id: ensureYoungSessionId(),
-      has_cat_name: true,
-    });
-
-    flushLeadConversionTags({ flow_track: "young" });
-
-    quizState.step = getYoungReviewStep();
-    renderFlowStep();
-
-    submitYoungCatLead(number)
-      .then(() => {
-        track("young_cat_lead_submitted", {
-          session_id: quizState.sessionId,
-          issue_id: getPrimaryYoungSymptom()?.id,
-          urgency: resolveYoungUrgency(),
-          ok: true,
-        });
-      })
-      .catch((err) => {
-        track("young_cat_lead_submitted", {
-          session_id: quizState.sessionId,
-          issue_id: getPrimaryYoungSymptom()?.id,
-          urgency: resolveYoungUrgency(),
-          ok: false,
-          status: err?.status || null,
-        });
-      });
+    await startVetCallPayment({ button: submitBtn, errorEl: error });
   });
 }
 
@@ -4712,6 +4773,12 @@ function renderYoungWellnessPlanStep() {
 }
 
 function renderYoungCallPlanStep() {
+  if (!quizState.vetCallPayment?.paymentId) {
+    quizState.step = getYoungConnectStep();
+    renderFlowStep();
+    return;
+  }
+
   setFlowProgress(getYoungStepCount() - 1, getYoungStepCount());
   setFlowFooter({ visible: false });
   setFlowProgramLabel();
@@ -4720,6 +4787,7 @@ function renderYoungCallPlanStep() {
   const name = getCatDisplayName();
   const possessive = name === "your cat" ? "your cat's" : `${name}'s`;
   const specialist = getYoungCallSpecialist();
+  const schedule = getVetCallSchedule();
   const phone = quizState.whatsappNumber || "";
   const issue = getPrimaryYoungSymptom();
   const issueLabel =
@@ -4732,34 +4800,36 @@ function renderYoungCallPlanStep() {
     symptoms: getSelectedYoungSymptoms().map((s) => s.id),
     specialist: specialist.fullName,
     phone_collected: !!phone,
+    vet_call_paid: true,
+    vet_call_available_now: schedule.availableNow,
   });
 
   assflowMain.innerHTML = `
     <div class="flow-step flow-step-result young-plan-step young-call-plan">
       <div class="young-care-plan young-call-plan-card">
-        <h1 class="young-call-plan-title" id="assflow-title">You're all set</h1>
+        <h1 class="young-call-plan-title" id="assflow-title">Consult booked</h1>
         <p class="young-call-plan-lead">
-          A feline specialist will call about ${escapeHtml(possessive)} ${escapeHtml(
-            String(issueLabel).toLowerCase()
-          )} soon.
+          Thanks — ${escapeHtml(specialist.shortName)} will call about ${escapeHtml(
+            possessive
+          )} ${escapeHtml(String(issueLabel).toLowerCase())}${
+            schedule.availableNow
+              ? " shortly"
+              : ` ${escapeHtml(schedule.callDayLabel)} at 10am`
+          }.
         </p>
 
-        <section class="young-call-vet" aria-label="Your specialist">
-          <img
-            class="young-call-vet-photo"
-            src="${specialist.image}"
-            alt="${escapeHtml(specialist.fullName)}"
-            width="72"
-            height="72"
-            loading="lazy"
-            decoding="async"
-          />
-          <div class="young-call-vet-meta">
-            <p class="young-call-vet-name">${escapeHtml(specialist.fullName)}</p>
-            <p class="young-call-vet-title">${escapeHtml(specialist.title)}</p>
-            <p class="young-call-vet-when">Usually calls within 15–30 minutes</p>
-          </div>
-        </section>
+        <div class="young-pay-success" role="status">
+          <p class="young-pay-success-title">Vet consult confirmed</p>
+          <p class="young-pay-success-copy">Paid ${escapeHtml(
+            VET_CALL_PRODUCT.priceLabel
+          )} · ${escapeHtml(schedule.callWhenShort)}</p>
+        </div>
+
+        ${renderYoungCallVetCard(specialist, {
+          whenText: schedule.availableNow
+            ? "Usually calls within 15–30 minutes"
+            : `She'll call ${schedule.callDayLabel} at 10am`,
+        })}
 
         ${
           phone
@@ -4769,21 +4839,12 @@ function renderYoungCallPlanStep() {
             : ""
         }
 
-        <section class="young-call-section" aria-labelledby="young-call-on-title">
-          <h2 class="young-call-section-title" id="young-call-on-title">On the call</h2>
+        <section class="young-call-section" aria-labelledby="young-call-next-title">
+          <h2 class="young-call-section-title" id="young-call-next-title">What happens next</h2>
           <ul class="young-call-list">
             <li>${escapeHtml(specialist.shortName)} reviews what you shared about ${escapeHtml(name)}</li>
             <li>Explains what may be going on in plain language</li>
             <li>Tells you what to do next — at home, or with your local vet</li>
-          </ul>
-        </section>
-
-        <section class="young-call-section" aria-labelledby="young-call-after-title">
-          <h2 class="young-call-section-title" id="young-call-after-title">After the call</h2>
-          <ul class="young-call-list">
-            <li>You'll get a clear next step for ${escapeHtml(name)}</li>
-            <li>If treatment is needed, ${escapeHtml(specialist.shortName)} will walk you through it</li>
-            <li>You can ask follow-up questions on the same call</li>
           </ul>
         </section>
 
@@ -4829,7 +4890,7 @@ function renderYoungPlanStep() {
               .map((reason) => `<li>${escapeHtml(reason)}</li>`)
               .join("")}
           </ul>
-          <p class="young-urgent-note">If this looks urgent, please also head to a nearby clinic. We'll still call to help you decide next steps.</p>
+          <p class="young-urgent-note">If this looks urgent, please also head to a nearby clinic. Your paid consult call will still help you decide next steps.</p>
         </div>
 
         <div class="young-plan-section">
@@ -4981,27 +5042,7 @@ window.addEventListener("pageshow", (event) => {
 initHeroPersonalization();
 initAgeGate();
 initAssessment();
-
-// Defer life-stage carousel until near viewport so Lighthouse/mobile
-// don't download ~1MB of stage photos during initial load.
-(function deferLifeJourney() {
-  const mount = document.getElementById("journey");
-  if (!mount) return;
-  const start = () => initLifeJourney();
-  if (!("IntersectionObserver" in window)) {
-    window.addEventListener("load", start, { once: true });
-    return;
-  }
-  const io = new IntersectionObserver(
-    (entries) => {
-      if (!entries.some((e) => e.isIntersecting)) return;
-      io.disconnect();
-      start();
-    },
-    { rootMargin: "200px 0px" }
-  );
-  io.observe(mount);
-})();
+initLifeJourney();
 
 const menuToggle = document.querySelector(".menu-toggle");
 const siteNav = document.querySelector(".site-nav");
