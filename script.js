@@ -2125,7 +2125,6 @@ function getVetCallSchedule(now = new Date()) {
     offlineNoticeTitle: null,
     offlineNoticeCopy: null,
     bookTitle: `Choose a call time ${dayTitle}`,
-    bookLead: `Evening and Sunday consults are by appointment. Pick a slot — ${dayTitle === "Monday" ? "Monday" : "tomorrow"} she’ll call you then.`,
   };
 }
 
