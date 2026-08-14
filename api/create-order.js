@@ -71,6 +71,8 @@ export default async function handler(req, res) {
   const phone = String(body.phone || "").replace(/\D/g, "").slice(0, 15);
   const catName = String(body.catName || "").slice(0, 60);
   const issueId = String(body.issueId || "").slice(0, 40);
+  const callbackSlot = String(body.callbackSlot || "").slice(0, 60);
+  const callbackSlotId = String(body.callbackSlotId || "").slice(0, 40);
   const receiptBase = sessionId || `vet_${Date.now()}`;
   const receipt = receiptBase.replace(/[^a-zA-Z0-9_]/g, "_").slice(0, 40);
 
@@ -93,6 +95,8 @@ export default async function handler(req, res) {
           phone,
           cat_name: catName,
           issue_id: issueId,
+          callback_slot: callbackSlot,
+          callback_slot_id: callbackSlotId,
         },
       }),
     });

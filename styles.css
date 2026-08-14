@@ -8624,6 +8624,59 @@ body[data-age-theme="geriatric"] .hero-clinic {
   color: var(--ink-soft);
 }
 
+.young-slot-picker {
+  margin: 4px 0 16px;
+  padding: 0;
+  border: 0;
+  min-inline-size: 0;
+}
+
+.young-slot-picker-legend {
+  margin: 0 0 10px;
+  padding: 0;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.young-slot-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.young-slot-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 12px 10px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: #fff;
+  cursor: pointer;
+  transition: border-color 160ms ease, background 160ms ease;
+}
+
+.young-slot-option:has(input:checked),
+.young-slot-option:has(input:focus-visible) {
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--line));
+  background: color-mix(in srgb, var(--accent-soft) 65%, #fff);
+}
+
+.young-slot-option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.young-slot-option-time {
+  font-size: 0.875rem;
+  font-weight: 650;
+  color: var(--ink);
+  text-align: center;
+}
+
 .young-detail-progress {
   margin: 0 0 6px;
   font-size: 0.75rem;
