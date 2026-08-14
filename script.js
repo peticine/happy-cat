@@ -2069,9 +2069,9 @@ function getYoungCallSpecialist() {
 }
 
 /**
- * Vet call hours in IST: Mon–Sat before 7pm.
- * Sundays and after 7pm → customer picks a slot on the next open day
- * (Saturday after 7pm / Sunday → Monday).
+ * Vet call hours in IST: Mon–Sat, 10:00–18:59.
+ * Outside that window (nights, early morning, Sundays) → pick a slot
+ * for the next open day (Sat night / Sunday → Monday; before 10am → today).
  */
 const VET_CALL_SLOT_OPTIONS = [
   { id: "10:00", label: "10:00 AM" },
@@ -2093,8 +2093,9 @@ function getVetCallSchedule(now = new Date()) {
   const hourRaw = parts.find((p) => p.type === "hour")?.value;
   const hour = Number.parseInt(hourRaw, 10);
   const isSunday = weekday === "Sun";
-  const isAfterHours = Number.isFinite(hour) && hour >= 19;
-  const availableNow = !isSunday && !isAfterHours;
+  const isBeforeOpen = Number.isFinite(hour) && hour < 10;
+  const isAfterClose = Number.isFinite(hour) && hour >= 19;
+  const availableNow = !isSunday && !isBeforeOpen && !isAfterClose;
 
   if (availableNow) {
     return {
@@ -2109,9 +2110,12 @@ function getVetCallSchedule(now = new Date()) {
     };
   }
 
-  // Sunday → tomorrow (Mon); Sat after 7pm → Monday; else after 7pm → tomorrow
-  const callDayLabel = !isSunday && weekday === "Sat" ? "Monday" : "tomorrow";
-  const dayTitle = callDayLabel === "Monday" ? "Monday" : "tomorrow";
+  let callDayLabel = "tomorrow";
+  if (isSunday || (weekday === "Sat" && isAfterClose)) {
+    callDayLabel = "Monday";
+  } else if (!isSunday && isBeforeOpen) {
+    callDayLabel = "today";
+  }
 
   return {
     availableNow: false,
@@ -2122,11 +2126,11 @@ function getVetCallSchedule(now = new Date()) {
       value: `${callDayLabel}|${slot.id}`,
       display: `${callDayLabel} · ${slot.label}`,
     })),
-    callWhenShort: `pick a time ${dayTitle}`,
-    callWhenCard: `Available ${dayTitle} — choose a time below`,
+    callWhenShort: `pick a time ${callDayLabel}`,
+    callWhenCard: `Available ${callDayLabel} — choose a time below`,
     offlineNoticeTitle: null,
     offlineNoticeCopy: null,
-    bookTitle: `Choose a call time ${dayTitle}`,
+    bookTitle: `Choose a call time ${callDayLabel}`,
   };
 }
 
@@ -2196,8 +2200,10 @@ function formatIstIsoFromYmdTime(ymd, timeId) {
 function resolveVetCallSlotDateTime(dayLabel, timeId, now = new Date()) {
   const ist = getIstDateParts(now);
   let daysAhead = 1;
-  if (dayLabel === "Monday") {
-    // Sat after-hours → Monday (+2). Sunday uses "tomorrow", not "Monday".
+  if (dayLabel === "today") {
+    daysAhead = 0;
+  } else if (dayLabel === "Monday") {
+    // Sat after-hours → Monday (+2). Sunday uses "tomorrow" (+1 → Mon).
     daysAhead = ist.weekday === "Sat" ? 2 : 1;
   } else if (dayLabel === "tomorrow") {
     daysAhead = 1;
