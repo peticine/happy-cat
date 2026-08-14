@@ -2103,7 +2103,6 @@ function getVetCallSchedule(now = new Date()) {
       offlineNoticeTitle: null,
       offlineNoticeCopy: null,
       bookTitle: null,
-      bookLead: null,
     };
   }
 
@@ -4618,9 +4617,7 @@ function renderYoungConnectStep() {
   const title = schedule.availableNow
     ? "Book your vet consult"
     : schedule.bookTitle || `Choose a call time ${schedule.callDayLabel}`;
-  const lead = schedule.availableNow
-    ? connectLead
-    : schedule.bookLead || connectLead;
+  const lead = schedule.availableNow ? connectLead : "";
 
   assflowMain.innerHTML = `
     <div class="flow-step young-connect-step">
@@ -4636,7 +4633,7 @@ function renderYoungConnectStep() {
           : ""
       }
       <h1 class="flow-title" id="assflow-title">${escapeHtml(title)}</h1>
-      <p class="flow-lead">${escapeHtml(lead)}</p>
+      ${lead ? `<p class="flow-lead">${escapeHtml(lead)}</p>` : ""}
 
       ${renderYoungCallVetCard(specialist, {
         whenText: schedule.callWhenCard,
