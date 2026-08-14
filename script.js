@@ -4831,9 +4831,7 @@ function renderYoungCallPlanStep() {
 
         <div class="young-pay-success" role="status">
           <p class="young-pay-success-title">Vet consult confirmed</p>
-          <p class="young-pay-success-copy">Paid ${escapeHtml(
-            VET_CALL_PRODUCT.priceLabel
-          )} · ${escapeHtml(schedule.callWhenShort)}</p>
+          <p class="young-pay-success-copy">Paid ${formatVetCallPriceHtml()} · ${escapeHtml(schedule.callWhenShort)}</p>
         </div>
 
         ${renderYoungCallVetCard(specialist, {
