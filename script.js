@@ -1826,11 +1826,24 @@ const FELICA_PREVENTION_PROGRAM = {
 const VET_CALL_PRODUCT = {
   id: "vet_call",
   name: "Vet consult call",
-  priceLabel: "₹299",
-  amountPaise: 29900,
+  priceLabel: "₹49",
+  wasPriceLabel: "₹299",
+  amountPaise: 4900,
   currency: "INR",
-  ctaLabel: "Pay ₹299 & book call",
+  ctaLabel: "Pay ₹49 & book call",
 };
+
+function formatVetCallPricePlain() {
+  return `${VET_CALL_PRODUCT.wasPriceLabel} → ${VET_CALL_PRODUCT.priceLabel}`;
+}
+
+function formatVetCallPriceHtml() {
+  return `<span class="vet-call-price"><s class="vet-call-price-was">${escapeHtml(
+    VET_CALL_PRODUCT.wasPriceLabel
+  )}</s> <span class="vet-call-price-now">${escapeHtml(
+    VET_CALL_PRODUCT.priceLabel
+  )}</span></span>`;
+}
 
 const FELICA_WHATSAPP_CONTACT_URL = "https://wa.me/918047285635";
 
