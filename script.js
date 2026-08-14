@@ -1028,7 +1028,10 @@ function buildYoungPmsPayload(phoneNational) {
       phone_national: phone,
       country_code: "91",
       preferred_method: "call",
-      callback_window: slot?.scheduledAt || slot?.display || "15_30_min",
+      // Digi Clinic maps scheduledFor from:
+      // contact.scheduled_at → scheduled_slot.scheduled_at → payment.scheduled_at → ISO callback_window
+      // null / "15_30_min" / "ASAP" → scheduledFor = now (createdAt stays intake time)
+      callback_window: slot?.scheduledAt || "ASAP",
       scheduled_at: slot?.scheduledAt || null,
       scheduled_slot: slot
         ? {
