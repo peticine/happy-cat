@@ -65,13 +65,13 @@ const HERO_VARIANTS = {
   litter: {
     headlineHook: "Is your cat peeing outside the litter box?",
     headline: "This is a sign of discomfort.",
-    lead: "Answer one quick question — then book a ₹49 specialist consult (was ₹299) (usually within 15–30 minutes).",
+    lead: "Answer one quick question — then book a ₹49 specialist consult (was ₹299; usually within 15–30 minutes).",
     image: "./images/hero-litter.webp?v=hc140",
   },
   urination: {
     headlineHook: "Is your cat peeing outside the litter box?",
     headline: "This is a sign of discomfort.",
-    lead: "Answer one quick question — then book a ₹49 specialist consult (was ₹299) (usually within 15–30 minutes).",
+    lead: "Answer one quick question — then book a ₹49 specialist consult (was ₹299; usually within 15–30 minutes).",
     image: "./images/hero-litter.webp?v=hc140",
   },
   quiet: {
