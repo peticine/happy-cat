@@ -8652,21 +8652,40 @@ body[data-age-theme="geriatric"] .hero-clinic {
 
 .young-slot-options {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
+  max-height: min(42vh, 320px);
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
+@media (max-width: 420px) {
+  .young-slot-options {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 .young-slot-option {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 2px;
   margin: 0;
-  padding: 12px 10px;
+  padding: 10px 8px;
   border-radius: 12px;
   border: 1px solid var(--line);
   background: #fff;
   cursor: pointer;
   transition: border-color 160ms ease, background 160ms ease;
+  min-inline-size: 0;
+}
+
+.young-slot-option--asap {
+  grid-column: 1 / -1;
+  padding: 12px 10px;
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--line));
+  background: color-mix(in srgb, var(--accent-soft) 40%, #fff);
 }
 
 .young-slot-option:has(input:checked),
@@ -8685,6 +8704,13 @@ body[data-age-theme="geriatric"] .hero-clinic {
   font-size: 0.875rem;
   font-weight: 650;
   color: var(--ink);
+  text-align: center;
+}
+
+.young-slot-option-sub {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--ink-soft);
   text-align: center;
 }
 
