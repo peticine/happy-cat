@@ -2102,15 +2102,14 @@ function getVetCallSchedule(now = new Date()) {
       callWhenCard: "You'll speak with her on this call · usually within 15–30 minutes",
       offlineNoticeTitle: null,
       offlineNoticeCopy: null,
+      bookTitle: null,
+      bookLead: null,
     };
   }
 
   // Sunday → tomorrow (Mon); Sat after 7pm → Monday; else after 7pm → tomorrow
   const callDayLabel = !isSunday && weekday === "Sat" ? "Monday" : "tomorrow";
-  const reason =
-    isSunday
-      ? "Our vet isn’t available on Sundays."
-      : "Our vet isn’t available after 7pm.";
+  const dayTitle = callDayLabel === "Monday" ? "Monday" : "tomorrow";
 
   return {
     availableNow: false,
@@ -2121,10 +2120,12 @@ function getVetCallSchedule(now = new Date()) {
       value: `${callDayLabel}|${slot.id}`,
       display: `${callDayLabel} · ${slot.label}`,
     })),
-    callWhenShort: `choose a time ${callDayLabel}`,
-    callWhenCard: `Not available right now · pick a time ${callDayLabel}`,
-    offlineNoticeTitle: "Vet not available right now",
-    offlineNoticeCopy: `${reason} Pick a call time ${callDayLabel} — she’ll call you then.`,
+    callWhenShort: `pick a time ${dayTitle}`,
+    callWhenCard: `Available ${dayTitle} — choose a time below`,
+    offlineNoticeTitle: null,
+    offlineNoticeCopy: null,
+    bookTitle: `Choose a call time ${dayTitle}`,
+    bookLead: `Evening and Sunday consults are by appointment. Pick a slot — ${dayTitle === "Monday" ? "Monday" : "tomorrow"} she’ll call you then.`,
   };
 }
 
@@ -2149,9 +2150,8 @@ function renderVetCallSlotPicker(schedule, selectedValue = "") {
 
   return `
     <fieldset class="young-slot-picker">
-      <legend class="young-slot-picker-legend">Choose a call time · ${escapeHtml(
-        schedule.callDayLabel
-      )}</legend>
+      <legend class="young-slot-picker-legend">When should she call?</legend>
+      <p class="young-slot-picker-sub">${escapeHtml(schedule.callDayLabel)} · IST</p>
       <div class="young-slot-options" role="radiogroup" aria-label="Call time slots">
         ${options}
       </div>
@@ -4616,6 +4616,12 @@ function renderYoungConnectStep() {
     ? `${specialist.shortName} usually calls within 15–30 minutes`
     : `${specialist.shortName} will call at the time you book`;
   const timingHint = selectedSlot?.display || schedule.callWhenShort;
+  const title = schedule.availableNow
+    ? "Book your vet consult"
+    : schedule.bookTitle || `Choose a call time ${schedule.callDayLabel}`;
+  const lead = schedule.availableNow
+    ? connectLead
+    : schedule.bookLead || connectLead;
 
   assflowMain.innerHTML = `
     <div class="flow-step young-connect-step">
@@ -4630,16 +4636,8 @@ function renderYoungConnectStep() {
         </div>`
           : ""
       }
-      ${
-        !schedule.availableNow
-          ? `<div class="young-vet-offline" role="status">
-          <p class="young-vet-offline-title">${escapeHtml(schedule.offlineNoticeTitle)}</p>
-          <p class="young-vet-offline-copy">${escapeHtml(schedule.offlineNoticeCopy)}</p>
-        </div>`
-          : ""
-      }
-      <h1 class="flow-title" id="assflow-title">Book your vet consult</h1>
-      <p class="flow-lead">${escapeHtml(connectLead)}</p>
+      <h1 class="flow-title" id="assflow-title">${escapeHtml(title)}</h1>
+      <p class="flow-lead">${escapeHtml(lead)}</p>
 
       ${renderYoungCallVetCard(specialist, {
         whenText: schedule.callWhenCard,
@@ -4647,6 +4645,8 @@ function renderYoungConnectStep() {
       })}
 
       <form class="young-connect-form" id="young-connect-form" novalidate>
+        ${renderVetCallSlotPicker(schedule, selectedSlot?.value || "")}
+
         <label class="flow-age-label" for="young-cat-name">Cat's name <span class="field-optional">(optional)</span></label>
         <input
           class="flow-age-input young-cat-name-input"
@@ -4672,14 +4672,12 @@ function renderYoungConnectStep() {
           />
         </div>
 
-        ${renderVetCallSlotPicker(schedule, selectedSlot?.value || "")}
-
         <p class="young-connect-next">${formatVetCallPriceHtml()} · UPI · private · ${escapeHtml(
           timingHint
         )}</p>
         <p class="flow-error" id="young-connect-error" hidden>Enter a valid 10-digit mobile number.</p>
         <button type="submit" class="btn btn-block btn-get-started">${escapeHtml(
-          VET_CALL_PRODUCT.ctaLabel
+          schedule.availableNow ? VET_CALL_PRODUCT.ctaLabel : "Pay ₹49 & reserve slot"
         )}</button>
       </form>
     </div>

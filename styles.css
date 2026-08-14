@@ -8625,18 +8625,29 @@ body[data-age-theme="geriatric"] .hero-clinic {
 }
 
 .young-slot-picker {
-  margin: 4px 0 16px;
-  padding: 0;
-  border: 0;
+  margin: 0 0 20px;
+  padding: 14px;
+  border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--line));
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--accent-soft) 45%, #fff);
   min-inline-size: 0;
 }
 
 .young-slot-picker-legend {
-  margin: 0 0 10px;
+  margin: 0;
   padding: 0;
-  font-size: 0.8125rem;
+  font-size: 0.9375rem;
   font-weight: 700;
   color: var(--ink);
+}
+
+.young-slot-picker-sub {
+  margin: 4px 0 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent);
 }
 
 .young-slot-options {
