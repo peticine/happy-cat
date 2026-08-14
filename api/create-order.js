@@ -73,6 +73,7 @@ export default async function handler(req, res) {
   const issueId = String(body.issueId || "").slice(0, 40);
   const callbackSlot = String(body.callbackSlot || "").slice(0, 60);
   const callbackSlotId = String(body.callbackSlotId || "").slice(0, 40);
+  const scheduledAt = String(body.scheduledAt || "").slice(0, 40);
   const receiptBase = sessionId || `vet_${Date.now()}`;
   const receipt = receiptBase.replace(/[^a-zA-Z0-9_]/g, "_").slice(0, 40);
 
@@ -97,6 +98,7 @@ export default async function handler(req, res) {
           issue_id: issueId,
           callback_slot: callbackSlot,
           callback_slot_id: callbackSlotId,
+          scheduled_at: scheduledAt,
         },
       }),
     });

@@ -1028,13 +1028,15 @@ function buildYoungPmsPayload(phoneNational) {
       phone_national: phone,
       country_code: "91",
       preferred_method: "call",
-      callback_window: slot?.display || "15_30_min",
+      callback_window: slot?.scheduledAt || slot?.display || "15_30_min",
+      scheduled_at: slot?.scheduledAt || null,
       scheduled_slot: slot
         ? {
             day_label: slot.dayLabel,
             time_id: slot.timeId,
             time_label: slot.label,
             display: slot.display,
+            scheduled_at: slot.scheduledAt,
           }
         : null,
     },
@@ -1062,6 +1064,7 @@ function buildYoungPmsPayload(phoneNational) {
           order_id: quizState.vetCallPayment.orderId,
           payment_id: quizState.vetCallPayment.paymentId,
           status: "paid",
+          scheduled_at: slot?.scheduledAt || null,
         }
       : null,
     flags: {
@@ -2132,6 +2135,77 @@ function formatVetCallSlotLabel(slot) {
   return `${slot.dayLabel} at ${slot.label}`;
 }
 
+function getIstDateParts(date = new Date()) {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Kolkata",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    weekday: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hourCycle: "h23",
+  }).formatToParts(date);
+  const get = (type) => parts.find((p) => p.type === type)?.value || "";
+  return {
+    year: get("year"),
+    month: get("month"),
+    day: get("day"),
+    weekday: get("weekday"),
+    hour: get("hour"),
+    minute: get("minute"),
+    second: get("second"),
+    ymd: `${get("year")}-${get("month")}-${get("day")}`,
+  };
+}
+
+function addDaysToYmd(ymd, days) {
+  const [y, m, d] = ymd.split("-").map(Number);
+  const utc = new Date(Date.UTC(y, m - 1, d));
+  utc.setUTCDate(utc.getUTCDate() + days);
+  return utc.toISOString().slice(0, 10);
+}
+
+function formatIstIsoFromYmdTime(ymd, timeId) {
+  const [year, month, day] = ymd.split("-").map(Number);
+  const [hour, minute] = String(timeId || "10:00")
+    .split(":")
+    .map((n) => Number.parseInt(n, 10));
+  const utcMs =
+    Date.UTC(year, month - 1, day, hour || 0, minute || 0, 0) -
+    (5 * 60 + 30) * 60 * 1000;
+  const date = new Date(utcMs);
+  const ist = getIstDateParts(date);
+  return {
+    date,
+    scheduledAt: `${ist.ymd}T${ist.hour}:${ist.minute}:${ist.second}+05:30`,
+    display: new Intl.DateTimeFormat("en-IN", {
+      timeZone: "Asia/Kolkata",
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    }).format(date),
+  };
+}
+
+/** Resolve absolute IST datetime for "tomorrow" / "Monday" + HH:mm slot. */
+function resolveVetCallSlotDateTime(dayLabel, timeId, now = new Date()) {
+  const ist = getIstDateParts(now);
+  let daysAhead = 1;
+  if (dayLabel === "Monday") {
+    // Sat after-hours → Monday (+2). Sunday uses "tomorrow", not "Monday".
+    daysAhead = ist.weekday === "Sat" ? 2 : 1;
+  } else if (dayLabel === "tomorrow") {
+    daysAhead = 1;
+  }
+  const targetYmd = addDaysToYmd(ist.ymd, daysAhead);
+  return formatIstIsoFromYmdTime(targetYmd, timeId);
+}
+
 function renderVetCallSlotPicker(schedule, selectedValue = "") {
   if (schedule.availableNow || !schedule.slots?.length) return "";
   const options = schedule.slots
@@ -2157,17 +2231,19 @@ function renderVetCallSlotPicker(schedule, selectedValue = "") {
   `;
 }
 
-function resolveSelectedVetCallSlot(schedule, rawValue) {
+function resolveSelectedVetCallSlot(schedule, rawValue, now = new Date()) {
   if (schedule.availableNow) return null;
   const value = String(rawValue || "");
   const match = schedule.slots.find((slot) => slot.value === value);
   if (!match) return null;
+  const absolute = resolveVetCallSlotDateTime(match.dayLabel, match.id, now);
   return {
     dayLabel: match.dayLabel,
     timeId: match.id,
     label: match.label,
     value: match.value,
-    display: formatVetCallSlotLabel(match),
+    display: absolute.display,
+    scheduledAt: absolute.scheduledAt,
   };
 }
 
@@ -4309,6 +4385,7 @@ async function startVetCallPayment({ button = null, errorEl = null } = {}) {
         issueId,
         callbackSlot: quizState.vetCallSlot?.display || "",
         callbackSlotId: quizState.vetCallSlot?.value || "",
+        scheduledAt: quizState.vetCallSlot?.scheduledAt || "",
       }),
     });
     const order = await orderRes.json().catch(() => ({}));
@@ -4337,6 +4414,7 @@ async function startVetCallPayment({ button = null, errorEl = null } = {}) {
           issue_id: issueId,
           callback_slot: quizState.vetCallSlot?.display || "",
           callback_slot_id: quizState.vetCallSlot?.value || "",
+          scheduled_at: quizState.vetCallSlot?.scheduledAt || "",
         },
         // UPI only: hide other default methods instead of a custom UPI block
         // (custom blocks + show_default_blocks:false can empty the checkout).
@@ -4931,6 +5009,7 @@ function renderYoungCallPlanStep() {
     vet_call_paid: true,
     vet_call_available_now: schedule.availableNow,
     vet_call_slot: slot?.display || null,
+    vet_call_scheduled_at: slot?.scheduledAt || null,
   });
 
   assflowMain.innerHTML = `
