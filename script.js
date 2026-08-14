@@ -1031,17 +1031,20 @@ function buildYoungPmsPayload(phoneNational) {
       // Digi Clinic maps scheduledFor from:
       // contact.scheduled_at → scheduled_slot.scheduled_at → payment.scheduled_at → ISO callback_window
       // null / "15_30_min" / "ASAP" → scheduledFor = now (createdAt stays intake time)
+      // IMPORTANT: never send scheduled_slot: null — Digi Zod rejects it as contact=null.
       callback_window: slot?.scheduledAt || "ASAP",
-      scheduled_at: slot?.scheduledAt || null,
-      scheduled_slot: slot
+      ...(slot?.scheduledAt ? { scheduled_at: slot.scheduledAt } : {}),
+      ...(slot
         ? {
-            day_label: slot.dayLabel,
-            time_id: slot.timeId,
-            time_label: slot.label,
-            display: slot.display,
-            scheduled_at: slot.scheduledAt,
+            scheduled_slot: {
+              day_label: slot.dayLabel,
+              time_id: slot.timeId,
+              time_label: slot.label,
+              display: slot.display,
+              scheduled_at: slot.scheduledAt,
+            },
           }
-        : null,
+        : {}),
     },
     pet: {
       name,
@@ -1067,7 +1070,7 @@ function buildYoungPmsPayload(phoneNational) {
           order_id: quizState.vetCallPayment.orderId,
           payment_id: quizState.vetCallPayment.paymentId,
           status: "paid",
-          scheduled_at: slot?.scheduledAt || null,
+          ...(slot?.scheduledAt ? { scheduled_at: slot.scheduledAt } : {}),
         }
       : null,
     flags: {
