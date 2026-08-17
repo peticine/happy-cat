@@ -2077,9 +2077,8 @@ function getYoungCallSpecialist() {
 
 /**
  * Vet call hours in IST: Mon–Sat, 10:00–18:59.
- * Always show a slot picker (including during open hours).
- * Open hours → "Now" (ASAP) + remaining 30‑min slots today.
- * Outside hours → next open day’s 30‑min slots (no Now).
+ * Open hours → ASAP only (no slot picker).
+ * Outside hours → next open day’s 30‑min slots.
  */
 const VET_CALL_OPEN_HOUR = 10;
 const VET_CALL_CLOSE_HOUR = 19; // exclusive end
@@ -2118,9 +2117,22 @@ function getVetCallSchedule(now = new Date()) {
   const isAfterClose = Number.isFinite(hour) && hour >= VET_CALL_CLOSE_HOUR;
   const availableNow = !isSunday && !isBeforeOpen && !isAfterClose;
 
+  if (availableNow) {
+    return {
+      availableNow: true,
+      callDayLabel: null,
+      slots: [],
+      callWhenShort: "usually within 15–30 minutes",
+      callWhenCard: "You'll speak with her on this call · usually within 15–30 minutes",
+      offlineNoticeTitle: null,
+      offlineNoticeCopy: null,
+      bookTitle: null,
+    };
+  }
+
   let callDayLabel = "tomorrow";
   let daysAhead = 1;
-  if (availableNow || (!isSunday && isBeforeOpen)) {
+  if (!isSunday && isBeforeOpen) {
     callDayLabel = "today";
     daysAhead = 0;
   } else if (isSunday || (weekday === "Sat" && isAfterClose)) {
@@ -2129,7 +2141,7 @@ function getVetCallSchedule(now = new Date()) {
   }
 
   const targetYmd = addDaysToYmd(ist.ymd, daysAhead);
-  const timeSlots = buildVetCallHalfHourSlots()
+  const slots = buildVetCallHalfHourSlots()
     .filter((slot) => (daysAhead === 0 ? !isVetCallSlotInPast(targetYmd, slot.id, now) : true))
     .map((slot) => ({
       ...slot,
@@ -2139,34 +2151,15 @@ function getVetCallSchedule(now = new Date()) {
       asap: false,
     }));
 
-  const slots = [];
-  if (availableNow) {
-    slots.push({
-      id: "now",
-      label: "Now",
-      dayLabel: "today",
-      value: "now",
-      display: "usually within 15–30 minutes",
-      asap: true,
-    });
-  }
-  slots.push(...timeSlots);
-
   return {
-    availableNow,
+    availableNow: false,
     callDayLabel,
     slots,
-    callWhenShort: availableNow
-      ? "pick Now or a time today"
-      : `pick a time ${callDayLabel}`,
-    callWhenCard: availableNow
-      ? "Pick Now or a time today — she'll call then"
-      : `Available ${callDayLabel} — choose a time below`,
+    callWhenShort: `pick a time ${callDayLabel}`,
+    callWhenCard: `Available ${callDayLabel} — choose a time below`,
     offlineNoticeTitle: null,
     offlineNoticeCopy: null,
-    bookTitle: availableNow
-      ? "Choose a call time"
-      : `Choose a call time ${callDayLabel}`,
+    bookTitle: `Choose a call time ${callDayLabel}`,
   };
 }
 
@@ -2249,32 +2242,23 @@ function resolveVetCallSlotDateTime(dayLabel, timeId, now = new Date()) {
 }
 
 function renderVetCallSlotPicker(schedule, selectedValue = "") {
-  if (!schedule.slots?.length) return "";
+  if (schedule.availableNow || !schedule.slots?.length) return "";
   const options = schedule.slots
     .map((slot) => {
       const checked = selectedValue === slot.value ? "checked" : "";
-      const asapClass = slot.asap ? " young-slot-option--asap" : "";
-      const sub = slot.asap
-        ? `<span class="young-slot-option-sub">usually 15–30 min</span>`
-        : "";
       return `
-        <label class="young-slot-option${asapClass}">
+        <label class="young-slot-option">
           <input type="radio" name="vet_call_slot" value="${escapeHtml(slot.value)}" ${checked} required />
           <span class="young-slot-option-time">${escapeHtml(slot.label)}</span>
-          ${sub}
         </label>
       `;
     })
     .join("");
 
-  const daySub = schedule.availableNow
-    ? "Today · IST"
-    : `${schedule.callDayLabel} · IST`;
-
   return `
     <fieldset class="young-slot-picker">
       <legend class="young-slot-picker-legend">When should she call?</legend>
-      <p class="young-slot-picker-sub">${escapeHtml(daySub)}</p>
+      <p class="young-slot-picker-sub">${escapeHtml(schedule.callDayLabel)} · IST</p>
       <div class="young-slot-options" role="radiogroup" aria-label="Call time slots">
         ${options}
       </div>
@@ -2283,20 +2267,10 @@ function renderVetCallSlotPicker(schedule, selectedValue = "") {
 }
 
 function resolveSelectedVetCallSlot(schedule, rawValue, now = new Date()) {
+  if (schedule.availableNow) return null;
   const value = String(rawValue || "");
   const match = schedule.slots.find((slot) => slot.value === value);
   if (!match) return null;
-  if (match.asap) {
-    return {
-      asap: true,
-      dayLabel: "today",
-      timeId: "now",
-      label: "Now",
-      value: "now",
-      display: "usually within 15–30 minutes",
-      scheduledAt: null,
-    };
-  }
   const absolute = resolveVetCallSlotDateTime(match.dayLabel, match.id, now);
   return {
     asap: false,
@@ -4750,18 +4724,19 @@ function renderYoungConnectStep() {
   const specialist = getYoungCallSpecialist();
   const schedule = getVetCallSchedule();
   const selectedSlot = quizState.vetCallSlot;
-  const urgentTiming = selectedSlot?.asap
+  const urgentTiming = schedule.availableNow
     ? `${specialist.shortName} usually calls within 15–30 minutes`
     : selectedSlot?.display
       ? `${specialist.shortName} will call ${selectedSlot.display}`
       : `${specialist.shortName} will call at the time you book`;
   const timingHint = selectedSlot?.display || schedule.callWhenShort;
-  const title = schedule.bookTitle || "Choose a call time";
-  const lead = connectLead;
-  const ctaLabel =
-    selectedSlot?.asap || (!selectedSlot && schedule.availableNow)
-      ? VET_CALL_PRODUCT.ctaLabel
-      : "Pay ₹49 & reserve slot";
+  const title = schedule.availableNow
+    ? "Book your vet consult"
+    : schedule.bookTitle || `Choose a call time ${schedule.callDayLabel}`;
+  const lead = schedule.availableNow ? connectLead : "";
+  const ctaLabel = schedule.availableNow
+    ? VET_CALL_PRODUCT.ctaLabel
+    : "Pay ₹49 & reserve slot";
 
   assflowMain.innerHTML = `
     <div class="flow-step young-connect-step">
@@ -4826,7 +4801,6 @@ function renderYoungConnectStep() {
 
   const form = assflowMain.querySelector("#young-connect-form");
   const nextLine = form?.querySelector(".young-connect-next");
-  const submitBtnEl = form?.querySelector('button[type="submit"]');
   form?.querySelectorAll('input[name="vet_call_slot"]').forEach((input) => {
     input.addEventListener("change", () => {
       const slot = resolveSelectedVetCallSlot(schedule, input.value);
@@ -4834,11 +4808,6 @@ function renderYoungConnectStep() {
         nextLine.innerHTML = `${formatVetCallPriceHtml()} · UPI · private · ${escapeHtml(
           slot.display
         )}`;
-      }
-      if (slot && submitBtnEl) {
-        submitBtnEl.textContent = slot.asap
-          ? VET_CALL_PRODUCT.ctaLabel
-          : "Pay ₹49 & reserve slot";
       }
     });
   });
@@ -4853,12 +4822,10 @@ function renderYoungConnectStep() {
     const slotInput = form.querySelector('input[name="vet_call_slot"]:checked');
     const selected = resolveSelectedVetCallSlot(schedule, slotInput?.value);
 
-    if (!selected) {
+    if (!schedule.availableNow && !selected) {
       if (error) {
         error.hidden = false;
-        error.textContent = schedule.availableNow
-          ? "Choose Now or a call time."
-          : `Choose a call time ${schedule.callDayLabel}.`;
+        error.textContent = `Choose a call time ${schedule.callDayLabel}.`;
       }
       form.querySelector('input[name="vet_call_slot"]')?.focus();
       return;
@@ -4879,7 +4846,7 @@ function renderYoungConnectStep() {
     if (phoneInput) phoneInput.value = number;
     quizState.whatsappNumber = number;
     quizState.contactMethod = "call";
-    quizState.vetCallSlot = selected;
+    quizState.vetCallSlot = schedule.availableNow ? null : selected;
     if (petName) {
       quizState.catName = petName;
       catName = petName;
@@ -5057,18 +5024,16 @@ function renderYoungCallPlanStep() {
     issue?.shortLabel ||
     YOUNG_SYMPTOMS.find((s) => s.id === issue?.id)?.shortLabel ||
     "your answers";
-  const whenShort = slot?.display
-    ? slot.display
-    : schedule.callWhenShort;
-  const whenCard = slot?.asap
-    ? "Usually calls within 15–30 minutes"
-    : slot?.display
-      ? `She'll call ${slot.display}`
+  const whenShort = slot?.display ? slot.display : schedule.callWhenShort;
+  const whenCard = slot?.display
+    ? `She'll call ${slot.display}`
+    : schedule.availableNow
+      ? "Usually calls within 15–30 minutes"
       : `She'll call ${schedule.callDayLabel} at your booked time`;
-  const leadWhen = slot?.asap
-    ? " shortly"
-    : slot?.display
-      ? ` at ${escapeHtml(slot.display)}`
+  const leadWhen = slot?.display
+    ? ` at ${escapeHtml(slot.display)}`
+    : schedule.availableNow
+      ? " shortly"
       : ` ${escapeHtml(schedule.callDayLabel)}`;
 
   track("young_plan_viewed", {
@@ -5078,7 +5043,6 @@ function renderYoungCallPlanStep() {
     phone_collected: !!phone,
     vet_call_paid: true,
     vet_call_available_now: schedule.availableNow,
-    vet_call_asap: !!slot?.asap,
     vet_call_slot: slot?.display || null,
     vet_call_scheduled_at: slot?.scheduledAt || null,
   });
