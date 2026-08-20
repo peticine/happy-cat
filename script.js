@@ -14,7 +14,7 @@ const CAT_NAME_KEY = "peticine-cat-name";
 const CAT_PROFILE_KEY = "peticine-cat-profile";
 const AGE_DONE_KEY = "peticine-age-done";
 const AGE_THEMES = ["young", "prime", "mature", "senior", "geriatric"];
-const PRIMARY_CTA_LABEL = "Start Health Check";
+const PRIMARY_CTA_LABEL = "Check symptoms · ₹49 call";
 
 // Meta ad headlines per concern (use ?concern= in landing URL):
 // water/drinking: "Cat drinking more water? Free 2-min check" | "Extra water bowls? See if it's worth a vet call"
@@ -2064,15 +2064,85 @@ function getWellnessSpecialist(planId) {
   return WELLNESS_SPECIALISTS[planId] || WELLNESS_SPECIALISTS.skin;
 }
 
-/** Young-cat call page always shows Dr. Ankita — partner assigns the real vet. */
+/** Face of the Felica call — partner clinic assigns the available feline vet. */
 function getYoungCallSpecialist() {
   return {
-    ...WELLNESS_SPECIALISTS.skin,
-    shortName: "Dr. Ankita",
-    fullName: "Dr. Ankita Kawale",
-    title: "Feline Specialist",
+    shortName: "a Felica vet",
+    fullName: "Felica feline specialists",
+    title: "Assigned from our partner clinic",
     image: "./images/dr-ankita-kawale.webp?v=hc140",
+    experience: "Feline-focused consults only",
+    catsTreated: "An available specialist calls you — not a bot",
   };
+}
+
+function buildYoungCallValueSummary() {
+  const name = getCatDisplayName();
+  const possessive = name === "your cat" ? "your cat's" : `${name}'s`;
+  const issue = getPrimaryYoungSymptom() || YOUNG_SYMPTOMS.find((s) => s.id === "prevention");
+  const issueId = issue?.id || "prevention";
+  const shortLabel =
+    issue?.shortLabel || YOUNG_SYMPTOMS.find((s) => s.id === issueId)?.shortLabel || "your answers";
+  const detail = formatYoungDetailSummary(issueId);
+  const urgency = resolveYoungUrgency();
+  const ageLabel =
+    quizState.age != null ? formatCatAgeLabel(quizState.age) : null;
+
+  const bullets = [];
+  if (detail) {
+    bullets.push(`You shared: ${detail}`);
+  } else {
+    bullets.push(`Main concern: ${shortLabel}`);
+  }
+  bullets.push(
+    "On the call, a feline vet explains what this pattern often means and what to do next"
+  );
+  if (urgency === "urgent") {
+    bullets.push("They help you decide whether to head to a clinic now");
+  } else if (issueId === "prevention") {
+    bullets.push("Prevention tips tailored to what you want help with");
+  } else {
+    bullets.push("Clear home-care guidance and when an in-person visit is needed");
+  }
+
+  return {
+    eyebrow: ageLabel
+      ? `${name === "your cat" ? "Your cat" : name} · ${ageLabel}`
+      : name === "your cat"
+        ? "Based on your answers"
+        : `${name}'s check`,
+    title: `What a specialist will cover for ${possessive} ${String(shortLabel).toLowerCase()}`,
+    bullets,
+  };
+}
+
+function renderYoungCallValueSummary(summary) {
+  if (!summary?.bullets?.length) return "";
+  return `
+    <section class="young-call-value" aria-label="What your consult covers">
+      <p class="young-call-value-eyebrow">${escapeHtml(summary.eyebrow)}</p>
+      <h2 class="young-call-value-title">${escapeHtml(summary.title)}</h2>
+      <ul class="young-call-value-list">
+        ${summary.bullets
+          .map((line) => `<li>${escapeHtml(line)}</li>`)
+          .join("")}
+      </ul>
+    </section>
+  `;
+}
+
+function renderYoungCallGuarantee(schedule) {
+  const whenPromise = schedule.availableNow
+    ? "If we don’t call within 30 minutes, full refund."
+    : "If we miss your booked slot, full refund.";
+  return `
+    <div class="young-call-guarantee">
+      <p class="young-call-guarantee-refund">${escapeHtml(whenPromise)}</p>
+      <p class="young-call-guarantee-callback">We'll call from <strong>${escapeHtml(
+        FELICA_CALLBACK_NUMBER
+      )}</strong> — save it so you don’t miss us.</p>
+    </div>
+  `;
 }
 
 /**
@@ -2123,7 +2193,7 @@ function getVetCallSchedule(now = new Date()) {
       callDayLabel: null,
       slots: [],
       callWhenShort: "usually within 15–30 minutes",
-      callWhenCard: "You'll speak with her on this call · usually within 15–30 minutes",
+      callWhenCard: "A Felica feline vet will call · usually within 15–30 minutes",
       offlineNoticeTitle: null,
       offlineNoticeCopy: null,
       bookTitle: null,
@@ -2257,7 +2327,7 @@ function renderVetCallSlotPicker(schedule, selectedValue = "") {
 
   return `
     <fieldset class="young-slot-picker">
-      <legend class="young-slot-picker-legend">When should she call?</legend>
+      <legend class="young-slot-picker-legend">When should they call?</legend>
       <p class="young-slot-picker-sub">${escapeHtml(schedule.callDayLabel)} · IST</p>
       <div class="young-slot-options" role="radiogroup" aria-label="Call time slots">
         ${options}
@@ -2283,7 +2353,7 @@ function resolveSelectedVetCallSlot(schedule, rawValue, now = new Date()) {
   };
 }
 
-/** Shared doctor trust card — used before pay and on the booked confirmation. */
+/** Shared specialist trust card — used before pay and on the booked confirmation. */
 function renderYoungCallVetCard(specialist, { whenText, showCredentials = false } = {}) {
   const when = whenText || "Usually calls within 15–30 minutes";
   const credentials =
@@ -2303,11 +2373,11 @@ function renderYoungCallVetCard(specialist, { whenText, showCredentials = false 
       : "";
 
   return `
-    <section class="young-call-vet" aria-label="Your specialist">
+    <section class="young-call-vet" aria-label="Your feline specialist">
       <img
         class="young-call-vet-photo"
         src="${specialist.image}"
-        alt="${escapeHtml(specialist.fullName)}"
+        alt=""
         width="72"
         height="72"
         loading="lazy"
@@ -4703,35 +4773,37 @@ function renderYoungConnectStep() {
   const name = getCatDisplayName();
   const possessive = name === "your cat" ? "your cat's" : `${name}'s`;
   const connectLeads = {
-    vomiting: `We'll review ${possessive} vomiting pattern on a paid consult call.`,
-    appetite: `We'll review what you shared about ${possessive} eating on a paid consult call.`,
-    litter: `We'll review the litter changes you noted for ${name} on a paid consult call.`,
-    skin: `We'll review ${possessive} scratching or flea issue on a paid consult call.`,
-    coat: `We'll review what you noticed about ${possessive} fur on a paid consult call.`,
-    eyes: `We'll review ${possessive} teary eyes on a paid consult call.`,
-    behaviour: `We'll review the behaviour changes you described on a paid consult call.`,
-    hydration: `We'll review ${possessive} drinking and peeing changes on a paid consult call.`,
-    energy: `We'll review ${possessive} energy changes on a paid consult call.`,
-    dental: `We'll review the mouth trouble you described on a paid consult call.`,
-    mobility: `We'll review how ${possessive} movement has changed on a paid consult call.`,
-    prevention: `Book a paid consult — a feline specialist will call with ${possessive} prevention plan.`,
+    vomiting: `Based on what you shared about ${possessive} vomiting, a feline vet will walk you through next steps.`,
+    appetite: `Based on what you shared about ${possessive} eating, a feline vet will walk you through next steps.`,
+    litter: `Based on the litter changes you noted, a feline vet will walk you through next steps.`,
+    skin: `Based on ${possessive} scratching or flea signs, a feline vet will walk you through next steps.`,
+    coat: `Based on what you noticed about ${possessive} fur, a feline vet will walk you through next steps.`,
+    eyes: `Based on ${possessive} eye symptoms, a feline vet will walk you through next steps.`,
+    behaviour: `Based on the behaviour changes you described, a feline vet will walk you through next steps.`,
+    hydration: `Based on ${possessive} drinking and peeing changes, a feline vet will walk you through next steps.`,
+    energy: `Based on ${possessive} energy changes, a feline vet will walk you through next steps.`,
+    dental: `Based on the mouth trouble you described, a feline vet will walk you through next steps.`,
+    mobility: `Based on how ${possessive} movement has changed, a feline vet will walk you through next steps.`,
+    prevention: `A feline vet will call with a prevention plan tailored to what you want help with.`,
   };
   const issueId = getPrimaryYoungSymptom()?.id || "prevention";
   const connectLead = isPrevention
     ? connectLeads.prevention
-    : connectLeads[issueId] || "Book a paid consult — a specialist will call with next steps.";
+    : connectLeads[issueId] ||
+      "A feline vet will walk you through what your answers suggest and what to do next.";
   const isLikelyUrgent = !isPrevention && resolveYoungUrgency() === "urgent";
   const specialist = getYoungCallSpecialist();
   const schedule = getVetCallSchedule();
   const selectedSlot = quizState.vetCallSlot;
+  const valueSummary = buildYoungCallValueSummary();
   const urgentTiming = schedule.availableNow
-    ? `${specialist.shortName} usually calls within 15–30 minutes`
+    ? "usually within 15–30 minutes"
     : selectedSlot?.display
-      ? `${specialist.shortName} will call ${selectedSlot.display}`
-      : `${specialist.shortName} will call at the time you book`;
+      ? `at ${selectedSlot.display}`
+      : `at the time you book`;
   const timingHint = selectedSlot?.display || schedule.callWhenShort;
   const title = schedule.availableNow
-    ? "Book your vet consult"
+    ? "Book your ₹49 vet consult"
     : schedule.bookTitle || `Choose a call time ${schedule.callDayLabel}`;
   const lead = schedule.availableNow ? connectLead : "";
   const ctaLabel = schedule.availableNow
@@ -4745,14 +4817,16 @@ function renderYoungConnectStep() {
         isLikelyUrgent
           ? `<div class="young-urgent-inline" role="status">
           <p class="young-urgent-inline-title">This may need prompt care</p>
-          <p class="young-urgent-inline-copy">Book a ₹49 consult — ${escapeHtml(
+          <p class="young-urgent-inline-copy">If this looks urgent, head to a nearby clinic. You can also book a ₹49 call (${escapeHtml(
             urgentTiming
-          )} to help you decide next steps. If this looks urgent, also head to a nearby clinic.</p>
+          )}) for guidance while you go.</p>
         </div>`
           : ""
       }
       <h1 class="flow-title" id="assflow-title">${escapeHtml(title)}</h1>
       ${lead ? `<p class="flow-lead">${escapeHtml(lead)}</p>` : ""}
+
+      ${renderYoungCallValueSummary(valueSummary)}
 
       ${renderYoungCallVetCard(specialist, {
         whenText: schedule.callWhenCard,
@@ -4792,6 +4866,7 @@ function renderYoungConnectStep() {
         )}</p>
         <p class="flow-error" id="young-connect-error" hidden>Enter a valid 10-digit mobile number.</p>
         <button type="submit" class="btn btn-block btn-get-started">${escapeHtml(ctaLabel)}</button>
+        ${renderYoungCallGuarantee(schedule)}
       </form>
     </div>
   `;
@@ -5026,10 +5101,10 @@ function renderYoungCallPlanStep() {
     "your answers";
   const whenShort = slot?.display ? slot.display : schedule.callWhenShort;
   const whenCard = slot?.display
-    ? `She'll call ${slot.display}`
+    ? `They'll call ${slot.display}`
     : schedule.availableNow
       ? "Usually calls within 15–30 minutes"
-      : `She'll call ${schedule.callDayLabel} at your booked time`;
+      : `They'll call ${schedule.callDayLabel} at your booked time`;
   const leadWhen = slot?.display
     ? ` at ${escapeHtml(slot.display)}`
     : schedule.availableNow
@@ -5052,7 +5127,7 @@ function renderYoungCallPlanStep() {
       <div class="young-care-plan young-call-plan-card">
         <h1 class="young-call-plan-title" id="assflow-title">Consult booked</h1>
         <p class="young-call-plan-lead">
-          Thanks — ${escapeHtml(specialist.shortName)} will call about ${escapeHtml(
+          Thanks — a Felica feline vet will call about ${escapeHtml(
             possessive
           )} ${escapeHtml(String(issueLabel).toLowerCase())}${leadWhen}.
         </p>
@@ -5077,7 +5152,7 @@ function renderYoungCallPlanStep() {
         <section class="young-call-section" aria-labelledby="young-call-next-title">
           <h2 class="young-call-section-title" id="young-call-next-title">What happens next</h2>
           <ul class="young-call-list">
-            <li>${escapeHtml(specialist.shortName)} reviews what you shared about ${escapeHtml(name)}</li>
+            <li>Your specialist reviews what you shared about ${escapeHtml(name)}</li>
             <li>Explains what may be going on in plain language</li>
             <li>Tells you what to do next — at home, or with your local vet</li>
           </ul>
@@ -5125,7 +5200,7 @@ function renderYoungPlanStep() {
               .map((reason) => `<li>${escapeHtml(reason)}</li>`)
               .join("")}
           </ul>
-          <p class="young-urgent-note">If this looks urgent, please also head to a nearby clinic. Your paid consult call will still help you decide next steps.</p>
+          <p class="young-urgent-note">If this looks urgent, please also head to a nearby clinic. Your specialist call will still help you decide next steps.</p>
         </div>
 
         <div class="young-plan-section">
