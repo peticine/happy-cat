@@ -2072,7 +2072,6 @@ function getYoungCallSpecialist() {
     title: "Assigned from our partner clinic",
     image: "./images/dr-ankita-kawale.webp?v=hc140",
     experience: "Feline-focused consults only",
-    catsTreated: "An available specialist calls you — not a bot",
   };
 }
 
