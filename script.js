@@ -5200,7 +5200,7 @@ function renderYoungPlanStep() {
               .map((reason) => `<li>${escapeHtml(reason)}</li>`)
               .join("")}
           </ul>
-          <p class="young-urgent-note">If this looks urgent, please also head to a nearby clinic. Your paid consult call will still help you decide next steps.</p>
+          <p class="young-urgent-note">If this looks urgent, please also head to a nearby clinic. Your specialist call will still help you decide next steps.</p>
         </div>
 
         <div class="young-plan-section">
