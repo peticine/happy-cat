@@ -1009,9 +1009,13 @@ function buildYoungPmsPayload(phoneNational) {
       ? `Paid vet consult ${VET_CALL_PRODUCT.priceLabel}${
           slot?.display ? ` · ${slot.display}` : ""
         }${phone ? ` — call +91 ${phone}` : ""}`
-      : phone
-        ? `Prefer call within 15–30 min at +91 ${phone}`
-        : "Prefer call within 15–30 min",
+      : slot?.scheduledAt
+        ? `Reserved free slot ${slot.display} — collect ₹49 before call${
+            phone ? ` at +91 ${phone}` : ""
+          }`
+        : phone
+          ? `Prefer call within 15–30 min at +91 ${phone}`
+          : "Prefer call within 15–30 min",
   ];
 
   return {
@@ -1846,20 +1850,17 @@ const VET_CALL_PRODUCT = {
   id: "vet_call",
   name: "Vet consult call",
   priceLabel: "₹49",
-  wasPriceLabel: "₹299",
   amountPaise: 4900,
   currency: "INR",
   ctaLabel: "Pay ₹49 & book call",
 };
 
 function formatVetCallPricePlain() {
-  return `${VET_CALL_PRODUCT.wasPriceLabel} → ${VET_CALL_PRODUCT.priceLabel}`;
+  return VET_CALL_PRODUCT.priceLabel;
 }
 
 function formatVetCallPriceHtml() {
-  return `<span class="vet-call-price"><s class="vet-call-price-was">${escapeHtml(
-    VET_CALL_PRODUCT.wasPriceLabel
-  )}</s> <span class="vet-call-price-now">${escapeHtml(
+  return `<span class="vet-call-price"><span class="vet-call-price-now">${escapeHtml(
     VET_CALL_PRODUCT.priceLabel
   )}</span></span>`;
 }
@@ -2064,14 +2065,15 @@ function getWellnessSpecialist(planId) {
   return WELLNESS_SPECIALISTS[planId] || WELLNESS_SPECIALISTS.skin;
 }
 
-/** Face of the Felica call — partner clinic assigns the available feline vet. */
+/** Young-cat call page — Dr. Ankita is currently the only active consult vet. */
 function getYoungCallSpecialist() {
   return {
-    shortName: "a Felica vet",
-    fullName: "Felica feline specialists",
-    title: "Assigned from our partner clinic",
+    shortName: "Dr. Ankita",
+    fullName: "Dr. Ankita Kawale",
+    title: "Feline Specialist",
     image: "./images/dr-ankita-kawale.webp?v=hc140",
-    experience: "Feline-focused consults only",
+    experience: "8 years in feline medicine",
+    catsTreated: "3,000+ cats treated",
   };
 }
 
@@ -2094,7 +2096,7 @@ function buildYoungCallValueSummary() {
     bullets.push(`Main concern: ${shortLabel}`);
   }
   bullets.push(
-    "On the call, a feline vet explains what this pattern often means and what to do next"
+    "On the call, Dr. Ankita explains what this pattern often means and what to do next"
   );
   if (urgency === "urgent") {
     bullets.push("They help you decide whether to head to a clinic now");
@@ -2131,15 +2133,22 @@ function renderYoungCallValueSummary(summary) {
 }
 
 function renderYoungCallGuarantee(schedule) {
-  const whenPromise = schedule.availableNow
-    ? "If we don’t call within 30 minutes, full refund."
-    : "If we miss your booked slot, full refund.";
+  if (schedule.availableNow) {
+    return `
+    <div class="young-call-guarantee">
+      <p class="young-call-guarantee-refund">If Dr. Ankita doesn’t call within 30 minutes, full refund.</p>
+      <p class="young-call-guarantee-callback">She'll call from <strong>${escapeHtml(
+        FELICA_CALLBACK_NUMBER
+      )}</strong> — save it so you don’t miss her.</p>
+    </div>
+  `;
+  }
   return `
     <div class="young-call-guarantee">
-      <p class="young-call-guarantee-refund">${escapeHtml(whenPromise)}</p>
-      <p class="young-call-guarantee-callback">We'll call from <strong>${escapeHtml(
+      <p class="young-call-guarantee-refund">Free to reserve. We'll collect ₹49 before she calls.</p>
+      <p class="young-call-guarantee-callback">She'll call from <strong>${escapeHtml(
         FELICA_CALLBACK_NUMBER
-      )}</strong> — save it so you don’t miss us.</p>
+      )}</strong> — save it so you don’t miss her.</p>
     </div>
   `;
 }
@@ -2192,7 +2201,7 @@ function getVetCallSchedule(now = new Date()) {
       callDayLabel: null,
       slots: [],
       callWhenShort: "usually within 15–30 minutes",
-      callWhenCard: "A Felica feline vet will call · usually within 15–30 minutes",
+      callWhenCard: "Dr. Ankita will call · usually within 15–30 minutes",
       offlineNoticeTitle: null,
       offlineNoticeCopy: null,
       bookTitle: null,
@@ -2224,11 +2233,11 @@ function getVetCallSchedule(now = new Date()) {
     availableNow: false,
     callDayLabel,
     slots,
-    callWhenShort: `pick a time ${callDayLabel}`,
-    callWhenCard: `Available ${callDayLabel} — choose a time below`,
+    callWhenShort: `pick a free slot ${callDayLabel}`,
+    callWhenCard: `Available ${callDayLabel} — reserve free, pay ₹49 before she calls`,
     offlineNoticeTitle: null,
     offlineNoticeCopy: null,
-    bookTitle: `Choose a call time ${callDayLabel}`,
+    bookTitle: `Reserve a free call slot ${callDayLabel}`,
   };
 }
 
@@ -2326,7 +2335,7 @@ function renderVetCallSlotPicker(schedule, selectedValue = "") {
 
   return `
     <fieldset class="young-slot-picker">
-      <legend class="young-slot-picker-legend">When should they call?</legend>
+      <legend class="young-slot-picker-legend">When should she call?</legend>
       <p class="young-slot-picker-sub">${escapeHtml(schedule.callDayLabel)} · IST</p>
       <div class="young-slot-options" role="radiogroup" aria-label="Call time slots">
         ${options}
@@ -2376,7 +2385,7 @@ function renderYoungCallVetCard(specialist, { whenText, showCredentials = false 
       <img
         class="young-call-vet-photo"
         src="${specialist.image}"
-        alt=""
+        alt="${escapeHtml(specialist.fullName)}"
         width="72"
         height="72"
         loading="lazy"
@@ -3725,6 +3734,7 @@ let quizState = {
   screeningSessionId: null,
   vetCallPayment: null,
   vetCallSlot: null,
+  vetCallDeferredPay: false,
   openedAt: null,
 };
 
@@ -3753,6 +3763,7 @@ function resetQuizState() {
     screeningSessionId: crypto.randomUUID(),
     vetCallPayment: null,
     vetCallSlot: null,
+    vetCallDeferredPay: false,
     openedAt: Date.now(),
   };
   setFlowProgramLabel();
@@ -4416,6 +4427,7 @@ function completePaidVetBooking(phoneNational) {
 
   flushLeadConversionTags({ flow_track: "young", paid_consult: true });
 
+  quizState.vetCallDeferredPay = false;
   quizState.step = getYoungPlanStep();
   renderFlowStep();
 
@@ -4430,6 +4442,7 @@ function completePaidVetBooking(phoneNational) {
         ok: true,
         paid: true,
         payment_id: quizState.vetCallPayment?.paymentId || null,
+        scheduled_at: quizState.vetCallSlot?.scheduledAt || null,
       });
     })
     .catch((err) => {
@@ -4442,6 +4455,91 @@ function completePaidVetBooking(phoneNational) {
         paid: true,
       });
     });
+}
+
+/** After-hours: reserve slot free; team collects ₹49 before the call. */
+async function completeDeferredVetBooking({ button = null, errorEl = null } = {}) {
+  const btn = button || assflowMain.querySelector("#young-connect-form button[type='submit']");
+  const errNode = errorEl || assflowMain.querySelector("#young-connect-error");
+  const phone = String(quizState.whatsappNumber || "").replace(/\D/g, "");
+  const slot = quizState.vetCallSlot;
+
+  if (!slot?.scheduledAt) {
+    if (errNode) {
+      errNode.hidden = false;
+      errNode.textContent = "Choose a call time to reserve.";
+    }
+    return false;
+  }
+
+  if (!isValidIndianMobile(phone)) {
+    if (errNode) {
+      errNode.hidden = false;
+      errNode.textContent = "Enter a valid 10-digit mobile number.";
+    }
+    return false;
+  }
+
+  if (errNode) {
+    errNode.hidden = true;
+    errNode.textContent = "";
+  }
+
+  setVetPayButtonState(btn, { busy: true, label: "Reserving slot…" });
+
+  track("vet_call_slot_reserved_free", {
+    session_id: ensureYoungSessionId(),
+    scheduled_at: slot.scheduledAt,
+    slot: slot.display,
+    issue_id: getPrimaryYoungSymptom()?.id || null,
+  });
+
+  track("whatsapp_number_collected", {
+    cat_age: quizState.age,
+    flow_track: "young",
+    symptoms: getSelectedYoungSymptoms().map((s) => s.id),
+    contact_method: "call",
+    session_id: ensureYoungSessionId(),
+    paid: false,
+    deferred_pay: true,
+  });
+
+  quizState.vetCallPayment = null;
+  quizState.vetCallDeferredPay = true;
+  flushLeadConversionTags({ flow_track: "young", paid_consult: false, deferred_pay: true });
+
+  quizState.step = getYoungPlanStep();
+  renderFlowStep();
+
+  try {
+    await submitYoungCatLead(phone);
+    track("young_cat_lead_submitted", {
+      session_id: quizState.sessionId,
+      issue_id: getPrimaryYoungSymptom()?.id,
+      urgency: resolveYoungUrgency(),
+      ok: true,
+      paid: false,
+      deferred_pay: true,
+      scheduled_at: slot.scheduledAt,
+    });
+    return true;
+  } catch (err) {
+    track("young_cat_lead_submitted", {
+      session_id: quizState.sessionId,
+      issue_id: getPrimaryYoungSymptom()?.id,
+      urgency: resolveYoungUrgency(),
+      ok: false,
+      status: err?.status || null,
+      paid: false,
+      deferred_pay: true,
+    });
+    return false;
+  } finally {
+    setVetPayButtonState(btn, {
+      busy: false,
+      label: "Reserve free call slot",
+    });
+  }
 }
 
 async function startVetCallPayment({ button = null, errorEl = null } = {}) {
@@ -4803,11 +4901,18 @@ function renderYoungConnectStep() {
   const timingHint = selectedSlot?.display || schedule.callWhenShort;
   const title = schedule.availableNow
     ? "Book your ₹49 vet consult"
-    : schedule.bookTitle || `Choose a call time ${schedule.callDayLabel}`;
-  const lead = schedule.availableNow ? connectLead : "";
+    : schedule.bookTitle || `Reserve a free call slot ${schedule.callDayLabel}`;
+  const lead = schedule.availableNow
+    ? connectLead
+    : `Pick a time ${schedule.callDayLabel}. Free to reserve — we'll collect ₹49 before Dr. Ankita calls.`;
   const ctaLabel = schedule.availableNow
     ? VET_CALL_PRODUCT.ctaLabel
-    : "Pay ₹49 & reserve slot";
+    : "Reserve free call slot";
+  const priceLine = schedule.availableNow
+    ? `${formatVetCallPriceHtml()} · UPI · private · ${escapeHtml(timingHint)}`
+    : `Free to reserve · pay ${escapeHtml(VET_CALL_PRODUCT.priceLabel)} before call · ${escapeHtml(
+        timingHint
+      )}`;
 
   assflowMain.innerHTML = `
     <div class="flow-step young-connect-step">
@@ -4828,7 +4933,9 @@ function renderYoungConnectStep() {
       ${renderYoungCallValueSummary(valueSummary)}
 
       ${renderYoungCallVetCard(specialist, {
-        whenText: schedule.callWhenCard,
+        whenText: selectedSlot?.display
+          ? `Dr. Ankita will call ${selectedSlot.display}`
+          : schedule.callWhenCard,
         showCredentials: true,
       })}
 
@@ -4860,9 +4967,7 @@ function renderYoungConnectStep() {
           />
         </div>
 
-        <p class="young-connect-next">${formatVetCallPriceHtml()} · UPI · private · ${escapeHtml(
-          timingHint
-        )}</p>
+        <p class="young-connect-next">${priceLine}</p>
         <p class="flow-error" id="young-connect-error" hidden>Enter a valid 10-digit mobile number.</p>
         <button type="submit" class="btn btn-block btn-get-started">${escapeHtml(ctaLabel)}</button>
         ${renderYoungCallGuarantee(schedule)}
@@ -4879,9 +4984,11 @@ function renderYoungConnectStep() {
     input.addEventListener("change", () => {
       const slot = resolveSelectedVetCallSlot(schedule, input.value);
       if (slot && nextLine) {
-        nextLine.innerHTML = `${formatVetCallPriceHtml()} · UPI · private · ${escapeHtml(
-          slot.display
-        )}`;
+        nextLine.innerHTML = schedule.availableNow
+          ? `${formatVetCallPriceHtml()} · UPI · private · ${escapeHtml(slot.display)}`
+          : `Free to reserve · pay ${escapeHtml(
+              VET_CALL_PRODUCT.priceLabel
+            )} before call · ${escapeHtml(slot.display)}`;
       }
     });
   });
@@ -4931,7 +5038,11 @@ function renderYoungConnectStep() {
       }
     }
 
-    await startVetCallPayment({ button: submitBtn, errorEl: error });
+    if (schedule.availableNow) {
+      await startVetCallPayment({ button: submitBtn, errorEl: error });
+    } else {
+      await completeDeferredVetBooking({ button: submitBtn, errorEl: error });
+    }
   });
 }
 
@@ -5076,7 +5187,9 @@ function renderYoungWellnessPlanStep() {
 }
 
 function renderYoungCallPlanStep() {
-  if (!quizState.vetCallPayment?.paymentId) {
+  const paid = !!quizState.vetCallPayment?.paymentId;
+  const deferred = !!quizState.vetCallDeferredPay && !!quizState.vetCallSlot?.scheduledAt;
+  if (!paid && !deferred) {
     quizState.step = getYoungConnectStep();
     renderFlowStep();
     return;
@@ -5100,40 +5213,57 @@ function renderYoungCallPlanStep() {
     "your answers";
   const whenShort = slot?.display ? slot.display : schedule.callWhenShort;
   const whenCard = slot?.display
-    ? `They'll call ${slot.display}`
-    : schedule.availableNow
-      ? "Usually calls within 15–30 minutes"
-      : `They'll call ${schedule.callDayLabel} at your booked time`;
+    ? `She'll call ${slot.display}`
+    : "Usually calls within 15–30 minutes";
   const leadWhen = slot?.display
     ? ` at ${escapeHtml(slot.display)}`
-    : schedule.availableNow
+    : paid
       ? " shortly"
-      : ` ${escapeHtml(schedule.callDayLabel)}`;
+      : "";
 
   track("young_plan_viewed", {
     cat_age: quizState.age,
     symptoms: getSelectedYoungSymptoms().map((s) => s.id),
     specialist: specialist.fullName,
     phone_collected: !!phone,
-    vet_call_paid: true,
+    vet_call_paid: paid,
+    vet_call_deferred_pay: deferred,
     vet_call_available_now: schedule.availableNow,
     vet_call_slot: slot?.display || null,
     vet_call_scheduled_at: slot?.scheduledAt || null,
   });
 
+  const successTitle = paid ? "Vet consult confirmed" : "Call slot reserved";
+  const successCopy = paid
+    ? `Paid ${formatVetCallPriceHtml()} · ${escapeHtml(whenShort)}`
+    : `Free reservation · pay ${escapeHtml(
+        VET_CALL_PRODUCT.priceLabel
+      )} before ${escapeHtml(specialist.shortName)} calls · ${escapeHtml(whenShort)}`;
+  const nextSteps = paid
+    ? `
+            <li>${escapeHtml(specialist.shortName)} reviews what you shared about ${escapeHtml(name)}</li>
+            <li>Explains what may be going on in plain language</li>
+            <li>Tells you what to do next — at home, or with your local vet</li>`
+    : `
+            <li>We confirm your slot and collect ₹49 before the call</li>
+            <li>${escapeHtml(specialist.shortName)} reviews what you shared about ${escapeHtml(name)}</li>
+            <li>She explains what may be going on and what to do next</li>`;
+
   assflowMain.innerHTML = `
     <div class="flow-step flow-step-result young-plan-step young-call-plan">
       <div class="young-care-plan young-call-plan-card">
-        <h1 class="young-call-plan-title" id="assflow-title">Consult booked</h1>
+        <h1 class="young-call-plan-title" id="assflow-title">${
+          paid ? "Consult booked" : "Slot reserved"
+        }</h1>
         <p class="young-call-plan-lead">
-          Thanks — a Felica feline vet will call about ${escapeHtml(
+          Thanks — ${escapeHtml(specialist.shortName)} will call about ${escapeHtml(
             possessive
           )} ${escapeHtml(String(issueLabel).toLowerCase())}${leadWhen}.
         </p>
 
         <div class="young-pay-success" role="status">
-          <p class="young-pay-success-title">Vet consult confirmed</p>
-          <p class="young-pay-success-copy">Paid ${formatVetCallPriceHtml()} · ${escapeHtml(whenShort)}</p>
+          <p class="young-pay-success-title">${successTitle}</p>
+          <p class="young-pay-success-copy">${successCopy}</p>
         </div>
 
         ${renderYoungCallVetCard(specialist, {
@@ -5151,9 +5281,7 @@ function renderYoungCallPlanStep() {
         <section class="young-call-section" aria-labelledby="young-call-next-title">
           <h2 class="young-call-section-title" id="young-call-next-title">What happens next</h2>
           <ul class="young-call-list">
-            <li>Your specialist reviews what you shared about ${escapeHtml(name)}</li>
-            <li>Explains what may be going on in plain language</li>
-            <li>Tells you what to do next — at home, or with your local vet</li>
+            ${nextSteps}
           </ul>
         </section>
 
