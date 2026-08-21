@@ -36,7 +36,7 @@
         href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&display=swap"
       />
     </noscript>
-    <link rel="stylesheet" href="./styles.min.css?v=hc159" />
+    <link rel="stylesheet" href="./styles.min.css?v=hc160" />
     <!-- Marketing tags: stub immediately, load scripts after idle so they don't block LCP -->
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -168,29 +168,39 @@
 
             <div class="hero-landing-cta">
               <button type="button" class="btn btn-get-started btn-hero-primary" id="hero-primary-cta">
-                <span id="hero-cta-label">Check symptoms · ₹49 call</span>
+                <span id="hero-cta-label">Talk to Dr. Ankita · ₹49</span>
                 <span class="btn-hero-arrow" aria-hidden="true">→</span>
               </button>
             </div>
 
             <div class="hero-landing-meta">
+              <div class="hero-doctor-strip" aria-label="Your specialist">
+                <img
+                  class="hero-doctor-strip-photo"
+                  src="./images/dr-ankita-kawale.webp?v=hc140"
+                  alt="Dr. Ankita Kawale"
+                  width="48"
+                  height="48"
+                  decoding="async"
+                />
+                <div class="hero-doctor-strip-copy">
+                  <p class="hero-doctor-strip-name">Dr. Ankita Kawale</p>
+                  <p class="hero-doctor-strip-meta">Feline specialist · 8 years · 3,000+ cats</p>
+                </div>
+              </div>
+
               <p class="hero-landing-urgency">
-                Early treatment can add years of healthy life for many conditions.
+                Dr. Ankita usually calls within 15–30 minutes after you book.
               </p>
 
-              <ul class="hero-trust hero-trust--badges" aria-label="Why this screening works">
-                <li>2 min</li>
-                <li>₹49 consult</li>
-                <li>Vet specialist</li>
+              <ul class="hero-trust hero-trust--badges" aria-label="Consult details">
+                <li>2 min check</li>
+                <li data-hero-badge="consult">₹49 · usually 15–30 min</li>
+                <li>UPI only</li>
               </ul>
 
               <div class="hero-social-proof">
-                <div class="hero-social-avatars" aria-hidden="true">
-                  <span class="hero-social-avatar hero-social-avatar--1"></span>
-                  <span class="hero-social-avatar hero-social-avatar--2"></span>
-                  <span class="hero-social-avatar hero-social-avatar--3"></span>
-                </div>
-                <p>Join families who've booked a consult with <strong>Dr. Ankita</strong></p>
+                <p data-hero-social>Dr. Ankita · feline specialist · <strong>8 years · 3,000+ cats</strong></p>
               </div>
             </div>
           </div>
@@ -200,7 +210,7 @@
           <div class="wrap">
             <div class="section-head section-head-center">
               <p class="eyebrow">How it works</p>
-              <h2>A quick check. Then book a vet consult.</h2>
+              <h2 data-how-head>A quick check. Then talk to Dr. Ankita.</h2>
             </div>
             <ol class="how-steps reveal">
               <li class="how-step">
@@ -211,8 +221,8 @@
               <li class="how-step-arrow" aria-hidden="true">→</li>
               <li class="how-step">
                 <span class="how-step-icon" aria-hidden="true"><i data-lucide="smartphone"></i></span>
-                <h3>Book a ₹49 specialist call</h3>
-                <p>Enter your number and pay ₹49 with UPI. Private — no spam. Dr. Ankita calls you next.</p>
+                <h3 data-how-book-title>Pay ₹49 · she calls you</h3>
+                <p data-how-book-copy>UPI only. Private. Dr. Ankita usually calls within 15–30 minutes with clear next steps.</p>
               </li>
               <li class="how-step-arrow" aria-hidden="true">→</li>
               <li class="how-step">
@@ -263,7 +273,7 @@
               </article>
             </div>
             <div class="coverage-cta site-cta">
-              <button type="button" class="btn btn-get-started">Check symptoms · ₹49 call</button>
+              <button type="button" class="btn btn-get-started">Talk to Dr. Ankita · ₹49</button>
             </div>
           </div>
         </section>
@@ -287,7 +297,7 @@
               </div>
             </div>
             <div class="life-journey-cta site-cta">
-              <button type="button" class="btn btn-get-started" id="journey-screening-cta">Check symptoms · ₹49 call</button>
+              <button type="button" class="btn btn-get-started" id="journey-screening-cta">Talk to Dr. Ankita · ₹49</button>
             </div>
           </div>
         </section>
@@ -339,11 +349,11 @@
               </details>
               <details class="faq-item">
                 <summary>What if nobody calls?</summary>
-                <p>During open hours: if Dr. Ankita doesn’t call within 30 minutes, full refund. After hours: reserve a slot free — we collect ₹49 before she calls. Calls come from <strong>+91 80 4728 5635</strong>.</p>
+                <p>During open hours: if Dr. Ankita doesn’t call within 30 minutes, full refund. After hours: reserve free, then we WhatsApp a ₹49 UPI link before she calls (no pay → no call). Calls come from <strong>+91 80 4728 5635</strong>.</p>
               </details>
               <details class="faq-item">
                 <summary>How long does it take?</summary>
-                <p>About 2 minutes for the check, then ₹49 UPI for your consult. The specialist usually calls within 15–30 minutes during open hours.</p>
+                <p>About 2 minutes for the check. During open hours you pay ₹49 on UPI and she usually calls within 15–30 minutes. After hours you reserve free and pay via WhatsApp UPI before the call.</p>
               </details>
               <details class="faq-item">
                 <summary>What happens after my specialist call?</summary>
@@ -360,9 +370,9 @@
         <section class="final-cta clinic-band" id="start">
           <div class="wrap final-cta-inner site-cta">
             <h2>Your cat can't tell you something is wrong.</h2>
-            <p class="final-cta-body">A 2-minute check, then a ₹49 consult with Dr. Ankita — usually within 15–30 minutes.</p>
+            <p class="final-cta-body">A 2-minute check, then a ₹49 call with Dr. Ankita — usually within 15–30 minutes during open hours.</p>
             <button type="button" class="btn btn-light btn-get-started btn-final-cta">
-              <span>Check symptoms · ₹49 call</span>
+              <span>Talk to Dr. Ankita · ₹49</span>
               <span class="btn-hero-arrow" aria-hidden="true">→</span>
             </button>
             <ul class="final-cta-trust" aria-label="Screening details">
@@ -422,7 +432,7 @@
 
     <div class="sticky-cta" id="sticky-cta" aria-hidden="true">
       <div class="sticky-cta-inner site-cta">
-        <button type="button" class="btn btn-sm btn-get-started">Check symptoms · ₹49 call</button>
+        <button type="button" class="btn btn-sm btn-get-started">Talk to Dr. Ankita · ₹49</button>
       </div>
     </div>
 
@@ -449,6 +459,6 @@
 
     <script src="./site-icons.js?v=hc6" defer></script>
     <script src="./quiz-visuals.js?v=hc52" defer></script>
-    <script src="./script.min.js?v=hc159" defer></script>
+    <script src="./script.min.js?v=hc160" defer></script>
   </body>
 </html>

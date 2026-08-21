@@ -14,7 +14,7 @@ const CAT_NAME_KEY = "peticine-cat-name";
 const CAT_PROFILE_KEY = "peticine-cat-profile";
 const AGE_DONE_KEY = "peticine-age-done";
 const AGE_THEMES = ["young", "prime", "mature", "senior", "geriatric"];
-const PRIMARY_CTA_LABEL = "Check symptoms · ₹49 call";
+const PRIMARY_CTA_LABEL = "Talk to Dr. Ankita · ₹49";
 
 // Meta ad headlines per concern (use ?concern= in landing URL):
 // water/drinking: "Cat drinking more water? Free 2-min check" | "Extra water bowls? See if it's worth a vet call"
@@ -255,8 +255,60 @@ function applySiteCtaLabels(label) {
       heroLabel.textContent = label;
       return;
     }
+    const span = btn.querySelector("span:not(.btn-hero-arrow)");
+    if (span && btn.querySelector(".btn-hero-arrow")) {
+      span.textContent = label;
+      return;
+    }
     btn.textContent = label;
   });
+}
+
+/** Keep landing copy honest for open hours vs after-hours reserve. */
+function applyConsultAvailabilityCopy(now = new Date()) {
+  const schedule = typeof getVetCallSchedule === "function" ? getVetCallSchedule(now) : null;
+  const open = !!schedule?.availableNow;
+  const day = schedule?.callDayLabel || "tomorrow";
+
+  const urgency = document.querySelector(".hero-landing-urgency");
+  if (urgency) {
+    urgency.textContent = open
+      ? "Dr. Ankita usually calls within 15–30 minutes after you book."
+      : `We're closed now — reserve a free slot for ${day}. Pay ₹49 before she calls.`;
+  }
+
+  const badgeConsult = document.querySelector("[data-hero-badge='consult']");
+  if (badgeConsult) {
+    badgeConsult.textContent = open ? "₹49 · usually 15–30 min" : `Free reserve · pay ₹49`;
+  }
+
+  const howTitle = document.querySelector("[data-how-book-title]");
+  const howCopy = document.querySelector("[data-how-book-copy]");
+  if (howTitle && howCopy) {
+    if (open) {
+      howTitle.textContent = "Pay ₹49 · she calls you";
+      howCopy.textContent =
+        "UPI only. Private. Dr. Ankita usually calls within 15–30 minutes with clear next steps.";
+    } else {
+      howTitle.textContent = `Reserve a free slot ${day}`;
+      howCopy.textContent =
+        "Pick a time now. Before she calls, we WhatsApp a ₹49 UPI link — pay to confirm. No pay, no call.";
+    }
+  }
+
+  const howHead = document.querySelector("[data-how-head]");
+  if (howHead) {
+    howHead.textContent = open
+      ? "A quick check. Then talk to Dr. Ankita."
+      : "A quick check. Then reserve her call.";
+  }
+
+  const social = document.querySelector("[data-hero-social]");
+  if (social) {
+    social.innerHTML = open
+      ? `Dr. Ankita · feline specialist · <strong>8 years · 3,000+ cats</strong>`
+      : `Dr. Ankita · reserve free now · <strong>pay ₹49 before she calls</strong>`;
+  }
 }
 
 function applyHeroFloatTags(concern) {
@@ -310,6 +362,7 @@ function initHeroPersonalization() {
   }
   applySiteCtaLabels(ctaLabel);
   applyHeroFloatTags(concern);
+  applyConsultAvailabilityCopy();
 
   const heroImg = document.getElementById("hero-cat-image");
   const heroImage =
@@ -1010,7 +1063,7 @@ function buildYoungPmsPayload(phoneNational) {
           slot?.display ? ` · ${slot.display}` : ""
         }${phone ? ` — call +91 ${phone}` : ""}`
       : slot?.scheduledAt
-        ? `Reserved free slot ${slot.display} — collect ₹49 before call${
+        ? `Reserved free slot ${slot.display} — WhatsApp ₹49 UPI before call${
             phone ? ` at +91 ${phone}` : ""
           }`
         : phone
@@ -2091,7 +2144,7 @@ function buildYoungCallValueSummary() {
 
   const bullets = [];
   if (detail) {
-    bullets.push(`You shared: ${detail}`);
+    bullets.push(detail);
   } else {
     bullets.push(`Main concern: ${shortLabel}`);
   }
@@ -2099,7 +2152,7 @@ function buildYoungCallValueSummary() {
     "On the call, Dr. Ankita explains what this pattern often means and what to do next"
   );
   if (urgency === "urgent") {
-    bullets.push("They help you decide whether to head to a clinic now");
+    bullets.push("She helps you decide whether to head to a clinic now");
   } else if (issueId === "prevention") {
     bullets.push("Prevention tips tailored to what you want help with");
   } else {
@@ -2112,7 +2165,7 @@ function buildYoungCallValueSummary() {
       : name === "your cat"
         ? "Based on your answers"
         : `${name}'s check`,
-    title: `What a specialist will cover for ${possessive} ${String(shortLabel).toLowerCase()}`,
+    title: `What Dr. Ankita will cover for ${possessive} ${String(shortLabel).toLowerCase()}`,
     bullets,
   };
 }
@@ -2145,7 +2198,7 @@ function renderYoungCallGuarantee(schedule) {
   }
   return `
     <div class="young-call-guarantee">
-      <p class="young-call-guarantee-refund">Free to reserve. We'll collect ₹49 before she calls.</p>
+      <p class="young-call-guarantee-refund">Free to reserve. Before she calls, we WhatsApp a ₹49 UPI link. No pay → no call.</p>
       <p class="young-call-guarantee-callback">She'll call from <strong>${escapeHtml(
         FELICA_CALLBACK_NUMBER
       )}</strong> — save it so you don’t miss her.</p>
@@ -2234,7 +2287,7 @@ function getVetCallSchedule(now = new Date()) {
     callDayLabel,
     slots,
     callWhenShort: `pick a free slot ${callDayLabel}`,
-    callWhenCard: `Available ${callDayLabel} — reserve free, pay ₹49 before she calls`,
+    callWhenCard: `Available ${callDayLabel} — reserve free; WhatsApp ₹49 UPI before she calls`,
     offlineNoticeTitle: null,
     offlineNoticeCopy: null,
     bookTitle: `Reserve a free call slot ${callDayLabel}`,
@@ -2501,11 +2554,23 @@ function renderWellnessConfirmationJourney(specialist, name) {
 }
 
 function formatYoungDetailSummary(issueId) {
+  const followups = getYoungIssueFollowups(issueId);
   const map = getIssueDetailAnswersMap(issueId);
-  const parts = Object.values(map)
+  const parts = followups
+    .map((q) => {
+      const answer = map[q.id];
+      if (!answer?.label) return null;
+      const shortQ = String(q.title || "")
+        .replace(/\?$/, "")
+        .trim();
+      return shortQ ? `${shortQ}: ${answer.label}` : answer.label;
+    })
+    .filter(Boolean);
+  if (parts.length) return parts.join(" · ");
+  return Object.values(map)
     .filter((a) => a?.label)
-    .map((a) => a.label);
-  return parts.join(" · ");
+    .map((a) => a.label)
+    .join(" · ");
 }
 
 function resolveWellnessDiagnosis(config) {
@@ -4741,7 +4806,7 @@ function renderYoungSymptomStep() {
   assflowMain.innerHTML = `
     <div class="flow-step young-issue-screen">
       <h1 class="flow-title" id="assflow-title">What's changed with your cat?</h1>
-      <p class="flow-lead">Choose the main thing you've noticed</p>
+      <p class="flow-lead">Choose the main concern — closest match is fine</p>
       <div class="young-issue-list" role="radiogroup" aria-label="Changes you've noticed">
         ${YOUNG_SYMPTOMS.map((symptom) => {
           const theme = YOUNG_SYMPTOM_THEMES[symptom.theme];
@@ -4904,15 +4969,13 @@ function renderYoungConnectStep() {
     : schedule.bookTitle || `Reserve a free call slot ${schedule.callDayLabel}`;
   const lead = schedule.availableNow
     ? connectLead
-    : `Pick a time ${schedule.callDayLabel}. Free to reserve — we'll collect ₹49 before Dr. Ankita calls.`;
+    : `Pick a time ${schedule.callDayLabel}. Free to reserve — before she calls, we WhatsApp a ₹49 UPI link (no pay → no call).`;
   const ctaLabel = schedule.availableNow
     ? VET_CALL_PRODUCT.ctaLabel
     : "Reserve free call slot";
   const priceLine = schedule.availableNow
     ? `${formatVetCallPriceHtml()} · UPI · private · ${escapeHtml(timingHint)}`
-    : `Free to reserve · pay ${escapeHtml(VET_CALL_PRODUCT.priceLabel)} before call · ${escapeHtml(
-        timingHint
-      )}`;
+    : `Free now · WhatsApp ₹49 UPI before call · ${escapeHtml(timingHint)}`;
 
   assflowMain.innerHTML = `
     <div class="flow-step young-connect-step">
@@ -4986,9 +5049,7 @@ function renderYoungConnectStep() {
       if (slot && nextLine) {
         nextLine.innerHTML = schedule.availableNow
           ? `${formatVetCallPriceHtml()} · UPI · private · ${escapeHtml(slot.display)}`
-          : `Free to reserve · pay ${escapeHtml(
-              VET_CALL_PRODUCT.priceLabel
-            )} before call · ${escapeHtml(slot.display)}`;
+          : `Free now · WhatsApp ₹49 UPI before call · ${escapeHtml(slot.display)}`;
       }
     });
   });
@@ -5236,18 +5297,16 @@ function renderYoungCallPlanStep() {
   const successTitle = paid ? "Vet consult confirmed" : "Call slot reserved";
   const successCopy = paid
     ? `Paid ${formatVetCallPriceHtml()} · ${escapeHtml(whenShort)}`
-    : `Free reservation · pay ${escapeHtml(
-        VET_CALL_PRODUCT.priceLabel
-      )} before ${escapeHtml(specialist.shortName)} calls · ${escapeHtml(whenShort)}`;
+    : `Free reservation · WhatsApp ₹49 UPI before call · ${escapeHtml(whenShort)}`;
   const nextSteps = paid
     ? `
             <li>${escapeHtml(specialist.shortName)} reviews what you shared about ${escapeHtml(name)}</li>
             <li>Explains what may be going on in plain language</li>
             <li>Tells you what to do next — at home, or with your local vet</li>`
     : `
-            <li>We confirm your slot and collect ₹49 before the call</li>
+            <li>Before your slot, we WhatsApp a ₹49 UPI link — pay to confirm the call</li>
             <li>${escapeHtml(specialist.shortName)} reviews what you shared about ${escapeHtml(name)}</li>
-            <li>She explains what may be going on and what to do next</li>`;
+            <li>She calls at your booked time and explains what to do next</li>`;
 
   assflowMain.innerHTML = `
     <div class="flow-step flow-step-result young-plan-step young-call-plan">
@@ -5285,7 +5344,9 @@ function renderYoungCallPlanStep() {
           </ul>
         </section>
 
-        <button type="button" class="btn btn-block young-plan-done" data-flow-done>Done for now</button>
+        <button type="button" class="btn btn-block young-plan-done" data-flow-done>${
+          paid ? "Done for now" : "Got it — I'll watch for WhatsApp"
+        }</button>
         <p class="score-reassure">Not a diagnosis. Your vet makes every treatment decision.</p>
       </div>
     </div>
