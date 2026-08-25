@@ -330,8 +330,13 @@ let catAgeProfile = null;
 // dispatches a DOM CustomEvent ("felica:track"), and forwards funnel events
 // to Meta Pixel (fbq) and Google Ads (gtag) for conversion tracking.
 const FUNNEL_EVENTS = [];
+// Lead form conversion (phone / WhatsApp collected) — not purchase.
 const GOOGLE_ADS_LEAD_SEND_TO = "AW-18298322041/boF_COGojMscEPn4qJVE";
+// Purchase conversion (shared Ads tag: AW-18298322041/nqEHCJDF4eMcEPn4qJVE).
+// Fire only after verified Razorpay payment — never on lead form submit.
+const GOOGLE_ADS_PURCHASE_SEND_TO = "AW-18298322041/nqEHCJDF4eMcEPn4qJVE";
 let leadConversionFired = false;
+let purchaseConversionFired = false;
 
 /**
  * Fires Google Ads "Submit lead form" + Meta Lead once.
@@ -375,6 +380,33 @@ function flushLeadConversionTags(props = {}) {
   return Promise.resolve();
 }
 
+/**
+ * Fires Google Ads "Purchase" conversion once per successful payment.
+ * Requires a real transaction_id so Ads can dedupe duplicates.
+ */
+function flushPurchaseConversionTags(props = {}) {
+  const transactionId = String(props.transaction_id || "").trim();
+  if (!transactionId || purchaseConversionFired) return;
+  purchaseConversionFired = true;
+
+  const value = Number(props.value);
+  const currency = String(props.currency || "INR");
+
+  try {
+    if (typeof window.gtag === "function") {
+      window.gtag("event", "conversion", {
+        send_to: GOOGLE_ADS_PURCHASE_SEND_TO,
+        value: Number.isFinite(value) ? value : 1.0,
+        currency,
+        transaction_id: transactionId,
+        transport_type: "beacon",
+      });
+    }
+  } catch (err) {
+    /* ads tag must never break the app */
+  }
+}
+
 function trackGoogleAds(event, props = {}) {
   if (typeof window.gtag !== "function") return;
   try {
@@ -397,6 +429,10 @@ function trackGoogleAds(event, props = {}) {
         break;
       case "whatsapp_number_collected":
         // Fired via flushLeadConversionTags() so the beacon can complete.
+        break;
+      case "purchase":
+        // Google Ads Purchase conversion (nqEH…) — not the lead label.
+        flushPurchaseConversionTags(props);
         break;
       case "young_cat_lead_submitted":
         if (props.ok) {
