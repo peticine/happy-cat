@@ -8088,6 +8088,7 @@ body[data-age-theme="geriatric"] .hero-clinic {
   height: 100%;
   object-fit: cover;
   display: block;
+  background: var(--line);
 }
 
 .young-result-tag {
