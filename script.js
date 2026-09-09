@@ -14,7 +14,7 @@ const CAT_NAME_KEY = "peticine-cat-name";
 const CAT_PROFILE_KEY = "peticine-cat-profile";
 const AGE_DONE_KEY = "peticine-age-done";
 const AGE_THEMES = ["young", "prime", "mature", "senior", "geriatric"];
-const PRIMARY_CTA_LABEL = "Start Health Check";
+const PRIMARY_CTA_LABEL = "Speak to a vet";
 
 // Meta ad headlines per concern (use ?concern= in landing URL):
 // water/drinking: "Cat drinking more water? 2-min check" | "Extra water bowls? See if it's worth a vet call"
@@ -35,14 +35,14 @@ const PRIMARY_CTA_LABEL = "Start Health Check";
 const HERO_VARIANTS = {
   water: {
     headlineHook: "Drinking more water than usual?",
-    headline: "It could be a sign of kidney disease.",
-    lead: "A quick check, then a specialist call in 15–30 minutes.",
+    headline: "We'll check if this needs a clinic — we don't prescribe for kidney disease on a call.",
+    lead: "A quick check. If it's something we can treat online, a vet will call to prescribe supplements.",
     image: "./images/hero-water.webp?v=hc139",
   },
   drinking: {
     headlineHook: "Drinking more water than usual?",
-    headline: "It could be a sign of kidney disease.",
-    lead: "A quick check, then a specialist call in 15–30 minutes.",
+    headline: "We'll check if this needs a clinic — we don't prescribe for kidney disease on a call.",
+    lead: "A quick check. If it's something we can treat online, a vet will call to prescribe supplements.",
     image: "./images/hero-water.webp?v=hc139",
   },
   weight: {
@@ -66,14 +66,14 @@ const HERO_VARIANTS = {
   },
   litter: {
     headlineHook: "Is your cat peeing outside the litter box?",
-    headline: "This is a sign of discomfort.",
-    lead: "Answer one quick question — a feline specialist will call you in 15–30 minutes.",
+    headline: "We'll check if this is an emergency, a clinic visit, or something a vet can treat online.",
+    lead: "If it's something we can treat online, a feline vet will call to prescribe the right supplements.",
     image: "./images/hero-litter.webp?v=hc139",
   },
   urination: {
     headlineHook: "Is your cat peeing outside the litter box?",
-    headline: "This is a sign of discomfort.",
-    lead: "Answer one quick question — a feline specialist will call you in 15–30 minutes.",
+    headline: "We'll check if this is an emergency, a clinic visit, or something a vet can treat online.",
+    lead: "If it's something we can treat online, a feline vet will call to prescribe the right supplements.",
     image: "./images/hero-litter.webp?v=hc139",
   },
   quiet: {
@@ -81,29 +81,29 @@ const HERO_VARIANTS = {
     consequence: "When cats withdraw, it's often because they don't feel well — not because they're being difficult.",
   },
   dental: {
-    headlineHook: "Bad breath is not normal for cats.",
-    headline: "It could be a sign of dental disease.",
-    lead: "A quick check, then a specialist call in 15–30 minutes.",
+    headlineHook: "Bad breath is not always a clinic visit.",
+    headline: "We'll check if a vet can prescribe dental support on a call — or if your cat needs to be seen.",
+    lead: "If it's something we can treat online, a feline vet will call to prescribe the right supplements.",
     image: "./images/hero-dental.webp?v=hc139",
   },
   breath: {
-    headlineHook: "Bad breath is not normal for cats.",
-    headline: "It could be a sign of dental disease.",
-    lead: "A quick check, then a specialist call in 15–30 minutes.",
+    headlineHook: "Bad breath is not always a clinic visit.",
+    headline: "We'll check if a vet can prescribe dental support on a call — or if your cat needs to be seen.",
+    lead: "If it's something we can treat online, a feline vet will call to prescribe the right supplements.",
     image: "./images/hero-dental.webp?v=hc139",
   },
   senior: {
     headlineHook: "Is your cat over 7?",
-    headline: "Senior cats hide illness until it's late.",
-    lead: "A quick senior check, then a specialist call in 15–30 minutes.",
+    headline: "We'll check kidney-related signs first. Clinic cases stay at the clinic — we only call to prescribe prevention support.",
+    lead: "If nothing needs an exam, a feline vet will call to prescribe the right supplements.",
     image: "./images/stage-senior.webp?v=hc139",
-    pageTitle: "Felica | Senior cat health screening",
+    pageTitle: "Felica | Senior cat check",
     pageDescription:
-      "2-minute screening for senior cats. Check kidney disease, hyperthyroidism, diabetes, arthritis, and more — then speak with a feline specialist.",
+      "Quick check for senior cats. If a clinic visit isn't needed, a feline vet calls to prescribe prevention supplements.",
   },
   default: {
-    headlineHook: "Cats hide pain.",
-    headline: "Find out before it gets late.",
+    headlineHook: "Everyday cat issues, treated online.",
+    headline: "A feline vet calls you and prescribes the right supplements — if a clinic visit isn't needed.",
   },
 };
 
@@ -120,12 +120,12 @@ const HERO_BG_IMAGES = {
 // Floating tags around the hero portrait — overridden per concern landing.
 const HERO_FLOAT_TAGS = {
   default: [
-    { icon: "heart-pulse", label: "Kidney disease" },
-    { icon: "zap", label: "Hyperthyroidism" },
-    { icon: "scale", label: "Diabetes" },
-    { icon: "toilet", label: "Urinary disease" },
-    { icon: "utensils", label: "Dental disease" },
-    { icon: "moon", label: "Arthritis & pain" },
+    { icon: "bug", label: "Scratching & fleas" },
+    { icon: "sparkles", label: "Dull coat" },
+    { icon: "wind", label: "Hairballs" },
+    { icon: "eye", label: "Tear stains" },
+    { icon: "shield", label: "Gut support" },
+    { icon: "heart-pulse", label: "Prevention" },
   ],
   dental: [
     { icon: "wind", label: "Bad breath" },
@@ -354,19 +354,23 @@ let leadConversionFired = false;
  * timeout when blocked or slow, and caused drop-offs).
  */
 function flushLeadConversionTags(props = {}) {
+  const lane = props.lane || props.care_lane;
+  // Only paid-lead conversions: vet will prescribe supplements on the call.
+  if (lane !== "green") return Promise.resolve();
   if (leadConversionFired) return Promise.resolve();
   leadConversionFired = true;
 
   const flow = props.flow_track || props.flow || "screening";
   const contentName =
-    flow === "young" ? "young_cat_screening" : "cat_health_screening";
+    flow === "young" ? "young_cat_supplement_call" : "cat_supplement_call";
 
   try {
     if (typeof window.fbq === "function") {
       window.fbq("track", "Lead", {
         content_name: contentName,
-        content_category: "screening",
+        content_category: "supplement_call",
         flow,
+        lane: "green",
       });
     }
   } catch (err) {
@@ -566,37 +570,18 @@ function formatCatAgeLabel(years) {
   return `${whole} ${whole === 1 ? "year" : "years"}`;
 }
 
-const AGE_WHEEL_OPTIONS = [
-  ...[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((months) => ({
-    id: `m${months}`,
-    years: months / 12,
-    label: `${months} ${months === 1 ? "month" : "months"}`,
+const AGE_YEAR_PICKS = [
+  ...Array.from({ length: 15 }, (_, i) => ({
+    years: i + 1,
+    label: String(i + 1),
   })),
-  ...Array.from({ length: 25 }, (_, i) => {
-    const years = i + 1;
-    return {
-      id: `y${years}`,
-      years,
-      label: `${years} ${years === 1 ? "year" : "years"}`,
-    };
-  }),
+  { years: 16, label: "16+" },
 ];
 
-function nearestAgeWheelOption(years) {
-  if (years == null || Number.isNaN(Number(years))) {
-    return AGE_WHEEL_OPTIONS.find((opt) => opt.id === "y5") || AGE_WHEEL_OPTIONS[0];
-  }
-  let best = AGE_WHEEL_OPTIONS[0];
-  let bestDist = Infinity;
-  AGE_WHEEL_OPTIONS.forEach((opt) => {
-    const dist = Math.abs(opt.years - years);
-    if (dist < bestDist) {
-      bestDist = dist;
-      best = opt;
-    }
-  });
-  return best;
-}
+const AGE_MONTH_PICKS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((months) => ({
+  years: months / 12,
+  label: String(months),
+}));
 
 function applyAgeTheme(theme) {
   if (!ageGate) return;
@@ -1002,8 +987,8 @@ function buildYoungPmsAnswers(issueId) {
 function buildYoungPmsPayload(phoneNational) {
   syncYoungDurationFromAnswers();
   const sessionId = ensureYoungSessionId();
-  const issue = getPrimaryYoungSymptom() || YOUNG_SYMPTOMS.find((s) => s.id === "prevention");
-  const issueId = issue?.id || "prevention";
+  const issue = getPrimaryYoungSymptom() || YOUNG_SYMPTOMS.find((s) => s.id === "second_opinion");
+  const issueId = issue?.id || "second_opinion";
   const shortLabel =
     issue?.shortLabel || YOUNG_SYMPTOMS.find((s) => s.id === issueId)?.shortLabel || issueId;
   const fullLabel = issue?.label || shortLabel;
@@ -1017,7 +1002,9 @@ function buildYoungPmsPayload(phoneNational) {
   const summaryParts = [
     `${displayName === "your cat" ? "Cat" : displayName}, ${formatCatAgeLabel(quizState.age)}`,
     answerSummary ? `${shortLabel} — ${answerSummary}` : shortLabel,
-    phone ? `Prefer call within 15–30 min at +91 ${phone}` : "Prefer call within 15–30 min",
+    phone
+      ? `Supplement call within 15–30 min at +91 ${phone}`
+      : "Supplement call within 15–30 min",
   ];
 
   return {
@@ -1043,7 +1030,8 @@ function buildYoungPmsPayload(phoneNational) {
       age_band: "young",
     },
     triage: {
-      urgency: urgency === "prevention" ? "prevention" : urgency === "urgent" ? "urgent" : "consult",
+      lane: "green",
+      urgency: urgency === "prevention" ? "prevention" : "consult",
       urgency_reasons: urgencyReasons,
     },
     chief_complaint: {
@@ -1054,8 +1042,10 @@ function buildYoungPmsPayload(phoneNational) {
     answers,
     summary_text: summaryParts.join(". ") + ".",
     flags: {
-      urgent: urgency === "urgent",
-      prevention_only: issueId === "prevention",
+      urgent: false,
+      supplement_call: true,
+      call_scope: "just_this",
+      prevention_only: CARE_CHECKIN_IDS.has(issueId),
     },
   };
 }
@@ -1189,9 +1179,127 @@ const YOUNG_SYMPTOM_THEMES = {
   dental: { bg: "#f5f0ee", icon: "#8b5a45", ring: "rgba(139, 90, 69, 0.18)" },
   mobility: { bg: "#eef3f8", icon: "#4a6fa5", ring: "rgba(74, 111, 165, 0.18)" },
   prevention: { bg: "#eef5fc", icon: "#1559b7", ring: "rgba(21, 89, 183, 0.18)" },
+  care: { bg: "#eef5fc", icon: "#1559b7", ring: "rgba(21, 89, 183, 0.18)" },
+  advice: { bg: "#f3eef8", icon: "#7a4fa8", ring: "rgba(122, 79, 168, 0.18)" },
 };
 
+const CARE_CHECKIN_IDS = new Set(["bathing", "grooming", "dental_care", "second_opinion"]);
+const GENERAL_CARE_IDS = ["bathing", "grooming", "dental_care"];
+
 const YOUNG_SYMPTOMS = [
+  {
+    id: "skin",
+    label: "Itching or fleas — cat is otherwise well",
+    shortLabel: "Itching",
+    icon: "Bug",
+    theme: "skin",
+    online: true,
+  },
+  {
+    id: "shedding",
+    label: "Shedding more than usual — otherwise well",
+    shortLabel: "Hairfall",
+    icon: "Wind",
+    theme: "coat",
+    online: true,
+  },
+  {
+    id: "coat",
+    label: "Coat looks dull or dry",
+    shortLabel: "Dry coat",
+    icon: "Sparkles",
+    theme: "coat",
+    online: true,
+  },
+  {
+    id: "vomiting",
+    label: "Hairballs — still keeping food down",
+    shortLabel: "Hairball",
+    icon: "Cat",
+    theme: "gut",
+    online: true,
+  },
+  {
+    id: "dental",
+    label: "Smelly breath — still eating normally",
+    shortLabel: "Bad breath",
+    icon: "Stethoscope",
+    theme: "dental",
+    online: true,
+  },
+  {
+    id: "general_care",
+    label: "Bathing, grooming, or dental care",
+    shortLabel: "General care",
+    icon: "Droplets",
+    theme: "care",
+    online: true,
+  },
+  {
+    id: "nutrition",
+    label: "Food and nutrition help",
+    shortLabel: "Nutrition",
+    icon: "Utensils",
+    theme: "appetite",
+    online: true,
+  },
+  {
+    id: "chubby",
+    label: "A bit overweight — still active",
+    shortLabel: "Getting chubby",
+    icon: "Scale",
+    theme: "appetite",
+    online: true,
+  },
+  {
+    id: "second_opinion",
+    label: "Want a vet to look at this with you",
+    shortLabel: "Second opinion",
+    icon: "ClipboardList",
+    theme: "advice",
+    online: true,
+  },
+  {
+    id: "bathing",
+    label: "Bathing help for a healthy cat",
+    shortLabel: "Bathing",
+    icon: "Droplets",
+    theme: "care",
+    online: true,
+    picker: false,
+  },
+  {
+    id: "grooming",
+    label: "Grooming help for a healthy cat",
+    shortLabel: "Grooming",
+    icon: "Sparkles",
+    theme: "care",
+    online: true,
+    picker: false,
+  },
+  {
+    id: "dental_care",
+    label: "Dental care for a healthy cat",
+    shortLabel: "Dental",
+    icon: "Shield",
+    theme: "care",
+    online: true,
+    picker: false,
+  },
+  {
+    id: "behaviour",
+    label: "My cat seems off — restless, hiding, irritable, or aggressive",
+    shortLabel: "Restless or hiding",
+    icon: "Cat",
+    theme: "mood",
+  },
+  {
+    id: "energy",
+    label: "My cat is sleeping more or has low energy",
+    shortLabel: "Less active",
+    icon: "Moon",
+    theme: "behaviour",
+  },
   {
     id: "appetite",
     label: "My cat is not eating properly",
@@ -1207,25 +1315,11 @@ const YOUNG_SYMPTOMS = [
     theme: "hydration",
   },
   {
-    id: "vomiting",
-    label: "My cat is vomiting — food, hairball, or yellow liquid",
-    shortLabel: "Vomiting",
-    icon: "Wind",
-    theme: "gut",
-  },
-  {
     id: "litter",
     label: "My cat is peeing outside the litter box, or has diarrhoea / straining",
     shortLabel: "Litter box changes",
     icon: "Toilet",
     theme: "litter",
-  },
-  {
-    id: "energy",
-    label: "My cat is sleeping more or has low energy",
-    shortLabel: "Less active",
-    icon: "Moon",
-    theme: "behaviour",
   },
   {
     id: "mobility",
@@ -1235,46 +1329,25 @@ const YOUNG_SYMPTOMS = [
     theme: "mobility",
   },
   {
-    id: "behaviour",
-    label: "My cat seems off — restless, hiding, irritable, or aggressive",
-    shortLabel: "Behaviour change",
-    icon: "Cat",
-    theme: "mood",
-  },
-  {
     id: "eyes",
-    label: "My cat has teary eyes or eye stains",
-    shortLabel: "Teary eyes",
+    label: "Tear stains or watery eyes — eyes open",
+    shortLabel: "Watery eyes",
     icon: "Eye",
     theme: "eyes",
   },
   {
-    id: "skin",
-    label: "My cat is scratching a lot, or has fleas/ticks/lice",
-    shortLabel: "Scratching",
+    id: "stool",
+    label: "Softer stool — no blood or straining",
+    shortLabel: "Loose poo",
+    icon: "Toilet",
+    theme: "litter",
+  },
+  {
+    id: "worms",
+    label: "Worms seen in stool or around the tail",
+    shortLabel: "Worms",
     icon: "Bug",
-    theme: "skin",
-  },
-  {
-    id: "coat",
-    label: "My cat's fur looks dull, dry, or is falling out",
-    shortLabel: "Dull coat",
-    icon: "Sparkles",
-    theme: "coat",
-  },
-  {
-    id: "dental",
-    label: "My cat has bad breath or difficulty chewing food",
-    shortLabel: "Bad breath",
-    icon: "Stethoscope",
-    theme: "dental",
-  },
-  {
-    id: "prevention",
-    label: "Nothing wrong — I just want a routine health check",
-    shortLabel: "Routine check-up",
-    icon: "ListChecks",
-    theme: "prevention",
+    theme: "gut",
   },
 ];
 
@@ -1411,6 +1484,94 @@ const YOUNG_SYMPTOM_META = {
       { name: "Daily omega & gut support", note: "Baseline wellness for cats under 7" },
     ],
   },
+  shedding: {
+    planTitle: "Coat & shedding plan",
+    products: [
+      { name: "Omega & coat oil", note: "Daily support when shedding picks up" },
+      { name: "Skin soothe supplement", note: "Helps dry skin under the extra fur" },
+      { name: "Hairball paste", note: "Extra hair often means more hairballs" },
+    ],
+  },
+  stool: {
+    planTitle: "Gut comfort plan",
+    products: [
+      { name: "Digestive probiotic", note: "Supports gut balance after softer stool" },
+      { name: "Gut comfort supplement", note: "Gentle daily support for a gurgly tummy" },
+      { name: "Monthly deworming", note: "Parasites are a common hidden cause" },
+    ],
+  },
+  worms: {
+    planTitle: "Deworming plan",
+    products: [
+      { name: "Monthly deworming", note: "Treats the worms you can see — and the ones you can't" },
+      { name: "Digestive probiotic", note: "Settles the gut after worms" },
+      { name: "Flea prevention", note: "Fleas can spread tapeworms" },
+    ],
+  },
+  picky: {
+    planTitle: "Nutrition plan",
+    products: [
+      { name: "Appetite support gel", note: "Makes meals more appealing without skipping food" },
+      { name: "Omega supplement", note: "Fills gaps when they graze or play with food" },
+      { name: "Probiotic paste", note: "A fussy gut often shows up as picky eating" },
+    ],
+  },
+  chubby: {
+    planTitle: "Weight support plan",
+    products: [
+      { name: "Daily omega & gut support", note: "Steady nutrition while portions come down" },
+      { name: "Joint comfort supplement", note: "Extra weight is easier on joints with daily support" },
+      { name: "Hairball paste", note: "Indoor cats often need both gut and weight help" },
+    ],
+  },
+  bathing: {
+    planTitle: "Bathing care plan",
+    products: [
+      { name: "Gentle cat shampoo", note: "Safe wash for cats who need a bath" },
+      { name: "Skin soothe supplement", note: "Helps skin after a bath" },
+      { name: "Flea prevention", note: "Baths don't replace monthly flea care" },
+    ],
+  },
+  grooming: {
+    planTitle: "Grooming plan",
+    products: [
+      { name: "Coat oil", note: "Makes brushing easier and the coat less dry" },
+      { name: "Hairball paste", note: "Grooming often brings up extra hair" },
+      { name: "Skin soothe supplement", note: "Daily support when the coat is thick or matted" },
+    ],
+  },
+  dental_care: {
+    planTitle: "Dental care plan",
+    products: [
+      { name: "Dental gel or water additive", note: "Daily mouth care at home" },
+      { name: "Dental treats", note: "Helps reduce plaque between meals" },
+      { name: "Omega support", note: "Supports gums from the inside" },
+    ],
+  },
+  nutrition: {
+    planTitle: "Nutrition plan",
+    products: [
+      { name: "Daily omega & gut support", note: "Fills gaps in everyday food" },
+      { name: "Probiotic paste", note: "Helps when the gut is fussy with food" },
+      { name: "Appetite support gel", note: "Useful when they graze or skip meals" },
+    ],
+  },
+  second_opinion: {
+    planTitle: "Second opinion",
+    products: [
+      { name: "Daily omega & gut support", note: "If the vet agrees it fits" },
+      { name: "Flea prevention", note: "Year-round in most Indian homes" },
+      { name: "Hairball paste", note: "Common indoor-cat support" },
+    ],
+  },
+  general_care: {
+    planTitle: "Everyday care plan",
+    products: [
+      { name: "Gentle cat shampoo", note: "Safe wash for cats who need a bath" },
+      { name: "Coat oil", note: "Makes brushing easier" },
+      { name: "Dental gel", note: "Daily mouth care at home" },
+    ],
+  },
 };
 
 const YOUNG_SYMPTOM_ALIASES = {
@@ -1426,6 +1587,21 @@ const YOUNG_SYMPTOM_ALIASES = {
   drinking: "hydration",
   diarrhoea: "litter",
   diarrhea: "litter",
+  stool: "litter",
+  shedding: "shedding",
+  hairfall: "shedding",
+  hairball: "vomiting",
+  hairballs: "vomiting",
+  worms: "worms",
+  picky: "nutrition",
+  nutrition: "nutrition",
+  food: "nutrition",
+  chubby: "chubby",
+  overweight: "chubby",
+  calm: "second_opinion",
+  stress: "second_opinion",
+  joints: "second_opinion",
+  stiffness: "second_opinion",
   skin: "skin",
   scratching: "skin",
   itching: "skin",
@@ -1445,9 +1621,17 @@ const YOUNG_SYMPTOM_ALIASES = {
   behavior: "behaviour",
   dental: "dental",
   breath: "dental",
+  bathing: "bathing",
+  bath: "bathing",
+  grooming: "grooming",
+  dentalcare: "dental_care",
   mobility: "mobility",
-  prevention: "prevention",
-  wellness: "prevention",
+  prevention: "second_opinion",
+  wellness: "second_opinion",
+  opinion: "second_opinion",
+  second: "second_opinion",
+  general: "general_care",
+  generalcare: "general_care",
 };
 
 const YOUNG_DURATION_OPTIONS = [
@@ -2249,16 +2433,21 @@ function getWellnessPlanConfig() {
 }
 
 function getYoungSymptomMeta() {
-  const id = getPrimaryYoungSymptom()?.id || "prevention";
-  return YOUNG_SYMPTOM_META[id] || YOUNG_SYMPTOM_META.prevention;
+  const id = getPrimaryYoungSymptom()?.id || "second_opinion";
+  return YOUNG_SYMPTOM_META[id] || YOUNG_SYMPTOM_META.second_opinion;
 }
 
 function getSelectedYoungSymptoms() {
-  return quizState.youngSymptoms || [];
+  return (quizState.youngSymptoms || [])
+    .map((item) => {
+      const id = typeof item === "string" ? item : item?.id;
+      return YOUNG_SYMPTOMS.find((s) => s.id === id);
+    })
+    .filter(Boolean);
 }
 
 function getSelectedIssueSymptoms() {
-  return getSelectedYoungSymptoms().filter((s) => s.id !== "prevention");
+  return getSelectedYoungSymptoms().filter((s) => !CARE_CHECKIN_IDS.has(s.id));
 }
 
 function getPrimaryYoungSymptom() {
@@ -2273,7 +2462,7 @@ function isYoungSymptomSelected(id) {
 
 function getYoungSymptomTheme(symptomId) {
   const symptom = YOUNG_SYMPTOMS.find((s) => s.id === symptomId);
-  return YOUNG_SYMPTOM_THEMES[symptom?.theme || "prevention"];
+  return YOUNG_SYMPTOM_THEMES[symptom?.theme || "care"];
 }
 
 function refreshFlowIcons() {
@@ -2423,8 +2612,8 @@ function isYoungCatAge(years) {
 }
 
 function isPreventionPath() {
-  const selected = getSelectedYoungSymptoms();
-  return selected.length === 1 && selected[0].id === "prevention";
+  const id = getPrimaryYoungSymptom()?.id;
+  return CARE_CHECKIN_IDS.has(id);
 }
 
 function getYoungConnectStep() {
@@ -2446,16 +2635,152 @@ function getYoungStepCount() {
 }
 
 function formatYoungStepLabel(step) {
-  return `Step ${step} of ${getYoungStepCount()}`;
+  return `Step ${step} of ${getYoungConnectStep()}`;
 }
 
 function getYoungDetailAnswers() {
   return quizState.youngDetailAnswers || {};
 }
 
+const CALL_HELP_LINE = {
+  skin: "itch care by courier",
+  coat: "coat oil by courier",
+  shedding: "hairfall care by courier",
+  vomiting: "hairball paste by courier",
+  dental: "mouth care by courier",
+  bathing: "bathing care by courier",
+  grooming: "grooming care by courier",
+  dental_care: "dental care by courier",
+  nutrition: "a food plan by courier",
+  chubby: "weight support by courier",
+  second_opinion: "a care plan if it fits",
+  general_care: "everyday care by courier",
+};
+
+const CALL_SCOPE_NOT_FOR = [
+  "Not eating",
+  "Hiding",
+  "Vomiting",
+  "Can't pee, or crying in the box",
+  "Blood in poo",
+];
+
+const CALL_SCOPE_QUESTION = {
+  id: "scope",
+  title: "We can only help with this",
+  lead: "",
+  options: [
+    { id: "just_this", label: "Yes, call me for this" },
+    { id: "something_else", label: "No, my cat needs a clinic" },
+  ],
+};
+
 function getYoungIssueFollowups(issueId) {
   if (!issueId) return [];
-  return YOUNG_ISSUE_FOLLOWUPS[issueId] || [];
+  const symptom = YOUNG_SYMPTOMS.find((s) => s.id === issueId);
+  return symptom?.online ? [{ id: "result" }] : [];
+}
+
+const ISSUE_RESULTS = {
+  skin: {
+    before: "./images/issues/issue-skin-before.png",
+    after: "./images/issues/issue-skin-after.png",
+    beforeCaption: "Itching and irritated skin",
+    afterCaption: "Calm skin after care",
+  },
+  shedding: {
+    before: "./images/issues/issue-shedding-before.png",
+    after: "./images/issues/issue-shedding-after.png",
+    beforeCaption: "Too much hair fall",
+    afterCaption: "Fuller coat after care",
+  },
+  coat: {
+    before: "./images/issues/issue-coat-before.png",
+    after: "./images/issues/issue-coat-after.png",
+    beforeCaption: "Dry, dull coat",
+    afterCaption: "Soft shine after care",
+  },
+  vomiting: {
+    before: "./images/issues/issue-hairball-before.png",
+    after: "./images/issues/issue-hairball-after.png",
+    beforeCaption: "Hairballs",
+    afterCaption: "Settled tummy after care",
+  },
+  dental: {
+    before: "./images/issues/issue-dental-before.png",
+    after: "./images/issues/issue-dental-after.png",
+    beforeCaption: "Bad breath",
+    afterCaption: "Fresher mouth after care",
+  },
+  bathing: {
+    before: "./images/issues/issue-bathing-before.png",
+    after: "./images/issues/issue-bathing-after.png",
+    beforeCaption: "Needs a bath",
+    afterCaption: "Clean coat after a bath",
+  },
+  grooming: {
+    before: "./images/issues/issue-grooming-before.png",
+    after: "./images/issues/issue-grooming-after.png",
+    beforeCaption: "Matted, ungroomed fur",
+    afterCaption: "Neat coat after grooming",
+  },
+  dental_care: {
+    before: "./images/issues/issue-dentalcare-before.png",
+    after: "./images/issues/issue-dentalcare-after.png",
+    beforeCaption: "Needs dental care",
+    afterCaption: "Cleaner teeth after care",
+  },
+  nutrition: {
+    before: "./images/issues/issue-nutrition-before.png",
+    after: "./images/issues/issue-nutrition-after.png",
+    beforeCaption: "Poor nutrition",
+    afterCaption: "Healthier body after care",
+  },
+  chubby: {
+    before: "./images/issues/issue-chubby-before.png",
+    after: "./images/issues/issue-chubby-after.png",
+    beforeCaption: "Getting chubby",
+    afterCaption: "Healthier weight after care",
+  },
+  second_opinion: {
+    before: "./images/issues/issue-opinion-before.png",
+    after: "./images/issues/issue-opinion-after.png",
+    beforeCaption: "Not sure what's wrong",
+    afterCaption: "A vet checks, then a clear plan",
+  },
+  general_care: {
+    before: "./images/issues/issue-bathing-before.png",
+    after: "./images/issues/issue-grooming-after.png",
+    beforeCaption: "Needs everyday care",
+    afterCaption: "Looked after at home",
+  },
+};
+
+function setYoungCallScope(scopeId) {
+  let issue = getPrimaryYoungSymptom();
+  if (!issue) {
+    const fallback = YOUNG_SYMPTOMS.find((s) => s.id === "second_opinion") || YOUNG_SYMPTOMS[0];
+    quizState.youngSymptoms = [{ id: fallback.id, label: fallback.label }];
+    issue = fallback;
+  }
+  if (!quizState.youngDetailAnswers) quizState.youngDetailAnswers = {};
+  const current = quizState.youngDetailAnswers[issue.id];
+  if (!current || current.id) quizState.youngDetailAnswers[issue.id] = {};
+  quizState.youngDetailAnswers[issue.id].scope = {
+    id: scopeId,
+    label: scopeId === "something_else" ? "Needs a clinic" : "This issue only",
+  };
+}
+
+function exitYoungFlowToClinic() {
+  setYoungCallScope("something_else");
+  track("young_step_completed", {
+    step: "clinic_escape",
+    symptom: getPrimaryYoungSymptom()?.id || null,
+    value: "something_else",
+  });
+  quizState.step = getYoungPlanStep();
+  renderFlowStep();
 }
 
 function getIssueDetailAnswersMap(symptomId) {
@@ -2529,6 +2854,18 @@ function applyUrlConcernYoungPrefill(years) {
 
   const concern = getHeroConcernFromUrl();
   quizState.youngSymptoms = [{ id: preselected.id, label: preselected.label }];
+  if (preselected.id === "general_care") {
+    quizState.youngSymptoms = [];
+    quizState.issuePickerView = "general";
+    track("young_symptoms_selected", {
+      symptoms: ["general_care"],
+      cat_age: years,
+      source: "url_concern",
+      concern,
+    });
+    return true;
+  }
+  if (preselected.online) setYoungCallScope("just_this");
   quizState.step = 3;
 
   track("young_symptoms_selected", {
@@ -2697,9 +3034,9 @@ function leadSpamErrorMessage(reason) {
     case "too_fast":
       return "Take a moment to finish the questions, then try again.";
     case "rate_phone":
-      return "We already have a request from this number. A specialist will call you soon.";
+      return "We already have a request from this number. A vet will call you soon.";
     case "rate_device":
-      return "You've already submitted recently. A specialist will call you soon.";
+      return "You've already submitted recently. A vet will call you soon.";
     case "bot_honeypot":
       return "Something went wrong. Please try again.";
     default:
@@ -2724,6 +3061,10 @@ function getYoungSymptomLabel() {
 
 function getYoungUrgentReasons() {
   const reasons = [];
+  if (hasOnlineSafetyRed()) {
+    reasons.push("This needs a clinic. We can't treat it on a call.");
+    return reasons;
+  }
   const durationId = quizState.youngDuration?.id;
   const symptomIds = getSelectedIssueSymptoms().map((s) => s.id);
 
@@ -2791,7 +3132,18 @@ function getYoungUrgentReasons() {
   return reasons;
 }
 
+function hasOnlineSafetyRed() {
+  const issue = getPrimaryYoungSymptom();
+  return getIssueDetailAnswer(issue?.id, "safety")?.id === "red";
+}
+
+function hasOtherIssueOnCall() {
+  const issue = getPrimaryYoungSymptom();
+  return getIssueDetailAnswer(issue?.id, "scope")?.id === "something_else";
+}
+
 function resolveYoungUrgency() {
+  if (hasOnlineSafetyRed()) return "urgent";
   if (isPreventionPath()) return "prevention";
 
   syncYoungDurationFromAnswers();
@@ -2825,25 +3177,175 @@ function resolveYoungUrgency() {
   return "consult";
 }
 
+function isAmberClinicCase() {
+  if (isPreventionPath()) {
+    return getIssueDetailAnswer("prevention", "help_with")?.id === "vaccinations";
+  }
+
+  syncYoungDurationFromAnswers();
+  const symptomIds = getSelectedIssueSymptoms().map((s) => s.id);
+
+  if (symptomIds.includes("hydration")) return true;
+
+  if (symptomIds.includes("appetite")) {
+    const howMuch = getIssueDetailAnswer("appetite", "how_much")?.id;
+    const stopped = getIssueDetailAnswer("appetite", "stopped")?.id;
+    const since = getIssueDetailAnswer("appetite", "since_when")?.id;
+    if (stopped === "almost" || howMuch === "half" || howMuch === "very_little") return true;
+    if (since === "one_two_weeks" || since === "longer") return true;
+  }
+
+  if (symptomIds.includes("vomiting")) {
+    const times = getIssueDetailAnswer("vomiting", "times_24h")?.id;
+    const what = getIssueDetailAnswer("vomiting", "what")?.id;
+    const keep = getIssueDetailAnswer("vomiting", "keep_down")?.id;
+    if (times === "two_three" || what === "yellow" || keep === "water_only") return true;
+  }
+
+  if (symptomIds.includes("litter")) {
+    const changed = getIssueDetailAnswer("litter", "what_changed")?.id;
+    if (["peeing_outside", "going_more", "pooping_outside"].includes(changed)) return true;
+  }
+
+  if (symptomIds.includes("mobility")) {
+    const bearing = getIssueDetailAnswer("mobility", "weight_bearing")?.id;
+    const injury = getIssueDetailAnswer("mobility", "injury")?.id;
+    if (bearing === "partial" || injury === "yes") return true;
+  }
+
+  if (symptomIds.includes("dental")) {
+    const eat = getIssueDetailAnswer("dental", "difficulty_eating")?.id;
+    const drool = getIssueDetailAnswer("dental", "drooling")?.id;
+    const gums = getIssueDetailAnswer("dental", "gums")?.id;
+    if (eat === "yes" || eat === "some" || drool === "yes" || gums === "swollen") return true;
+  }
+
+  if (symptomIds.includes("energy")) {
+    const onset = getIssueDetailAnswer("energy", "onset")?.id;
+    const eating = getIssueDetailAnswer("energy", "still_eating")?.id;
+    const hiding = getIssueDetailAnswer("energy", "hiding")?.id;
+    if (onset === "sudden" || eating === "less" || hiding === "yes") return true;
+  }
+
+  if (symptomIds.includes("behaviour")) {
+    const eating = getIssueDetailAnswer("behaviour", "eating_drinking")?.id;
+    const what = getIssueDetailAnswer("behaviour", "what_changed")?.id;
+    const since = getIssueDetailAnswer("behaviour", "since_when")?.id;
+    if (eating && eating !== "yes") return true;
+    if (what === "hiding" && (since === "one_two_weeks" || since === "longer")) return true;
+  }
+
+  if (symptomIds.includes("eyes")) {
+    const discharge = getIssueDetailAnswer("eyes", "discharge")?.id;
+    if (discharge === "yellow_green" || discharge === "white") return true;
+  }
+
+  if (symptomIds.includes("coat")) {
+    if (getIssueDetailAnswer("coat", "weight_loss")?.id === "yes") return true;
+    if (getIssueDetailAnswer("coat", "hair_loss")?.id === "patches") return true;
+  }
+
+  return false;
+}
+
+function getAmberReasons() {
+  const reasons = [];
+  if (hasOtherIssueOnCall()) {
+    reasons.push("This call is only for everyday supplements.");
+    reasons.push("Other illnesses need a clinic visit.");
+    return reasons;
+  }
+  const name = getCatDisplayName();
+  const symptomIds = getSelectedIssueSymptoms().map((s) => s.id);
+
+  if (isPreventionPath() && getIssueDetailAnswer("prevention", "help_with")?.id === "vaccinations") {
+    reasons.push("Vaccinations need an in-person clinic visit — we can't give them on a call.");
+  }
+  if (symptomIds.includes("hydration")) {
+    reasons.push("Drinking or peeing more usually needs blood and urine tests — not supplements on a call.");
+  }
+  if (symptomIds.includes("appetite")) {
+    reasons.push(`${name}'s appetite change should be examined in person before any treatment.`);
+  }
+  if (symptomIds.includes("vomiting")) {
+    reasons.push("This vomiting pattern needs a hands-on check, not a supplement prescription.");
+  }
+  if (symptomIds.includes("litter")) {
+    const changed = getIssueDetailAnswer("litter", "what_changed")?.id;
+    if (changed === "peeing_outside" || changed === "going_more") {
+      reasons.push("Peeing outside or more often can be bladder or kidney disease — that needs a clinic.");
+    } else if (changed === "pooping_outside") {
+      reasons.push("Pooping outside the box often has a medical cause that needs an exam.");
+    }
+  }
+  if (symptomIds.includes("mobility")) {
+    reasons.push("A limp or possible injury needs to be seen in person. We can't prescribe pain meds on a call.");
+  }
+  if (symptomIds.includes("dental")) {
+    reasons.push("Mouth pain or gum changes need a dental exam — gel on a call won't treat this.");
+  }
+  if (symptomIds.includes("energy")) {
+    reasons.push("A sudden energy drop or hiding with poorer eating needs a clinic workup.");
+  }
+  if (symptomIds.includes("behaviour")) {
+    reasons.push("Behaviour plus eating or drinking changes should be checked in clinic first.");
+  }
+  if (symptomIds.includes("eyes")) {
+    reasons.push("Cloudy or coloured eye discharge needs an in-person look, not drops over the phone.");
+  }
+  if (symptomIds.includes("coat")) {
+    if (getIssueDetailAnswer("coat", "weight_loss")?.id === "yes") {
+      reasons.push("Coat changes with weight loss can hide thyroid, kidney, or gut disease.");
+    }
+    if (getIssueDetailAnswer("coat", "hair_loss")?.id === "patches") {
+      reasons.push("Bald patches can be infection or parasites that need an exam.");
+    }
+  }
+
+  if (!reasons.length) {
+    reasons.push("This isn't something we can treat or prescribe supplements for on a call.");
+  }
+  return reasons;
+}
+
+/** red = emergency clinic, amber = needs exam (no supplements), green = vet prescribes supplements on call */
+function resolveCareLane() {
+  if (hasOnlineSafetyRed() || resolveYoungUrgency() === "urgent") return "red";
+  if (hasOtherIssueOnCall()) return "amber";
+  const issue = getPrimaryYoungSymptom();
+  const catalog = issue ? YOUNG_SYMPTOMS.find((s) => s.id === issue.id) : null;
+  if (catalog?.online || isPreventionPath()) return "green";
+  if (isAmberClinicCase()) return "amber";
+  if (catalog && !catalog.online) return "amber";
+  return "green";
+}
+
 function buildYoungCarePlan() {
   const name = getCatDisplayName();
   const age = quizState.age;
-  const symptomId = getPrimaryYoungSymptom()?.id || "prevention";
+  const symptomId = getPrimaryYoungSymptom()?.id || "second_opinion";
   syncYoungDurationFromAnswers();
   const durationId = quizState.youngDuration?.id;
   const planKeyQuestions = {
-    vomiting: "times_24h",
+    vomiting: "scope",
     appetite: "stopped",
     litter: "blood_straining",
     hydration: "amount",
     energy: "onset",
     mobility: "weight_bearing",
     behaviour: "what_changed",
-    dental: "difficulty_eating",
+    dental: "scope",
     eyes: "squinting",
     skin: "fleas",
     coat: "hair_loss",
     prevention: "help_with",
+    shedding: "scope",
+    chubby: "scope",
+    bathing: "scope",
+    grooming: "scope",
+    dental_care: "scope",
+    nutrition: "scope",
+    second_opinion: "scope",
   };
   const detailId =
     getIssueDetailAnswer(symptomId, planKeyQuestions[symptomId])?.id ||
@@ -2855,7 +3357,7 @@ function buildYoungCarePlan() {
   const heard = isPrevention
     ? [
         `${name} is ${formatCatAgeLabel(age)} old`,
-        formatYoungDetailSummary("prevention") || "Routine prevention check-in",
+        formatYoungDetailSummary("second_opinion") || "Everyday care check-in",
       ]
     : [
         `${name} is ${formatCatAgeLabel(age)} old`,
@@ -3374,7 +3876,7 @@ function buildYoungCarePlan() {
       urgency,
       urgentReasons,
       planTitle: "Go to a vet clinic now",
-      summary: `${name} may need an in-person vet visit soon. A Felica specialist will still call to help you decide what to do next.`,
+      summary: `${name} may need an in-person vet visit now. This isn't something we can treat or prescribe for on a call.`,
       watch: [
         "Leave now for the nearest open veterinary clinic or emergency vet.",
         "If your clinic is closed, go to an emergency vet — don't wait until morning.",
@@ -3421,7 +3923,7 @@ const RISK_TIERS = {
     meterLabel: "Low",
     headline: "Looking good overall.",
     action: "Recheck in about 6 months",
-    detail: "Nothing worrying in your answers. We'll remind you when it's time to screen again.",
+    detail: "Nothing worrying in your answers. A feline vet can prescribe prevention supplements on a call if you'd like a routine plan.",
     cta: "Got it",
     ctaTrust:
       "Recheck in 6 months. We'll remind you when it's time.",
@@ -3433,8 +3935,8 @@ const RISK_TIERS = {
     label: "Worth a look",
     meterLabel: "Medium",
     headline: "Worth a closer look.",
-    action: "Feline specialist calls within 24 hours",
-    detail: "These answers together are worth checking. A specialist will call to explain what it means.",
+    action: "See a vet clinic for tests",
+    detail: "These answers together usually need bloodwork or an exam — not supplements on a call.",
     cta: "Got it",
     ctaTrust:
       "Not a diagnosis, just clarity on whether a vet visit makes sense and what to ask for.",
@@ -3446,8 +3948,8 @@ const RISK_TIERS = {
     label: "Let's check this",
     meterLabel: "High",
     headline: "Worth taking seriously.",
-    action: "Feline specialist calls within 24 hours",
-    detail: "A few answers flagged together need attention. A specialist will call with clear next steps.",
+    action: "See a vet clinic today or tomorrow",
+    detail: "A few answers flagged together need a hands-on vet visit. We can't treat this or prescribe supplements on a call.",
     cta: "Got it",
     ctaTrust:
       "We'll help you walk in with the right questions, so your clinic visit is worth the time.",
@@ -3542,6 +4044,7 @@ function resetQuizState() {
     youngSymptoms: [],
     youngDuration: null,
     youngDetailAnswers: {},
+    issuePickerView: "main",
     catName: null,
     contactMethod: "call",
     whatsappNumber: null,
@@ -3645,14 +4148,13 @@ function renderSpecialistCallout(riskLevel) {
   if (riskLevel === "low") {
     return `
       <p class="score-specialist score-specialist--low">
-        Your answers look reassuring overall. We'll remind you when it's time to screen again — and a feline specialist is available if you'd like help understanding what they mean.
+        A feline vet will call to prescribe prevention supplements if they fit ${escapeHtml(getCatDisplayName())} — fleas, gut, coat, and daily support. If anything still looks like a clinic case, they'll say so.
       </p>`;
   }
 
   return `
     <p class="score-specialist">
-      A feline specialist will call you soon to walk through your answers, explain what they mean, and help you understand your cat's health better.
-      <span class="score-callback-number">You'll get the call from <strong>${FELICA_CALLBACK_NUMBER}</strong> — save the number so you don't miss us.</span>
+      This isn't something we can treat online. Please book an in-person vet visit for tests — we don't prescribe supplements for this on a call.
     </p>`;
 }
 
@@ -3691,7 +4193,10 @@ function setFlowProgress(step, total) {
 function updateFlowChrome() {
   const terminalStep = isYoungFlow() ? getYoungPlanStep() : getResultStep();
   if (assflowBack) {
-    assflowBack.hidden = quizState.step <= 1 || quizState.step === terminalStep;
+    const inGeneralCarePicker =
+      isYoungFlow() && quizState.step === 2 && quizState.issuePickerView === "general";
+    assflowBack.hidden =
+      (!inGeneralCarePicker && quizState.step <= 1) || quizState.step === terminalStep;
   }
 }
 
@@ -3746,6 +4251,15 @@ function closeFlow() {
 }
 
 function flowBack() {
+  if (
+    isYoungFlow() &&
+    quizState.step === 2 &&
+    quizState.issuePickerView === "general"
+  ) {
+    quizState.issuePickerView = "main";
+    renderFlowStep();
+    return;
+  }
   if (quizState.step <= 1) return;
   clearYoungReviewTimers();
   quizState.step -= 1;
@@ -3762,6 +4276,7 @@ function commitAgeAndAdvance(years) {
   quizState.youngSymptoms = [];
   quizState.youngDuration = null;
   quizState.youngDetailAnswers = {};
+  quizState.issuePickerView = "main";
   quizState.catName = null;
   quizState.youngLeadResult = null;
   quizState.sessionId = useChronic ? null : createYoungSessionId();
@@ -3784,134 +4299,86 @@ function commitAgeAndAdvance(years) {
 function renderAgeStep() {
   const useChronic = !isYoungFlow();
   setFlowProgress(0, useChronic ? getTotalFlowSteps() : getYoungStepCount());
-  const prefillOpt = nearestAgeWheelOption(quizState.age);
-  const options = AGE_WHEEL_OPTIONS;
   const isSeniorLanding = isSeniorScreeningLanding();
-  const ageLead = isSeniorLanding
-    ? "Cats 7+ are at higher risk. Scroll to pick your cat's age."
-    : "Scroll to pick an age — includes months for kittens.";
   const stepLabel = useChronic
     ? formatFlowStepLabel(1, "Age")
     : formatYoungStepLabel(1);
+  let view = quizState.age != null && quizState.age < 1 ? "months" : "years";
 
-  assflowMain.innerHTML = `
-    <div class="flow-step">
-      <p class="flow-step-label">${stepLabel}</p>
-      <h1 class="flow-title" id="assflow-title">How old is your cat?</h1>
-      <p class="flow-lead">${escapeHtml(ageLead)}</p>
-      <div class="age-wheel" id="age-wheel" role="listbox" aria-label="Cat age">
-        <div class="age-wheel-fade age-wheel-fade--top" aria-hidden="true"></div>
-        <div class="age-wheel-highlight" aria-hidden="true"></div>
-        <ul class="age-wheel-list" id="age-wheel-list">
-          <li class="age-wheel-spacer" aria-hidden="true"></li>
-          ${options
-            .map(
-              (opt) => `
-            <li
-              class="age-wheel-item${opt.id === prefillOpt.id ? " is-selected" : ""}"
-              role="option"
-              data-age-id="${opt.id}"
-              data-years="${opt.years}"
-              aria-selected="${opt.id === prefillOpt.id ? "true" : "false"}"
-            >${escapeHtml(opt.label)}</li>`
-            )
-            .join("")}
-          <li class="age-wheel-spacer" aria-hidden="true"></li>
-        </ul>
-        <div class="age-wheel-fade age-wheel-fade--bottom" aria-hidden="true"></div>
+  const isYearSelected = (years) => {
+    if (quizState.age == null || quizState.age < 1) return false;
+    if (years >= 16) return quizState.age >= 16;
+    return Math.round(quizState.age) === years;
+  };
+
+  const isMonthSelected = (years) => {
+    if (quizState.age == null || quizState.age >= 1) return false;
+    return Math.abs(quizState.age - years) < 0.04;
+  };
+
+  const paint = () => {
+    const isMonths = view === "months";
+    const title = isMonths ? "How many months old?" : "How old is your cat?";
+    const lead = isMonths
+      ? "Tap the closest age in months."
+      : isSeniorLanding
+        ? "Tap the age in years. Cats 7 and older may need a clinic check."
+        : "Tap the age in years.";
+
+    const picks = isMonths
+      ? AGE_MONTH_PICKS.map(
+          (opt) => `
+        <button type="button" class="age-pick-btn${isMonthSelected(opt.years) ? " is-selected" : ""}" data-age-years="${opt.years}">
+          ${escapeHtml(opt.label)}
+        </button>`
+        ).join("")
+      : AGE_YEAR_PICKS.map(
+          (opt) => `
+        <button type="button" class="age-pick-btn${isYearSelected(opt.years) ? " is-selected" : ""}" data-age-years="${opt.years}">
+          ${escapeHtml(opt.label)}
+        </button>`
+        ).join("");
+
+    const extra = isMonths
+      ? `<button type="button" class="young-clinic-escape" data-age-years-back>My cat is 1 year or older</button>`
+      : `<button type="button" class="age-pick-kitten" data-age-kitten>Under 1 year — still a kitten</button>`;
+
+    assflowMain.innerHTML = `
+      <div class="flow-step age-pick-screen">
+        <p class="flow-step-label">${stepLabel}</p>
+        <h1 class="flow-title" id="assflow-title">${escapeHtml(title)}</h1>
+        <p class="flow-lead">${escapeHtml(lead)}</p>
+        ${isMonths ? `<p class="age-pick-unit">Months old</p>` : `<p class="age-pick-unit">Years old</p>`}
+        <div class="age-pick-grid${isMonths ? " age-pick-grid--months" : ""}" role="group" aria-label="${isMonths ? "Age in months" : "Age in years"}">
+          ${picks}
+        </div>
+        ${extra}
+        ${renderFlowTrustStrip()}
       </div>
-      <div class="flow-age-readout" id="flow-age-readout" aria-live="polite"></div>
-      ${renderFlowTrustStrip()}
-    </div>
-  `;
+    `;
 
-  const wheel = document.getElementById("age-wheel");
-  const list = document.getElementById("age-wheel-list");
-  const readout = document.getElementById("flow-age-readout");
-  const items = Array.from(list.querySelectorAll(".age-wheel-item"));
-  let selectedId = prefillOpt.id;
-  let selectedYears = prefillOpt.years;
-  let scrollEndTimer = null;
+    setFlowFooter({ visible: false });
 
-  const optionById = (id) => options.find((opt) => opt.id === id) || options[0];
-
-  const updateReadout = (years) => {
-    if (!readout) return;
-    readout.innerHTML = `About <strong>${catToHumanAge(
-      years
-    )}</strong> in human years — <span class="flow-age-band">${ageBandLabel(
-      years
-    )}</span> stage.`;
-  };
-
-  const setSelected = (id, { scroll = false } = {}) => {
-    const opt = optionById(id);
-    selectedId = opt.id;
-    selectedYears = opt.years;
-    items.forEach((item) => {
-      const isSelected = item.dataset.ageId === opt.id;
-      item.classList.toggle("is-selected", isSelected);
-      item.setAttribute("aria-selected", isSelected ? "true" : "false");
+    assflowMain.querySelectorAll("[data-age-years]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const years = Number(btn.dataset.ageYears);
+        if (!(years > 0 && years <= 25)) return;
+        commitAgeAndAdvance(years);
+      });
     });
-    updateReadout(opt.years);
-    setFlowFooter({ visible: true, disabled: false, label: "Next" });
-    if (scroll) {
-      const target = items.find((item) => item.dataset.ageId === opt.id);
-      if (target) {
-        wheel.scrollTop = target.offsetTop - wheel.clientHeight / 2 + target.offsetHeight / 2;
-      }
-    }
-  };
 
-  const idFromScroll = () => {
-    const center = wheel.scrollTop + wheel.clientHeight / 2;
-    let closest = items[0];
-    let closestDist = Infinity;
-    items.forEach((item) => {
-      const mid = item.offsetTop + item.offsetHeight / 2;
-      const dist = Math.abs(mid - center);
-      if (dist < closestDist) {
-        closestDist = dist;
-        closest = item;
-      }
+    assflowMain.querySelector("[data-age-kitten]")?.addEventListener("click", () => {
+      view = "months";
+      paint();
     });
-    return closest.dataset.ageId;
-  };
 
-  const snapToNearest = () => {
-    const id = idFromScroll();
-    const target = items.find((item) => item.dataset.ageId === id);
-    if (!target) return;
-    const top = target.offsetTop - wheel.clientHeight / 2 + target.offsetHeight / 2;
-    wheel.scrollTo({ top, behavior: "smooth" });
-    setSelected(id);
-  };
-
-  wheel.addEventListener(
-    "scroll",
-    () => {
-      setSelected(idFromScroll());
-      window.clearTimeout(scrollEndTimer);
-      scrollEndTimer = window.setTimeout(snapToNearest, 90);
-    },
-    { passive: true }
-  );
-
-  items.forEach((item) => {
-    item.addEventListener("click", () => {
-      setSelected(item.dataset.ageId, { scroll: true });
+    assflowMain.querySelector("[data-age-years-back]")?.addEventListener("click", () => {
+      view = "years";
+      paint();
     });
-  });
+  };
 
-  window.requestAnimationFrame(() => {
-    setSelected(prefillOpt.id, { scroll: true });
-  });
-
-  bindFlowContinue(() => {
-    if (!(selectedYears > 0 && selectedYears <= 25)) return;
-    commitAgeAndAdvance(selectedYears);
-  });
-
+  paint();
   trackScreeningStep("catAge");
 }
 
@@ -4002,11 +4469,24 @@ function renderResultStep() {
     cat_age: quizState.age,
     human_age: quizState.age != null ? catToHumanAge(quizState.age) : null,
     age_band: ageBandLabel(quizState.age),
+    care_lane: tier.id === "low" ? "green" : "amber",
     answers: SCREENING_QUESTIONS.reduce((acc, q) => {
       acc[q.id] = quizState.answers[q.id]?.id || null;
       return acc;
     }, {}),
   });
+
+  if (tier.id !== "low") {
+    assflowMain.innerHTML = `
+      <div class="flow-step flow-step-result">
+        ${renderChronicClinicResult(tier)}
+      </div>
+    `;
+    bindAgingResultHandlers();
+    track("care_lane_resolved", { lane: "amber", flow_track: "chronic", risk_level: tier.id });
+    trackScreeningStep("clinic");
+    return;
+  }
 
   assflowMain.innerHTML = `
     <div class="flow-step flow-step-result">
@@ -4032,12 +4512,32 @@ function renderGateResultPreview(tier) {
     </div>`;
 }
 
+function renderChronicClinicResult(tier) {
+  const headline = tier?.headline || "This needs a clinic visit.";
+  const detail = tier?.detail || "We can't treat this or prescribe supplements on a call.";
+  return `
+    <div class="quiz-result score-result young-plan-step young-plan-step--clinic">
+      <div class="young-clinic-panel" role="status">
+        <p class="young-clinic-eyebrow">Needs an in-person vet</p>
+        <h2 class="young-clinic-title" id="assflow-title">${escapeHtml(headline)}</h2>
+        <p class="young-clinic-lead">${escapeHtml(detail)}</p>
+        <ul class="young-clinic-reasons">
+          <li>Kidney, thyroid, and diabetes signs need blood and urine tests.</li>
+          <li>We don't prescribe supplements for this on a call.</li>
+          <li>Take these answers to your local vet so they know what to check.</li>
+        </ul>
+      </div>
+      ${renderScreeningSummary()}
+      <button type="button" class="btn btn-block btn-get-started" data-flow-done>Got it</button>
+      <p class="score-reassure">Not a diagnosis. Please see a vet in person for tests and treatment.</p>
+    </div>
+  `;
+}
+
 function renderWhatsAppGate(tier) {
   const preview = tier ? renderGateResultPreview(tier) : "";
   const leadLine =
-    tier && tier.id !== "low"
-      ? "A feline specialist will call within 24 hours."
-      : "See your full result on the next screen.";
+    "A feline vet will call to prescribe prevention supplements if they fit — usually within 15–30 minutes.";
   const catPrefill = quizState.catName || catName || "";
 
   return `
@@ -4078,7 +4578,7 @@ function renderWhatsAppGate(tier) {
         </div>
         <p class="whatsapp-gate-hint">Private · no spam</p>
         <p class="flow-error" id="whatsapp-gate-error" hidden></p>
-        <button type="submit" class="btn btn-block btn-get-started">Show my result</button>
+        <button type="submit" class="btn btn-block btn-get-started">Get my vet call</button>
       </form>
     </div>
   `;
@@ -4149,7 +4649,7 @@ function bindWhatsAppGateHandlers() {
       cat_age: quizState.age,
       has_cat_name: true,
     });
-    flushLeadConversionTags({ flow_track: "chronic" });
+    flushLeadConversionTags({ flow_track: "chronic", lane: "green" });
 
     const clientResult = buildClientScreeningResult();
     quizState.screeningResult = clientResult;
@@ -4259,24 +4759,11 @@ function renderYoungOptionCards(name, options, savedId, onSelect) {
     </fieldset>`;
 }
 
-function renderYoungSymptomStep() {
-  setFlowProgress(1, getYoungStepCount());
-  setFlowProgramLabel();
-  const preselected = getYoungSymptomFromUrl();
-  if (preselected && !getSelectedYoungSymptoms().length) {
-    quizState.youngSymptoms = [{ id: preselected.id, label: preselected.label }];
-  }
-
-  assflowMain.innerHTML = `
-    <div class="flow-step young-issue-screen">
-      <h1 class="flow-title" id="assflow-title">What's changed with your cat?</h1>
-      <p class="flow-lead">Choose the main thing you've noticed</p>
-      <div class="young-issue-list" role="radiogroup" aria-label="Changes you've noticed">
-        ${YOUNG_SYMPTOMS.map((symptom) => {
-          const theme = YOUNG_SYMPTOM_THEMES[symptom.theme];
-          const selected = isYoungSymptomSelected(symptom.id) ? " is-selected" : "";
-          const tileLabel = symptom.shortLabel || symptom.label;
-          return `
+function renderYoungIssueCard(symptom) {
+  const theme = YOUNG_SYMPTOM_THEMES[symptom.theme];
+  const selected = isYoungSymptomSelected(symptom.id) ? " is-selected" : "";
+  const tileLabel = symptom.shortLabel || symptom.label;
+  return `
           <label
             class="young-issue-card young-issue-card--single${selected}"
             data-symptom-id="${symptom.id}"
@@ -4296,35 +4783,141 @@ function renderYoungSymptomStep() {
               <span class="young-issue-label">${escapeHtml(tileLabel)}</span>
             </span>
           </label>`;
-        }).join("")}
-      </div>
-    </div>
-  `;
+}
 
-  setFlowFooter({ visible: false });
-  refreshFlowIcons();
-  trackYoungCatStep("issue");
+function getPickerIssues() {
+  return YOUNG_SYMPTOMS.filter((s) => s.online && s.picker !== false);
+}
 
+function getGeneralCareIssues() {
+  return GENERAL_CARE_IDS.map((id) => YOUNG_SYMPTOMS.find((s) => s.id === id)).filter(Boolean);
+}
+
+function selectYoungIssueAndAdvance(symptom) {
+  quizState.youngSymptoms = [{ id: symptom.id, label: symptom.label }];
+  quizState.youngDuration = null;
+  quizState.youngDetailAnswers = {};
+  quizState.issuePickerView = "main";
+  setYoungCallScope("just_this");
+
+  assflowMain.querySelectorAll(".young-issue-card").forEach((card) => {
+    card.classList.toggle("is-selected", card.dataset.symptomId === symptom.id);
+  });
+
+  track("young_symptoms_selected", {
+    symptoms: [symptom.id],
+    cat_age: quizState.age,
+  });
+  quizState.step = 3;
+  window.setTimeout(renderFlowStep, FLOW_ADVANCE_MS);
+}
+
+function bindYoungIssuePicker() {
   assflowMain.querySelectorAll('.young-issue-card input[name="young-symptoms"]').forEach((input) => {
     input.addEventListener("change", () => {
       const symptom = YOUNG_SYMPTOMS.find((s) => s.id === input.value);
       if (!symptom || !input.checked) return;
 
-      quizState.youngSymptoms = [{ id: symptom.id, label: symptom.label }];
-      quizState.youngDuration = null;
-      quizState.youngDetailAnswers = {};
+      if (symptom.id === "general_care") {
+        quizState.issuePickerView = "general";
+        renderYoungSymptomStep();
+        return;
+      }
 
-      assflowMain.querySelectorAll(".young-issue-card").forEach((card) => {
-        card.classList.toggle("is-selected", card.dataset.symptomId === symptom.id);
-      });
-
-      track("young_symptoms_selected", {
-        symptoms: [symptom.id],
-        cat_age: quizState.age,
-      });
-      quizState.step = 3;
-      window.setTimeout(renderFlowStep, FLOW_ADVANCE_MS);
+      selectYoungIssueAndAdvance(symptom);
     });
+  });
+}
+
+function renderYoungSymptomStep() {
+  setFlowProgress(1, getYoungStepCount());
+  setFlowProgramLabel();
+  const preselected = getYoungSymptomFromUrl();
+  if (preselected && preselected.picker !== false && !getSelectedYoungSymptoms().length) {
+    quizState.youngSymptoms = [{ id: preselected.id, label: preselected.label }];
+  }
+
+  const isGeneralView = quizState.issuePickerView === "general";
+  const issues = isGeneralView ? getGeneralCareIssues() : getPickerIssues();
+  const title = isGeneralView ? "Which kind of care?" : "What's wrong?";
+  const lead = isGeneralView
+    ? "Bathing, grooming, or dental."
+    : "Pick one. We'll call you and courier the medicine.";
+
+  assflowMain.innerHTML = `
+    <div class="flow-step young-issue-screen">
+      <p class="flow-step-label">${formatYoungStepLabel(2)}</p>
+      <h1 class="flow-title" id="assflow-title">${escapeHtml(title)}</h1>
+      <p class="flow-lead">${escapeHtml(lead)}</p>
+      ${
+        isGeneralView
+          ? ""
+          : `<p class="young-issue-safety">Not for: <strong>not eating, hiding, vomiting, can't pee, or blood in poo. Those need a clinic.</strong></p>`
+      }
+      <div class="young-issue-list" role="radiogroup" aria-label="${escapeHtml(title)}">
+        ${issues.map(renderYoungIssueCard).join("")}
+      </div>
+      ${
+        isGeneralView
+          ? ""
+          : `<button type="button" class="young-clinic-escape" data-clinic-escape>My cat has a bigger problem</button>`
+      }
+    </div>
+  `;
+
+  setFlowFooter({ visible: false });
+  updateFlowChrome();
+  refreshFlowIcons();
+  trackYoungCatStep(isGeneralView ? "general_care" : "issue");
+  bindYoungIssuePicker();
+  assflowMain.querySelector("[data-clinic-escape]")?.addEventListener("click", exitYoungFlowToClinic);
+}
+
+function renderYoungIssueResultStep(issue) {
+  const result = ISSUE_RESULTS[issue.id] || ISSUE_RESULTS.second_opinion;
+  const shortLabel = issue.shortLabel || "this";
+  const title =
+    issue.id === "second_opinion"
+      ? "What a vet check can look like"
+      : `What ${shortLabel.toLowerCase()} can look like`;
+
+  setFlowProgress(quizState.step - 1, getYoungStepCount());
+  assflowMain.innerHTML = `
+    <div class="flow-step young-result-screen">
+      <p class="flow-step-label">${formatYoungStepLabel(quizState.step)}</p>
+      <h1 class="flow-title" id="assflow-title">${escapeHtml(title)}</h1>
+      <p class="flow-lead">A doctor calls, then we courier the medicine. This is the kind of change parents see.</p>
+      <div class="young-result-ba" aria-label="Before and after">
+        <figure class="young-result-card">
+          <div class="young-result-photo">
+            <img src="${result.before}?v=hc158" alt="" width="480" height="360" />
+            <span class="young-result-tag">Before</span>
+          </div>
+          <figcaption>${escapeHtml(result.beforeCaption)}</figcaption>
+        </figure>
+        <span class="young-result-arrow" aria-hidden="true"><i data-lucide="chevron-right"></i></span>
+        <figure class="young-result-card">
+          <div class="young-result-photo">
+            <img src="${result.after}?v=hc158" alt="" width="480" height="360" />
+            <span class="young-result-tag young-result-tag--after">After care</span>
+          </div>
+          <figcaption>${escapeHtml(result.afterCaption)}</figcaption>
+        </figure>
+      </div>
+      <button type="button" class="btn btn-block btn-get-started" data-result-continue>Continue</button>
+    </div>
+  `;
+
+  setFlowFooter({ visible: false });
+  refreshFlowIcons();
+  trackYoungCatStep("result", issue.id);
+  assflowMain.querySelector("[data-result-continue]")?.addEventListener("click", () => {
+    track("young_step_completed", {
+      step: "result",
+      symptom: issue.id,
+    });
+    quizState.step += 1;
+    renderFlowStep();
   });
 }
 
@@ -4340,6 +4933,11 @@ function renderYoungIssueDetailStep() {
     return;
   }
 
+  if (question.id === "result") {
+    renderYoungIssueResultStep(issue);
+    return;
+  }
+
   const name = getCatDisplayName();
   const savedId = getIssueDetailAnswer(issue.id, question.id)?.id || "";
   const shortLabel =
@@ -4348,16 +4946,51 @@ function renderYoungIssueDetailStep() {
     /your cat/gi,
     name === "your cat" ? "your cat" : name
   );
+  const title =
+    question.id === "scope" && shortLabel
+      ? `We can only help with: ${shortLabel}`
+      : question.title;
+  const helpLine = CALL_HELP_LINE[issue.id] || "medicine by courier";
+  const issuePhrase = (shortLabel || "this").toLowerCase();
+  const okLabel =
+    issue.id === "prevention"
+      ? "Yes, call me for a check-up"
+      : `Yes, call me for ${issuePhrase}`;
+  const scopeOptions =
+    question.id === "scope"
+      ? [
+          { id: "just_this", label: okLabel },
+          { id: "something_else", label: "No, my cat needs a clinic" },
+        ]
+      : question.options;
 
   setFlowProgress(quizState.step - 1, getYoungStepCount());
 
+  const scopeBody =
+    question.id === "scope"
+      ? `
+      <p class="flow-lead">Please read this. This call cannot treat every problem.</p>
+      <div class="young-scope-will">
+        <p class="young-scope-will-title">What we will do</p>
+        <ul>
+          <li>A doctor calls about ${escapeHtml(issuePhrase)}</li>
+          <li>We send ${escapeHtml(helpLine)}</li>
+        </ul>
+      </div>
+      <div class="young-scope-wont">
+        <p class="young-scope-wont-title">If your cat also has any of this, go to a vet near you</p>
+        <ul>
+          ${CALL_SCOPE_NOT_FOR.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
+        </ul>
+      </div>`
+      : `${lead ? `<p class="flow-lead">${escapeHtml(lead)}</p>` : ""}`;
+
   assflowMain.innerHTML = `
-    <div class="flow-step young-detail-screen">
+    <div class="flow-step young-detail-screen${question.id === "scope" ? " young-detail-screen--scope" : ""}">
       <p class="flow-step-label">${formatYoungStepLabel(quizState.step)}</p>
-      ${shortLabel ? `<p class="young-detail-issue">${escapeHtml(shortLabel)}</p>` : ""}
-      <h1 class="flow-title" id="assflow-title">${escapeHtml(question.title)}</h1>
-      ${lead ? `<p class="flow-lead">${escapeHtml(lead)}</p>` : ""}
-      ${renderYoungOptionCards(`young-detail-${issue.id}-${question.id}`, question.options, savedId)}
+      <h1 class="flow-title" id="assflow-title">${escapeHtml(title)}</h1>
+      ${scopeBody}
+      ${renderYoungOptionCards(`young-detail-${issue.id}-${question.id}`, scopeOptions, savedId)}
     </div>
   `;
 
@@ -4395,42 +5028,23 @@ function renderYoungConnectStep() {
   setFlowProgress(connectStep - 1, getYoungStepCount());
   const catPrefill = quizState.catName || catName || "";
   quizState.contactMethod = "call";
-  const isPrevention = isPreventionPath();
-  const name = getCatDisplayName();
-  const possessive = name === "your cat" ? "your cat's" : `${name}'s`;
-  const connectLeads = {
-    vomiting: `We'll review ${possessive} vomiting pattern, then call with next steps.`,
-    appetite: `We'll review what you shared about ${possessive} eating, then call with next steps.`,
-    litter: `We'll review the litter changes you noted for ${name}, then call you.`,
-    skin: `We'll review ${possessive} scratching or flea issue, then call with a plan.`,
-    coat: `We'll review what you noticed about ${possessive} fur, then call with a plan.`,
-    eyes: `We'll review ${possessive} teary eyes, then call with guidance.`,
-    behaviour: `We'll review the behaviour changes you described, then call with next steps.`,
-    hydration: `We'll review ${possessive} drinking and peeing changes, then call with guidance.`,
-    energy: `We'll review ${possessive} energy changes, then call you.`,
-    dental: `We'll review the mouth trouble you described, then call you.`,
-    mobility: `We'll review how ${possessive} movement has changed, then call you.`,
-    prevention: `Leave your number — a feline specialist will call with ${possessive} prevention plan.`,
-  };
-  const issueId = getPrimaryYoungSymptom()?.id || "prevention";
-  const connectLead = isPrevention
-    ? connectLeads.prevention
-    : connectLeads[issueId] || "Someone will review what you shared, then call you.";
-  const isLikelyUrgent = !isPrevention && resolveYoungUrgency() === "urgent";
+  const issueId = getPrimaryYoungSymptom()?.id || "second_opinion";
+  const issueLabel =
+    getPrimaryYoungSymptom()?.shortLabel ||
+    YOUNG_SYMPTOMS.find((s) => s.id === issueId)?.shortLabel ||
+    "this";
+  const helpLine = CALL_HELP_LINE[issueId] || "medicine by courier";
+  const connectLead =
+    issueId === "second_opinion"
+      ? `We'll call for a second opinion. We send care if it fits.`
+      : `We'll call about ${issueLabel.toLowerCase()}. We send ${helpLine}.`;
 
   assflowMain.innerHTML = `
     <div class="flow-step young-connect-step">
       <p class="flow-step-label">${formatYoungStepLabel(connectStep)}</p>
-      ${
-        isLikelyUrgent
-          ? `<div class="young-urgent-inline" role="status">
-          <p class="young-urgent-inline-title">This may need prompt care</p>
-          <p class="young-urgent-inline-copy">Leave your number — a specialist will call within 15–30 minutes to help you decide next steps.</p>
-        </div>`
-          : ""
-      }
-      <h1 class="flow-title" id="assflow-title">Get your specialist call</h1>
+    <h1 class="flow-title" id="assflow-title">Leave your number</h1>
       <p class="flow-lead">${escapeHtml(connectLead)}</p>
+      <p class="young-connect-not-for">Not for: <strong>not eating, hiding, vomiting, can't pee, or blood in poo.</strong> Those need a clinic.</p>
 
       <form class="young-connect-form" id="young-connect-form" novalidate>
         <label class="flow-age-label" for="young-cat-name">Cat's name</label>
@@ -4466,15 +5080,17 @@ function renderYoungConnectStep() {
           <input type="text" id="young-company" name="company" tabindex="-1" autocomplete="off" />
         </div>
 
-        <p class="young-connect-next">Private · no spam · usually within 15–30 minutes</p>
+        <p class="young-connect-next">Private. A vet usually calls in 15–30 minutes.</p>
         <p class="flow-error" id="young-connect-error" hidden>Enter a valid 10-digit mobile number.</p>
-        <button type="submit" class="btn btn-block btn-get-started">Get my call</button>
+        <button type="submit" class="btn btn-block btn-get-started">Call me</button>
       </form>
+      <button type="button" class="young-clinic-escape" data-clinic-escape>My cat needs a clinic instead</button>
     </div>
   `;
 
   setFlowFooter({ visible: false });
   trackYoungCatStep("contact", issueId);
+  assflowMain.querySelector("[data-clinic-escape]")?.addEventListener("click", exitYoungFlowToClinic);
 
   const form = assflowMain.querySelector("#young-connect-form");
   form?.addEventListener("submit", (event) => {
@@ -4543,9 +5159,10 @@ function renderYoungConnectStep() {
       contact_method: "call",
       session_id: ensureYoungSessionId(),
       has_cat_name: true,
+      care_lane: "green",
     });
 
-    flushLeadConversionTags({ flow_track: "young" });
+    flushLeadConversionTags({ flow_track: "young", lane: "green" });
 
     quizState.step = getYoungReviewStep();
     renderFlowStep();
@@ -4556,6 +5173,7 @@ function renderYoungConnectStep() {
           session_id: quizState.sessionId,
           issue_id: getPrimaryYoungSymptom()?.id,
           urgency: resolveYoungUrgency(),
+          care_lane: "green",
           ok: true,
         });
       })
@@ -4564,6 +5182,7 @@ function renderYoungConnectStep() {
           session_id: quizState.sessionId,
           issue_id: getPrimaryYoungSymptom()?.id,
           urgency: resolveYoungUrgency(),
+          care_lane: "green",
           ok: false,
           status: err?.status || null,
         });
@@ -4718,30 +5337,34 @@ function renderYoungCallPlanStep() {
   flowCompleted = true;
 
   const name = getCatDisplayName();
-  const possessive = name === "your cat" ? "your cat's" : `${name}'s`;
   const specialist = getYoungCallSpecialist();
   const phone = quizState.whatsappNumber || "";
-  const issue = getPrimaryYoungSymptom();
-  const issueLabel =
-    issue?.shortLabel ||
-    YOUNG_SYMPTOMS.find((s) => s.id === issue?.id)?.shortLabel ||
-    "your answers";
+  const issueLabel = (
+    getPrimaryYoungSymptom()?.shortLabel ||
+    "this"
+  ).toLowerCase();
 
   track("young_plan_viewed", {
     cat_age: quizState.age,
     symptoms: getSelectedYoungSymptoms().map((s) => s.id),
     specialist: specialist.fullName,
     phone_collected: !!phone,
+    care_lane: "green",
+    urgency: "consult",
   });
+
+  const plan = buildYoungCarePlan();
+  const productItems = (plan.products || [])
+    .slice(0, 3)
+    .map((product) => `<li>${escapeHtml(product.name)} — ${escapeHtml(product.note)}</li>`)
+    .join("");
 
   assflowMain.innerHTML = `
     <div class="flow-step flow-step-result young-plan-step young-call-plan">
       <div class="young-care-plan young-call-plan-card">
         <h1 class="young-call-plan-title" id="assflow-title">You're all set</h1>
         <p class="young-call-plan-lead">
-          A feline specialist will call about ${escapeHtml(possessive)} ${escapeHtml(
-            String(issueLabel).toLowerCase()
-          )} soon.
+          This call is for ${escapeHtml(issueLabel)}. We courier the medicine after the call.
         </p>
 
         <section class="young-call-vet" aria-label="Your specialist">
@@ -4772,23 +5395,76 @@ function renderYoungCallPlanStep() {
         <section class="young-call-section" aria-labelledby="young-call-on-title">
           <h2 class="young-call-section-title" id="young-call-on-title">On the call</h2>
           <ul class="young-call-list">
-            <li>${escapeHtml(specialist.shortName)} reviews what you shared about ${escapeHtml(name)}</li>
-            <li>Explains what may be going on in plain language</li>
-            <li>Tells you what to do next — at home, or with your local vet</li>
+            <li>Only ${escapeHtml(issueLabel)} — not other problems</li>
+            <li>Couriers the medicine after the call</li>
+            <li>If something else is wrong, they will tell you to go to a clinic</li>
           </ul>
         </section>
 
-        <section class="young-call-section" aria-labelledby="young-call-after-title">
-          <h2 class="young-call-section-title" id="young-call-after-title">After the call</h2>
-          <ul class="young-call-list">
-            <li>You'll get a clear next step for ${escapeHtml(name)}</li>
-            <li>If treatment is needed, ${escapeHtml(specialist.shortName)} will walk you through it</li>
-            <li>You can ask follow-up questions on the same call</li>
-          </ul>
-        </section>
+        ${
+          productItems
+            ? `<section class="young-call-section" aria-labelledby="young-call-supplements-title">
+          <h2 class="young-call-section-title" id="young-call-supplements-title">What we may send</h2>
+          <ul class="young-call-list">${productItems}</ul>
+        </section>`
+            : ""
+        }
 
         <button type="button" class="btn btn-block young-plan-done" data-flow-done>Done for now</button>
-        <p class="score-reassure">Not a diagnosis. Your vet makes every treatment decision.</p>
+        <p class="score-reassure">Not a diagnosis. The vet confirms on the call before anything is sent.</p>
+      </div>
+    </div>
+  `;
+
+  bindYoungPlanHandlers();
+}
+
+function renderYoungClinicPlanStep() {
+  setFlowProgress(getYoungStepCount() - 1, getYoungStepCount());
+  setFlowFooter({ visible: false });
+  setFlowProgramLabel();
+  flowCompleted = true;
+
+  const name = getCatDisplayName();
+  const reasons = getAmberReasons();
+
+  track("young_plan_viewed", {
+    cat_age: quizState.age,
+    symptoms: getSelectedYoungSymptoms().map((s) => s.id),
+    prevention: false,
+    urgency: "consult",
+    care_lane: "amber",
+    phone_collected: false,
+  });
+  track("care_lane_resolved", {
+    lane: "amber",
+    flow_track: "young",
+    issue_id: getPrimaryYoungSymptom()?.id || null,
+  });
+
+  const scopedOut = hasOtherIssueOnCall();
+
+  assflowMain.innerHTML = `
+    <div class="flow-step flow-step-result young-plan-step young-plan-step--clinic">
+      <div class="young-care-plan">
+        <div class="young-clinic-panel" role="status">
+          <p class="young-clinic-eyebrow">Needs an in-person vet</p>
+          <h2 class="young-clinic-title" id="assflow-title">${
+            scopedOut ? "Please see a clinic" : "We can't treat this online"
+          }</h2>
+          <p class="young-clinic-lead">${
+            scopedOut
+              ? "We can only courier everyday medicine. For anything else, please take your cat to a vet near you."
+              : `${escapeHtml(name)} needs a clinic exam — not a call to prescribe supplements.`
+          }</p>
+          <ul class="young-clinic-reasons">
+            ${reasons.map((reason) => `<li>${escapeHtml(reason)}</li>`).join("")}
+          </ul>
+          <p class="young-clinic-note">Please take ${escapeHtml(name)} to a nearby veterinary clinic. We don't collect a number for cases we can't treat online.</p>
+        </div>
+
+        <button type="button" class="btn btn-block btn-get-started" data-flow-done>Got it</button>
+        <p class="score-reassure">Not a diagnosis. Please see a vet in person for tests and treatment.</p>
       </div>
     </div>
   `;
@@ -4797,13 +5473,19 @@ function renderYoungCallPlanStep() {
 }
 
 function renderYoungPlanStep() {
-  const plan = buildYoungCarePlan();
-  const isUrgent = plan.urgency === "urgent";
+  const lane = resolveCareLane();
 
-  if (!isUrgent) {
+  if (lane === "green") {
     renderYoungCallPlanStep();
     return;
   }
+
+  if (lane === "amber") {
+    renderYoungClinicPlanStep();
+    return;
+  }
+
+  const plan = buildYoungCarePlan();
 
   setFlowProgress(getYoungStepCount() - 1, getYoungStepCount());
   setFlowFooter({ visible: false });
@@ -4815,6 +5497,13 @@ function renderYoungPlanStep() {
     symptoms: getSelectedYoungSymptoms().map((s) => s.id),
     prevention: false,
     urgency: "urgent",
+    care_lane: "red",
+    phone_collected: false,
+  });
+  track("care_lane_resolved", {
+    lane: "red",
+    flow_track: "young",
+    issue_id: getPrimaryYoungSymptom()?.id || null,
   });
 
   assflowMain.innerHTML = `
@@ -4829,7 +5518,7 @@ function renderYoungPlanStep() {
               .map((reason) => `<li>${escapeHtml(reason)}</li>`)
               .join("")}
           </ul>
-          <p class="young-urgent-note">If this looks urgent, please also head to a nearby clinic. We'll still call to help you decide next steps.</p>
+          <p class="young-urgent-note">Go to a clinic now. We don't take calls or prescribe supplements for emergencies.</p>
         </div>
 
         <div class="young-plan-section">
@@ -4863,6 +5552,24 @@ function renderYoungFlowStep() {
   }
 
   if (step === getYoungConnectStep()) {
+    if (getPrimaryYoungSymptom()?.id === "general_care") {
+      quizState.step = 2;
+      quizState.issuePickerView = "general";
+      renderYoungSymptomStep();
+      return;
+    }
+    const lane = resolveCareLane();
+    track("care_lane_resolved", {
+      lane,
+      flow_track: "young",
+      issue_id: getPrimaryYoungSymptom()?.id || null,
+    });
+    if (lane !== "green") {
+      quizState.step = getYoungPlanStep();
+      updateFlowChrome();
+      renderYoungPlanStep();
+      return;
+    }
     renderYoungConnectStep();
     return;
   }
