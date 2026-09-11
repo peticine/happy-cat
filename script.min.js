@@ -345,20 +345,37 @@ let catAgeProfile = null;
 // to Meta Pixel (fbq) and Google Ads (gtag) for conversion tracking.
 const FUNNEL_EVENTS = [];
 const GOOGLE_ADS_LEAD_SEND_TO = "AW-18298322041/boF_COGojMscEPn4qJVE";
+const LEAD_CONVERSION_LOCK_KEY = "felica-lead-conversion-fired";
 let leadConversionFired = false;
 
+function hasLeadConversionLock() {
+  if (leadConversionFired) return true;
+  try {
+    return sessionStorage.getItem(LEAD_CONVERSION_LOCK_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+function lockLeadConversion() {
+  leadConversionFired = true;
+  try {
+    sessionStorage.setItem(LEAD_CONVERSION_LOCK_KEY, "1");
+  } catch {
+    /* private mode */
+  }
+}
+
 /**
- * Fires Google Ads "Submit lead form" + Meta Lead once.
- * Non-blocking: tags are sent immediately so submit CTAs can advance
- * without waiting on ad-network callbacks (which often hit the old 1.2s
- * timeout when blocked or slow, and caused drop-offs).
+ * Fires Google Ads "Submit lead form" + Meta Lead once — only after PMS
+ * accepts the young-cat lead. Do not call this on form click or API failure.
  */
 function flushLeadConversionTags(props = {}) {
   const lane = props.lane || props.care_lane;
   // Only paid-lead conversions: vet will prescribe supplements on the call.
   if (lane !== "green") return Promise.resolve();
-  if (leadConversionFired) return Promise.resolve();
-  leadConversionFired = true;
+  if (hasLeadConversionLock()) return Promise.resolve();
+  lockLeadConversion();
 
   const flow = props.flow_track || props.flow || "screening";
   const contentName =
@@ -4045,7 +4062,6 @@ let quizState = {
 };
 
 function resetQuizState() {
-  leadConversionFired = false;
   clearYoungReviewTimers();
   const concern = getHeroConcernFromUrl();
   const useChronic = concern === "senior";
@@ -4664,8 +4680,10 @@ function bindWhatsAppGateHandlers() {
     track("whatsapp_number_collected", {
       cat_age: quizState.age,
       has_cat_name: true,
+      care_lane: "amber",
     });
-    flushLeadConversionTags({ flow_track: "chronic", lane: "green" });
+    // Do not fire the supplement-call Google Ads lead here. This path posts
+    // to /screening, not /young-cat, and is not a courier-call lead.
 
     const clientResult = buildClientScreeningResult();
     quizState.screeningResult = clientResult;
@@ -5194,13 +5212,12 @@ function renderYoungConnectStep() {
       care_lane: "green",
     });
 
-    flushLeadConversionTags({ flow_track: "young", lane: "green" });
-
     quizState.step = getYoungReviewStep();
     renderFlowStep();
 
     submitYoungCatLead(number)
       .then(() => {
+        flushLeadConversionTags({ flow_track: "young", lane: "green" });
         track("young_cat_lead_submitted", {
           session_id: quizState.sessionId,
           issue_id: getPrimaryYoungSymptom()?.id,
