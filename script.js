@@ -992,7 +992,7 @@ function getMetaFbc() {
 
 function buildMetaAttribution() {
   captureMetaClickId();
-  return {
+  const attribution = {
     meta_pixel_id: META_PIXEL_ID,
     event_id: ensureYoungSessionId(),
     fbp: getMetaFbp(),
@@ -1000,6 +1000,9 @@ function buildMetaAttribution() {
     event_source_url: String(window.location.href || "").split("#")[0] || null,
     client_user_agent: navigator.userAgent || null,
   };
+  return Object.fromEntries(
+    Object.entries(attribution).filter(([, value]) => value != null && String(value).trim() !== "")
+  );
 }
 
 captureMetaClickId();
@@ -3004,7 +3007,7 @@ const JUNK_PHONE_NUMBERS = new Set([
   "9090909090",
 ]);
 
-/** Skip honeypot, speed, and 24h rate checks for this test number only. */
+/** Skip honeypot, speed, name-junk, and 24h rate checks for this test number only. */
 const LEAD_SPAM_ALLOWLIST = new Set(["9884180000"]);
 
 function isLeadSpamAllowlisted(phone) {
@@ -3127,10 +3130,7 @@ function rememberLeadSubmission(phone) {
 
 function getLeadSpamBlockReason({ honeypot = "", phone = "", catNameValue = "", requireCatName = false } = {}) {
   if (isLeadSpamAllowlisted(phone)) {
-    if (requireCatName) {
-      const nameReason = getCatNameBlockReason(catNameValue);
-      if (nameReason) return nameReason;
-    }
+    if (requireCatName && !normalizeCatNameInput(catNameValue)) return "cat_name";
     if (!isValidIndianMobile(phone)) return "phone";
     return null;
   }
