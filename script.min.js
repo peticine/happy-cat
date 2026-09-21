@@ -3024,8 +3024,15 @@ const JUNK_CAT_NAMES = new Set([
   "undefined",
 ]);
 
-/** Minimum time from flow open → lead submit. Real parents take longer. */
-const LEAD_MIN_ELAPSED_MS = 20000;
+/** Instant-submit floor for bots that skip the quiz. The young flow is 2–3 taps. */
+const LEAD_MIN_ELAPSED_MS = 2000;
+
+function hasFinishedLeadQuestions() {
+  if (quizState.age == null) return false;
+  if (isYoungFlow()) return getSelectedYoungSymptoms().length > 0;
+  return SCREENING_QUESTIONS.every((q) => quizState.answers?.[q.id]);
+}
+
 const LEAD_RATE_KEY = "felica-lead-rate-v1";
 const LEAD_RATE_WINDOW_MS = 24 * 60 * 60 * 1000;
 
@@ -3113,7 +3120,13 @@ function rememberLeadSubmission(phone) {
 function getLeadSpamBlockReason({ honeypot = "", phone = "", catNameValue = "", requireCatName = false } = {}) {
   if (String(honeypot || "").trim()) return "bot_honeypot";
   const openedAt = quizState.openedAt || 0;
-  if (openedAt && Date.now() - openedAt < LEAD_MIN_ELAPSED_MS) return "too_fast";
+  if (
+    openedAt &&
+    Date.now() - openedAt < LEAD_MIN_ELAPSED_MS &&
+    !hasFinishedLeadQuestions()
+  ) {
+    return "too_fast";
+  }
   if (requireCatName) {
     const nameReason = getCatNameBlockReason(catNameValue);
     if (nameReason) return nameReason;
@@ -4671,7 +4684,7 @@ function renderWhatsAppGate(tier) {
         </div>
         <div class="lead-honeypot" aria-hidden="true">
           <label for="gate-company">Company</label>
-          <input type="text" id="gate-company" name="company" tabindex="-1" autocomplete="off" />
+          <input type="text" id="gate-company" name="company" tabindex="-1" autocomplete="new-password" />
         </div>
         <p class="whatsapp-gate-hint">Private · no spam</p>
         <p class="flow-error" id="whatsapp-gate-error" hidden></p>
@@ -4715,7 +4728,7 @@ function bindWhatsAppGateHandlers() {
         nameInput?.classList.add("error");
         nameInput?.focus();
         setTimeout(() => nameInput?.classList.remove("error"), 2000);
-      } else {
+      } else if (blockReason === "phone") {
         input?.classList.add("error");
         input?.focus();
         setTimeout(() => input?.classList.remove("error"), 2000);
@@ -5192,7 +5205,7 @@ function renderYoungConnectStep() {
 
         <div class="lead-honeypot" aria-hidden="true">
           <label for="young-company">Company</label>
-          <input type="text" id="young-company" name="company" tabindex="-1" autocomplete="off" />
+          <input type="text" id="young-company" name="company" tabindex="-1" autocomplete="new-password" />
         </div>
 
         <p class="young-connect-next">Private. A vet usually calls in 15–30 minutes.</p>
@@ -5239,7 +5252,7 @@ function renderYoungConnectStep() {
         nameInput?.classList.add("error");
         nameInput?.focus();
         setTimeout(() => nameInput?.classList.remove("error"), 2000);
-      } else {
+      } else if (blockReason === "phone") {
         phoneInput?.classList.add("error");
         phoneInput?.focus();
         setTimeout(() => phoneInput?.classList.remove("error"), 2000);
