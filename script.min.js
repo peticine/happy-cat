@@ -383,12 +383,17 @@ function flushLeadConversionTags(props = {}) {
 
   try {
     if (typeof window.fbq === "function") {
-      window.fbq("track", "Lead", {
-        content_name: contentName,
-        content_category: "supplement_call",
-        flow,
-        lane: "green",
-      });
+      window.fbq(
+        "track",
+        "Lead",
+        {
+          content_name: contentName,
+          content_category: "supplement_call",
+          flow,
+          lane: "green",
+        },
+        { eventID: ensureYoungSessionId() }
+      );
     }
   } catch (err) {
     /* pixel must never break the app */
@@ -939,6 +944,65 @@ const FELICA_NEWSLETTER_EMAIL = "hello@felica.in";
 const FELICA_WHATSAPP_URL = "https://chat.whatsapp.com/placeholder-felica-community";
 const FELICA_CALLBACK_NUMBER = "+91 80 4728 5635";
 const SCREENING_API_BASE = "https://digi-clinic-tau.vercel.app";
+const META_PIXEL_ID = "1068626952161985";
+const FBCLID_STORAGE_KEY = "felica-fbclid";
+
+function readCookieValue(name) {
+  try {
+    const prefix = `${name}=`;
+    const match = document.cookie.split("; ").find((row) => row.startsWith(prefix));
+    if (!match) return "";
+    return decodeURIComponent(match.slice(prefix.length));
+  } catch {
+    return "";
+  }
+}
+
+function captureMetaClickId() {
+  try {
+    const fbclid = new URLSearchParams(window.location.search).get("fbclid")?.trim();
+    if (fbclid) sessionStorage.setItem(FBCLID_STORAGE_KEY, fbclid);
+  } catch {
+    /* private mode */
+  }
+}
+
+function getStoredFbclid() {
+  try {
+    return sessionStorage.getItem(FBCLID_STORAGE_KEY) || "";
+  } catch {
+    return "";
+  }
+}
+
+function getMetaFbp() {
+  return readCookieValue("_fbp") || null;
+}
+
+function getMetaFbc() {
+  const fbc = readCookieValue("_fbc");
+  if (fbc) return fbc;
+  const fbclid =
+    getStoredFbclid() ||
+    new URLSearchParams(window.location.search).get("fbclid")?.trim() ||
+    "";
+  if (!fbclid) return null;
+  return `fb.1.${Date.now()}.${fbclid}`;
+}
+
+function buildMetaAttribution() {
+  captureMetaClickId();
+  return {
+    meta_pixel_id: META_PIXEL_ID,
+    event_id: ensureYoungSessionId(),
+    fbp: getMetaFbp(),
+    fbc: getMetaFbc(),
+    event_source_url: String(window.location.href || "").split("#")[0] || null,
+    client_user_agent: navigator.userAgent || null,
+  };
+}
+
+captureMetaClickId();
 
 function createYoungSessionId() {
   try {
@@ -1064,6 +1128,7 @@ function buildYoungPmsPayload(phoneNational) {
       call_scope: "just_this",
       prevention_only: CARE_CHECKIN_IDS.has(issueId),
     },
+    attribution: buildMetaAttribution(),
   };
 }
 
