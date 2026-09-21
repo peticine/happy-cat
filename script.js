@@ -3004,6 +3004,13 @@ const JUNK_PHONE_NUMBERS = new Set([
   "9090909090",
 ]);
 
+/** Skip honeypot, speed, and 24h rate checks for this test number only. */
+const LEAD_SPAM_ALLOWLIST = new Set(["9884180000"]);
+
+function isLeadSpamAllowlisted(phone) {
+  return LEAD_SPAM_ALLOWLIST.has(normalizeIndianMobile(phone));
+}
+
 const JUNK_CAT_NAMES = new Set([
   "test",
   "testing",
@@ -3109,6 +3116,7 @@ function getLeadRateLimitReason(phone) {
 }
 
 function rememberLeadSubmission(phone) {
+  if (isLeadSpamAllowlisted(phone)) return;
   const digits = normalizeIndianMobile(phone);
   const store = readLeadRateStore();
   const now = Date.now();
@@ -3118,6 +3126,14 @@ function rememberLeadSubmission(phone) {
 }
 
 function getLeadSpamBlockReason({ honeypot = "", phone = "", catNameValue = "", requireCatName = false } = {}) {
+  if (isLeadSpamAllowlisted(phone)) {
+    if (requireCatName) {
+      const nameReason = getCatNameBlockReason(catNameValue);
+      if (nameReason) return nameReason;
+    }
+    if (!isValidIndianMobile(phone)) return "phone";
+    return null;
+  }
   if (String(honeypot || "").trim()) return "bot_honeypot";
   const openedAt = quizState.openedAt || 0;
   if (
