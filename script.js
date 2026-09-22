@@ -946,6 +946,18 @@ const FELICA_CALLBACK_NUMBER = "+91 80 4728 5635";
 const SCREENING_API_BASE = "https://digi-clinic-tau.vercel.app";
 const META_PIXEL_ID = "1068626952161985";
 const FBCLID_STORAGE_KEY = "felica-fbclid";
+const LANDING_ATTR_KEY = "felica-landing-attr";
+const LANDING_ATTR_KEYS = [
+  "utm_source",
+  "utm_medium",
+  "utm_campaign",
+  "utm_content",
+  "utm_term",
+  "fbclid",
+  "gclid",
+  "gbraid",
+  "wbraid",
+];
 
 function readCookieValue(name) {
   try {
@@ -958,10 +970,30 @@ function readCookieValue(name) {
   }
 }
 
-function captureMetaClickId() {
+function readStoredLandingAttribution() {
   try {
-    const fbclid = new URLSearchParams(window.location.search).get("fbclid")?.trim();
-    if (fbclid) sessionStorage.setItem(FBCLID_STORAGE_KEY, fbclid);
+    const raw = sessionStorage.getItem(LANDING_ATTR_KEY);
+    const parsed = raw ? JSON.parse(raw) : {};
+    return parsed && typeof parsed === "object" ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
+function captureLandingAttribution() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const stored = readStoredLandingAttribution();
+    let changed = false;
+    LANDING_ATTR_KEYS.forEach((key) => {
+      const value = params.get(key)?.trim();
+      if (value && !stored[key]) {
+        stored[key] = value;
+        changed = true;
+      }
+    });
+    if (stored.fbclid) sessionStorage.setItem(FBCLID_STORAGE_KEY, stored.fbclid);
+    if (changed) sessionStorage.setItem(LANDING_ATTR_KEY, JSON.stringify(stored));
   } catch {
     /* private mode */
   }
@@ -969,10 +1001,22 @@ function captureMetaClickId() {
 
 function getStoredFbclid() {
   try {
-    return sessionStorage.getItem(FBCLID_STORAGE_KEY) || "";
+    return (
+      readStoredLandingAttribution().fbclid ||
+      sessionStorage.getItem(FBCLID_STORAGE_KEY) ||
+      ""
+    );
   } catch {
     return "";
   }
+}
+
+function resolveTrafficSource(landing = readStoredLandingAttribution()) {
+  const utm = String(landing.utm_source || "").trim().toLowerCase();
+  if (utm) return landing.utm_source.trim();
+  if (landing.gclid || landing.gbraid || landing.wbraid) return "google";
+  if (landing.fbclid || getStoredFbclid()) return "meta";
+  return "direct";
 }
 
 function getMetaFbp() {
@@ -991,7 +1035,9 @@ function getMetaFbc() {
 }
 
 function buildMetaAttribution() {
-  captureMetaClickId();
+  captureLandingAttribution();
+  const landing = readStoredLandingAttribution();
+  const trafficSource = resolveTrafficSource(landing);
   const attribution = {
     meta_pixel_id: META_PIXEL_ID,
     event_id: ensureYoungSessionId(),
@@ -999,13 +1045,23 @@ function buildMetaAttribution() {
     fbc: getMetaFbc(),
     event_source_url: String(window.location.href || "").split("#")[0] || null,
     client_user_agent: navigator.userAgent || null,
+    traffic_source: trafficSource,
+    utm_source: landing.utm_source || (trafficSource !== "direct" ? trafficSource : null),
+    utm_medium: landing.utm_medium || null,
+    utm_campaign: landing.utm_campaign || null,
+    utm_content: landing.utm_content || null,
+    utm_term: landing.utm_term || null,
+    fbclid: landing.fbclid || getStoredFbclid() || null,
+    gclid: landing.gclid || null,
+    gbraid: landing.gbraid || null,
+    wbraid: landing.wbraid || null,
   };
   return Object.fromEntries(
     Object.entries(attribution).filter(([, value]) => value != null && String(value).trim() !== "")
   );
 }
 
-captureMetaClickId();
+captureLandingAttribution();
 
 function createYoungSessionId() {
   try {
@@ -4358,7 +4414,7 @@ function openFlow(source = "unknown") {
     source,
     has_saved_age: catAge != null,
     prefilled_age: catAge,
-    traffic_source: new URLSearchParams(window.location.search).get("utm_source") || "direct",
+    traffic_source: resolveTrafficSource(),
   });
   renderFlowStep();
 }
@@ -5807,7 +5863,7 @@ window.peticineOpenFlow = openFlow;
 track("page_viewed", {
   path: window.location.pathname,
   has_saved_age: localStorage.getItem(CAT_AGE_KEY) != null,
-  traffic_source: new URLSearchParams(window.location.search).get("utm_source") || "direct",
+  traffic_source: resolveTrafficSource(),
   hero_concern: getHeroConcernFromUrl(),
 });
 
