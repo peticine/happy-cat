@@ -102,12 +102,12 @@ const HERO_VARIANTS = {
       "Quick check for senior cats. If a clinic visit isn't needed, a feline vet calls to prescribe prevention supplements.",
   },
   skin: {
-    headlineHook: "Itching, hairfall, dry coat, or hairballs?",
+    headlineHook: "Itching, hairfall, or a dry coat?",
     headline: "A feline vet can treat everyday skin and coat issues on a call — then we courier the care.",
     lead: "Pick what's going on. If we can treat it online, a vet usually calls in 15–30 minutes.",
     pageTitle: "Felica | Cat skin and coat",
     pageDescription:
-      "Itching, dry coat, hairfall, or hairballs. If we can treat it online, a feline vet calls and we courier the care.",
+      "Itching, dry coat, or hairfall. If we can treat it online, a feline vet calls and we courier the care.",
   },
   default: {
     headlineHook: "Everyday cat issues, treated online.",
@@ -195,9 +195,9 @@ const HERO_FLOAT_TAGS = {
     { icon: "bug", label: "Itching" },
     { icon: "wind", label: "Hairfall" },
     { icon: "sparkles", label: "Dry coat" },
-    { icon: "cat", label: "Hairballs" },
     { icon: "shield", label: "Flea care" },
     { icon: "droplets", label: "Coat oil" },
+    { icon: "heart-pulse", label: "Skin support" },
   ],
 };
 
@@ -255,8 +255,6 @@ const HERO_CONCERN_ALIASES = {
   fleas: "skin",
   hairfall: "skin",
   shedding: "skin",
-  hairball: "skin",
-  hairballs: "skin",
   "skin-coat": "skin",
   "skin-and-coat": "skin",
   "coat-and-skin": "skin",
@@ -382,7 +380,7 @@ function applySkinCoatLandingCopy(concern) {
   if (concern !== "skin") return;
   const howStep = document.querySelector(".how-step p");
   if (howStep) {
-    howStep.textContent = "Pick one — itching, hairfall, dry coat, or hairballs.";
+    howStep.textContent = "Pick one — itching, hairfall, or a dry coat.";
   }
   document.querySelectorAll(".coverage-card").forEach((card) => {
     const group = card.getAttribute("data-coverage-group");
@@ -3049,7 +3047,7 @@ const YOUNG_URGENT_CHECKS = [
   { issue: "energy", question: "still_eating", values: ["no"] },
 ];
 
-const SKIN_COAT_PICKER_IDS = ["skin", "shedding", "coat", "vomiting"];
+const SKIN_COAT_PICKER_IDS = ["skin", "shedding", "coat"];
 
 function getSkinCoatPickerIssues() {
   return SKIN_COAT_PICKER_IDS.map((id) => YOUNG_SYMPTOMS.find((s) => s.id === id)).filter(Boolean);
@@ -5105,7 +5103,7 @@ function renderYoungSymptomStep() {
   const lead = isGeneralView
     ? "Bathing, grooming, or dental."
     : isSkinCoatLanding()
-      ? "Itching, hairfall, dry coat, or hairballs. Pick one."
+      ? "Itching, hairfall, or a dry coat. Pick one."
       : "Pick one. We'll call you and courier the medicine.";
 
   assflowMain.innerHTML = `
