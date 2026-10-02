@@ -1539,6 +1539,8 @@ const YOUNG_SYMPTOMS = [
     shortLabel: "Eating less",
     icon: "Utensils",
     theme: "appetite",
+    online: true,
+    picker: false,
   },
   {
     id: "hydration",
@@ -1823,7 +1825,7 @@ const YOUNG_SYMPTOM_ALIASES = {
   nausea: "vomiting",
   gut: "vomiting",
   eating: "eating_less",
-  appetite: "appetite",
+  appetite: "eating_less",
   "eating-less": "eating_less",
   "eating_less": "eating_less",
   picky: "eating_less",
@@ -2898,6 +2900,7 @@ const CALL_HELP_LINE = {
   grooming: "grooming care by courier",
   dental_care: "dental care by courier",
   eating_less: "appetite support by courier",
+  appetite: "appetite support by courier",
   nutrition: "a food plan by courier",
   chubby: "weight support by courier",
   second_opinion: "a care plan if it fits",
@@ -2994,6 +2997,12 @@ const ISSUE_RESULTS = {
     afterCaption: "Cleaner teeth after care",
   },
   eating_less: {
+    before: "./images/issues/issue-nutrition-before.jpg",
+    after: "./images/issues/issue-nutrition-after.jpg",
+    beforeCaption: "Eating less than usual",
+    afterCaption: "Steady appetite after care",
+  },
+  appetite: {
     before: "./images/issues/issue-nutrition-before.jpg",
     after: "./images/issues/issue-nutrition-after.jpg",
     beforeCaption: "Eating less than usual",
@@ -3498,10 +3507,11 @@ function isAmberClinicCase() {
 
   if (symptomIds.includes("hydration")) return true;
 
-  if (symptomIds.includes("appetite")) {
+  if (symptomIds.includes("appetite") && !symptomIds.includes("eating_less")) {
     const howMuch = getIssueDetailAnswer("appetite", "how_much")?.id;
     const stopped = getIssueDetailAnswer("appetite", "stopped")?.id;
     const since = getIssueDetailAnswer("appetite", "since_when")?.id;
+    if (stopped === "refusing") return true;
     if (stopped === "almost" || howMuch === "half" || howMuch === "very_little") return true;
     if (since === "one_two_weeks" || since === "longer") return true;
   }
@@ -3575,8 +3585,11 @@ function getAmberReasons() {
   if (symptomIds.includes("hydration")) {
     reasons.push("Drinking or peeing more usually needs blood and urine tests — not supplements on a call.");
   }
-  if (symptomIds.includes("appetite")) {
-    reasons.push(`${name}'s appetite change should be examined in person before any treatment.`);
+  if (symptomIds.includes("appetite") && !symptomIds.includes("eating_less")) {
+    const stopped = getIssueDetailAnswer("appetite", "stopped")?.id;
+    if (stopped === "refusing" || stopped === "almost") {
+      reasons.push(`${name}'s appetite change should be examined in person before any treatment.`);
+    }
   }
   if (symptomIds.includes("vomiting")) {
     reasons.push("This vomiting pattern needs a hands-on check, not a supplement prescription.");
@@ -3625,6 +3638,7 @@ function resolveCareLane() {
   if (hasOtherIssueOnCall()) return "amber";
   const issue = getPrimaryYoungSymptom();
   const catalog = issue ? YOUNG_SYMPTOMS.find((s) => s.id === issue.id) : null;
+  if (issue?.id === "eating_less" || issue?.id === "appetite") return "green";
   if (catalog?.online || isPreventionPath()) return "green";
   if (isAmberClinicCase()) return "amber";
   if (catalog && !catalog.online) return "amber";
