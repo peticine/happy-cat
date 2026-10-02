@@ -101,6 +101,14 @@ const HERO_VARIANTS = {
     pageDescription:
       "Quick check for senior cats. If a clinic visit isn't needed, a feline vet calls to prescribe prevention supplements.",
   },
+  skin: {
+    headlineHook: "Itching, hairfall, dry coat, or hairballs?",
+    headline: "A feline vet can treat everyday skin and coat issues on a call — then we courier the care.",
+    lead: "Pick what's going on. If we can treat it online, a vet usually calls in 15–30 minutes.",
+    pageTitle: "Felica | Cat skin and coat",
+    pageDescription:
+      "Itching, dry coat, hairfall, or hairballs. If we can treat it online, a feline vet calls and we courier the care.",
+  },
   default: {
     headlineHook: "Everyday cat issues, treated online.",
     headline: "A feline vet calls you and prescribes the right supplements — if a clinic visit isn't needed.",
@@ -183,6 +191,14 @@ const HERO_FLOAT_TAGS = {
     { icon: "utensils", label: "Dental disease" },
     { icon: "activity", label: "Weight loss" },
   ],
+  skin: [
+    { icon: "bug", label: "Itching" },
+    { icon: "wind", label: "Hairfall" },
+    { icon: "sparkles", label: "Dry coat" },
+    { icon: "cat", label: "Hairballs" },
+    { icon: "shield", label: "Flea care" },
+    { icon: "droplets", label: "Coat oil" },
+  ],
 };
 
 const HERO_CONCERN_ALIASES = {
@@ -230,6 +246,20 @@ const HERO_CONCERN_ALIASES = {
   aging: "senior",
   geriatric: "senior",
   "geriatric-cat": "senior",
+  coat: "skin",
+  "dry-coat": "skin",
+  drycoat: "skin",
+  "dull-coat": "skin",
+  itching: "skin",
+  scratching: "skin",
+  fleas: "skin",
+  hairfall: "skin",
+  shedding: "skin",
+  hairball: "skin",
+  hairballs: "skin",
+  "skin-coat": "skin",
+  "skin-and-coat": "skin",
+  "coat-and-skin": "skin",
 };
 
 function normalizeHeroConcern(raw) {
@@ -238,10 +268,22 @@ function normalizeHeroConcern(raw) {
   return HERO_CONCERN_ALIASES[key] || key;
 }
 
+function getConcernFromPath() {
+  const path = (window.location.pathname || "").replace(/\/+$/, "");
+  const slug = path.split("/").pop() || "";
+  if (!slug || slug === "index.html") return "";
+  return slug;
+}
+
+function isSkinCoatLanding() {
+  return getHeroConcernFromUrl() === "skin";
+}
+
 function getHeroConcernFromUrl() {
   const params = new URLSearchParams(window.location.search);
   const raw =
     params.get("concern") ||
+    getConcernFromPath() ||
     params.get("utm_content") ||
     params.get("ad") ||
     params.get("symptom") ||
@@ -333,6 +375,19 @@ function initHeroPersonalization() {
   }
 
   document.body.dataset.heroConcern = concern;
+  applySkinCoatLandingCopy(concern);
+}
+
+function applySkinCoatLandingCopy(concern) {
+  if (concern !== "skin") return;
+  const howStep = document.querySelector(".how-step p");
+  if (howStep) {
+    howStep.textContent = "Pick one — itching, hairfall, dry coat, or hairballs.";
+  }
+  document.querySelectorAll(".coverage-card").forEach((card) => {
+    const group = card.getAttribute("data-coverage-group");
+    if (group && group !== "skin") card.hidden = true;
+  });
 }
 
 let catAge = null;
@@ -2994,8 +3049,16 @@ const YOUNG_URGENT_CHECKS = [
   { issue: "energy", question: "still_eating", values: ["no"] },
 ];
 
+const SKIN_COAT_PICKER_IDS = ["skin", "shedding", "coat", "vomiting"];
+
+function getSkinCoatPickerIssues() {
+  return SKIN_COAT_PICKER_IDS.map((id) => YOUNG_SYMPTOMS.find((s) => s.id === id)).filter(Boolean);
+}
+
 function getYoungSymptomFromUrl() {
   const concern = getHeroConcernFromUrl();
+  // Skin/coat ads land on a 4-issue picker — do not skip to one symptom.
+  if (concern === "skin") return null;
   // Peeing-outside ad landings → litter-box issue (not diarrhoea-first confusion)
   if (concern === "litter" || concern === "urination") {
     return YOUNG_SYMPTOMS.find((s) => s.id === "litter") || null;
@@ -4970,6 +5033,7 @@ function renderYoungIssueCard(symptom) {
 }
 
 function getPickerIssues() {
+  if (isSkinCoatLanding()) return getSkinCoatPickerIssues();
   return YOUNG_SYMPTOMS.filter((s) => s.online && s.picker !== false);
 }
 
@@ -5033,10 +5097,16 @@ function renderYoungSymptomStep() {
 
   const isGeneralView = quizState.issuePickerView === "general";
   const issues = isGeneralView ? getGeneralCareIssues() : getPickerIssues();
-  const title = isGeneralView ? "Which kind of care?" : "What's wrong?";
+  const title = isGeneralView
+    ? "Which kind of care?"
+    : isSkinCoatLanding()
+      ? "What's going on with the coat?"
+      : "What's wrong?";
   const lead = isGeneralView
     ? "Bathing, grooming, or dental."
-    : "Pick one. We'll call you and courier the medicine.";
+    : isSkinCoatLanding()
+      ? "Itching, hairfall, dry coat, or hairballs. Pick one."
+      : "Pick one. We'll call you and courier the medicine.";
 
   assflowMain.innerHTML = `
     <div class="flow-step young-issue-screen">

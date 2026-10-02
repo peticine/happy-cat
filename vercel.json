@@ -1,6 +1,11 @@
 {
   "buildCommand": null,
   "outputDirectory": ".",
+  "rewrites": [
+    { "source": "/skin", "destination": "/index.html" },
+    { "source": "/coat", "destination": "/index.html" },
+    { "source": "/skin-and-coat", "destination": "/index.html" }
+  ],
   "headers": [
     {
       "source": "/images/(.*)",
