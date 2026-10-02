@@ -4,7 +4,10 @@
   "rewrites": [
     { "source": "/skin", "destination": "/index.html" },
     { "source": "/coat", "destination": "/index.html" },
-    { "source": "/skin-and-coat", "destination": "/index.html" }
+    { "source": "/skin-and-coat", "destination": "/index.html" },
+    { "source": "/eating", "destination": "/index.html" },
+    { "source": "/eating-less", "destination": "/index.html" },
+    { "source": "/appetite", "destination": "/index.html" }
   ],
   "headers": [
     {

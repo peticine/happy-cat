@@ -52,13 +52,19 @@ const HERO_VARIANTS = {
   },
   eating: {
     headlineHook: "Eating less than usual?",
-    headline: "Find out if it's a passing phase — or a sign something's wrong.",
-    consequence: "Appetite changes are easy to dismiss — but cats hide illness until habits shift.",
+    headline: "A feline vet can treat picky eating and appetite dips on a call — then we courier the care.",
+    lead: "If your cat is still eating some food, we can often help online. A vet usually calls in 15–30 minutes.",
+    pageTitle: "Felica | Cat eating less",
+    pageDescription:
+      "Eating less but still taking some food. If we can treat it online, a feline vet calls and we courier the care.",
   },
   appetite: {
     headlineHook: "Eating less than usual?",
-    headline: "Find out if it's a passing phase — or a sign something's wrong.",
-    consequence: "Appetite changes are easy to dismiss — but cats hide illness until habits shift.",
+    headline: "A feline vet can treat picky eating and appetite dips on a call — then we courier the care.",
+    lead: "If your cat is still eating some food, we can often help online. A vet usually calls in 15–30 minutes.",
+    pageTitle: "Felica | Cat eating less",
+    pageDescription:
+      "Eating less but still taking some food. If we can treat it online, a feline vet calls and we courier the care.",
   },
   sleeping: {
     headline: "Let's understand why your cat is sleeping more.",
@@ -198,6 +204,14 @@ const HERO_FLOAT_TAGS = {
     { icon: "shield", label: "Flea care" },
     { icon: "droplets", label: "Coat oil" },
     { icon: "heart-pulse", label: "Skin support" },
+  ],
+  eating: [
+    { icon: "utensils", label: "Eating less" },
+    { icon: "clock", label: "Skipping meals" },
+    { icon: "scale", label: "Picky appetite" },
+    { icon: "shield", label: "Still eating some" },
+    { icon: "heart-pulse", label: "Appetite support" },
+    { icon: "sparkles", label: "Energy dips" },
   ],
 };
 
@@ -374,6 +388,7 @@ function initHeroPersonalization() {
 
   document.body.dataset.heroConcern = concern;
   applySkinCoatLandingCopy(concern);
+  applyEatingLandingCopy(concern);
 }
 
 function applySkinCoatLandingCopy(concern) {
@@ -385,6 +400,22 @@ function applySkinCoatLandingCopy(concern) {
   document.querySelectorAll(".coverage-card").forEach((card) => {
     const group = card.getAttribute("data-coverage-group");
     if (group && group !== "skin") card.hidden = true;
+  });
+}
+
+function isEatingLanding() {
+  return getHeroConcernFromUrl() === "eating";
+}
+
+function applyEatingLandingCopy(concern) {
+  if (concern !== "eating") return;
+  const howStep = document.querySelector(".how-step p");
+  if (howStep) {
+    howStep.textContent = "Tell us your cat is eating less — still taking some food.";
+  }
+  document.querySelectorAll(".coverage-card").forEach((card) => {
+    const group = card.getAttribute("data-coverage-group");
+    if (group && group !== "eating") card.hidden = true;
   });
 }
 
@@ -1422,6 +1453,14 @@ const YOUNG_SYMPTOMS = [
     online: true,
   },
   {
+    id: "eating_less",
+    label: "Eating less — still eating some food",
+    shortLabel: "Eating less",
+    icon: "Utensils",
+    theme: "appetite",
+    online: true,
+  },
+  {
     id: "general_care",
     label: "Bathing, grooming, or dental care",
     shortLabel: "General care",
@@ -1710,6 +1749,17 @@ const YOUNG_SYMPTOM_META = {
       { name: "Probiotic paste", note: "A fussy gut often shows up as picky eating" },
     ],
   },
+  eating_less: {
+    durationTitle: (name) => `How long has ${name} been eating less?`,
+    durationLead: "A smaller appetite is common — what matters is that they are still taking some food.",
+    detailTitle: "How is eating right now?",
+    planTitle: "Appetite support plan",
+    products: [
+      { name: "Appetite support gel", note: "Makes meals more appealing without skipping food" },
+      { name: "Probiotic paste", note: "A fussy gut often shows up as picky eating" },
+      { name: "Omega supplement", note: "Keeps coat and energy steady while appetite recovers" },
+    ],
+  },
   chubby: {
     planTitle: "Weight support plan",
     products: [
@@ -1772,8 +1822,11 @@ const YOUNG_SYMPTOM_ALIASES = {
   vomiting: "vomiting",
   nausea: "vomiting",
   gut: "vomiting",
-  eating: "appetite",
+  eating: "eating_less",
   appetite: "appetite",
+  "eating-less": "eating_less",
+  "eating_less": "eating_less",
+  picky: "eating_less",
   litter: "litter",
   urination: "litter",
   pee: "litter",
@@ -1787,7 +1840,6 @@ const YOUNG_SYMPTOM_ALIASES = {
   hairball: "vomiting",
   hairballs: "vomiting",
   worms: "worms",
-  picky: "nutrition",
   nutrition: "nutrition",
   food: "nutrition",
   chubby: "chubby",
@@ -2845,6 +2897,7 @@ const CALL_HELP_LINE = {
   bathing: "bathing care by courier",
   grooming: "grooming care by courier",
   dental_care: "dental care by courier",
+  eating_less: "appetite support by courier",
   nutrition: "a food plan by courier",
   chubby: "weight support by courier",
   second_opinion: "a care plan if it fits",
@@ -2939,6 +2992,12 @@ const ISSUE_RESULTS = {
     after: "./images/issues/issue-dentalcare-after.jpg",
     beforeCaption: "Needs dental care",
     afterCaption: "Cleaner teeth after care",
+  },
+  eating_less: {
+    before: "./images/issues/issue-nutrition-before.jpg",
+    after: "./images/issues/issue-nutrition-after.jpg",
+    beforeCaption: "Eating less than usual",
+    afterCaption: "Steady appetite after care",
   },
   nutrition: {
     before: "./images/issues/issue-nutrition-before.jpg",
@@ -3048,9 +3107,14 @@ const YOUNG_URGENT_CHECKS = [
 ];
 
 const SKIN_COAT_PICKER_IDS = ["skin", "shedding", "coat"];
+const EATING_PICKER_IDS = ["eating_less"];
 
 function getSkinCoatPickerIssues() {
   return SKIN_COAT_PICKER_IDS.map((id) => YOUNG_SYMPTOMS.find((s) => s.id === id)).filter(Boolean);
+}
+
+function getEatingPickerIssues() {
+  return EATING_PICKER_IDS.map((id) => YOUNG_SYMPTOMS.find((s) => s.id === id)).filter(Boolean);
 }
 
 function getYoungSymptomFromUrl() {
@@ -3060,6 +3124,9 @@ function getYoungSymptomFromUrl() {
   // Peeing-outside ad landings → litter-box issue (not diarrhoea-first confusion)
   if (concern === "litter" || concern === "urination") {
     return YOUNG_SYMPTOMS.find((s) => s.id === "litter") || null;
+  }
+  if (concern === "eating") {
+    return YOUNG_SYMPTOMS.find((s) => s.id === "eating_less") || null;
   }
   const mapped = YOUNG_SYMPTOM_ALIASES[concern];
   if (!mapped) return null;
@@ -3589,6 +3656,7 @@ function buildYoungCarePlan() {
     grooming: "scope",
     dental_care: "scope",
     nutrition: "scope",
+    eating_less: "scope",
     second_opinion: "scope",
   };
   const detailId =
@@ -5032,6 +5100,7 @@ function renderYoungIssueCard(symptom) {
 
 function getPickerIssues() {
   if (isSkinCoatLanding()) return getSkinCoatPickerIssues();
+  if (isEatingLanding()) return getEatingPickerIssues();
   return YOUNG_SYMPTOMS.filter((s) => s.online && s.picker !== false);
 }
 
@@ -5099,12 +5168,16 @@ function renderYoungSymptomStep() {
     ? "Which kind of care?"
     : isSkinCoatLanding()
       ? "What's going on with the coat?"
-      : "What's wrong?";
+      : isEatingLanding()
+        ? "What's going on with eating?"
+        : "What's wrong?";
   const lead = isGeneralView
     ? "Bathing, grooming, or dental."
     : isSkinCoatLanding()
       ? "Itching, hairfall, or a dry coat. Pick one."
-      : "Pick one. We'll call you and courier the medicine.";
+      : isEatingLanding()
+        ? "Eating less, but still taking some food."
+        : "Pick one. We'll call you and courier the medicine.";
 
   assflowMain.innerHTML = `
     <div class="flow-step young-issue-screen">
