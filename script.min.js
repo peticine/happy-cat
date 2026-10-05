@@ -1176,25 +1176,6 @@ function youngMediaKindFromFile(file) {
   return null;
 }
 
-function youngMediaFilename(file, contentType) {
-  const ext =
-    contentType === "image/jpeg"
-      ? "jpg"
-      : contentType === "image/png"
-        ? "png"
-        : contentType === "image/webp"
-          ? "webp"
-          : contentType === "video/quicktime"
-            ? "mov"
-            : "mp4";
-  const base = String(file?.name || "cat")
-    .replace(/\.[^.]+$/, "")
-    .replace(/[^a-zA-Z0-9._-]+/g, "-")
-    .replace(/^\.+/, "")
-    .slice(0, 40) || "cat";
-  return `${Date.now()}-${base}.${ext}`;
-}
-
 function getYoungCatMediaItems() {
   return Array.isArray(quizState.youngMedia) ? quizState.youngMedia : [];
 }
@@ -1229,21 +1210,19 @@ function buildYoungCatMediaPayload() {
     });
 }
 
-async function uploadYoungCatMediaOnFelica(file, contentType) {
-  const filename = youngMediaFilename(file, contentType);
-  const res = await fetch(
-    `/api/young-cat-media?filename=${encodeURIComponent(filename)}`,
+async function uploadYoungCatMediaOnFelica(file) {
+  const response = await fetch(
+    `/api/young-cat-media?filename=${encodeURIComponent(file.name)}`,
     {
       method: "POST",
-      headers: { "content-type": contentType },
       body: file,
     }
   );
-  const json = await res.json().catch(() => ({}));
-  if (!res.ok || !isYoungCatMediaHttpsUrl(json.url)) {
-    throw new Error(json.error || "Could not host that file on Felica.");
+  const blob = await response.json().catch(() => ({}));
+  if (!response.ok || !isYoungCatMediaHttpsUrl(blob.url)) {
+    throw new Error(blob.error || "Could not host that file on Felica.");
   }
-  return json;
+  return blob;
 }
 
 async function hostYoungCatMediaOnFelica() {
