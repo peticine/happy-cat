@@ -1232,14 +1232,14 @@ function buildYoungCatMediaPayload() {
 
 async function uploadYoungCatMediaOnFelica(file, contentType) {
   const pathname = youngMediaPathname(file, contentType);
-  const res = await fetch("/api/young-cat-media", {
-    method: "POST",
-    headers: {
-      "x-content-type": contentType,
-      "x-pathname": pathname,
-    },
-    body: file,
-  });
+  const res = await fetch(
+    `/api/young-cat-media?filename=${encodeURIComponent(pathname)}`,
+    {
+      method: "POST",
+      headers: { "content-type": contentType },
+      body: file,
+    }
+  );
   const json = await res.json().catch(() => ({}));
   if (!res.ok || !isYoungCatMediaHttpsUrl(json.url)) {
     throw new Error(json.error || "Could not host that file on Felica.");
