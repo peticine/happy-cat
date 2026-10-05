@@ -1028,6 +1028,7 @@ const FELICA_NEWSLETTER_EMAIL = "hello@felica.in";
 const FELICA_WHATSAPP_URL = "https://chat.whatsapp.com/placeholder-felica-community";
 const FELICA_CALLBACK_NUMBER = "+91 80 4728 5635";
 const SCREENING_API_BASE = "https://digi-clinic-tau.vercel.app";
+const YOUNG_CAT_API_BASE = "https://clinic.tailhealthcare.com";
 const META_PIXEL_ID = "1068626952161985";
 const FBCLID_STORAGE_KEY = "felica-fbclid";
 const LANDING_ATTR_KEY = "felica-landing-attr";
@@ -1147,6 +1148,157 @@ function buildMetaAttribution() {
 
 captureLandingAttribution();
 
+const YOUNG_MEDIA_MAX_ITEMS = 4;
+const YOUNG_MEDIA_MAX_URL_CHARS = 2000;
+const YOUNG_MEDIA_IMAGE_MAX_BYTES = 10 * 1024 * 1024;
+const YOUNG_MEDIA_VIDEO_MAX_BYTES = 50 * 1024 * 1024;
+const YOUNG_MEDIA_BLOB_API = "https://vercel.com/api/blob";
+const YOUNG_MEDIA_CONTENT_TYPES = {
+  "image/jpeg": "image",
+  "image/png": "image",
+  "image/webp": "image",
+  "video/mp4": "video",
+  "video/quicktime": "video",
+};
+
+function youngMediaKindFromFile(file) {
+  const type = String(file?.type || "").toLowerCase();
+  if (YOUNG_MEDIA_CONTENT_TYPES[type]) {
+    return { kind: YOUNG_MEDIA_CONTENT_TYPES[type], contentType: type };
+  }
+  const name = String(file?.name || "").toLowerCase();
+  if (name.endsWith(".jpg") || name.endsWith(".jpeg")) {
+    return { kind: "image", contentType: "image/jpeg" };
+  }
+  if (name.endsWith(".png")) return { kind: "image", contentType: "image/png" };
+  if (name.endsWith(".webp")) return { kind: "image", contentType: "image/webp" };
+  if (name.endsWith(".mp4")) return { kind: "video", contentType: "video/mp4" };
+  if (name.endsWith(".mov")) return { kind: "video", contentType: "video/quicktime" };
+  return null;
+}
+
+function youngMediaPathname(file, contentType) {
+  const session = ensureYoungSessionId();
+  const ext =
+    contentType === "image/jpeg"
+      ? "jpg"
+      : contentType === "image/png"
+        ? "png"
+        : contentType === "image/webp"
+          ? "webp"
+          : contentType === "video/quicktime"
+            ? "mov"
+            : "mp4";
+  const base = String(file?.name || "cat")
+    .replace(/\.[^.]+$/, "")
+    .replace(/[^a-zA-Z0-9._-]+/g, "-")
+    .replace(/^\.+/, "")
+    .slice(0, 40) || "cat";
+  return `young-cat-media/${session}/${Date.now()}-${base}.${ext}`;
+}
+
+function getYoungCatMediaItems() {
+  return Array.isArray(quizState.youngMedia) ? quizState.youngMedia : [];
+}
+
+function isYoungCatMediaHttpsUrl(url) {
+  if (!url || typeof url !== "string") return false;
+  const trimmed = url.trim();
+  if (trimmed.length > YOUNG_MEDIA_MAX_URL_CHARS) return false;
+  try {
+    return new URL(trimmed).protocol === "https:";
+  } catch (err) {
+    return false;
+  }
+}
+
+function buildYoungCatMediaPayload() {
+  return getYoungCatMediaItems()
+    .filter((item) => item && isYoungCatMediaHttpsUrl(item.url) && (item.type === "image" || item.type === "video"))
+    .slice(0, YOUNG_MEDIA_MAX_ITEMS)
+    .map((item) => {
+      const out = {
+        type: item.type,
+        url: String(item.url).trim(),
+      };
+      const contentType = String(item.content_type || item.contentType || "").toLowerCase();
+      if (YOUNG_MEDIA_CONTENT_TYPES[contentType] === item.type) {
+        out.content_type = contentType;
+      }
+      const filename = String(item.filename || "").trim();
+      if (filename) out.filename = filename.slice(0, 200);
+      return out;
+    });
+}
+
+async function putYoungCatMediaToBlob(file, contentType, pathname, token) {
+  const storeId = String(token).split("_")[3] || "blob";
+  const requestId = `${storeId}:${Date.now()}:${Math.random().toString(16).slice(2)}`;
+  const params = new URLSearchParams({ pathname });
+  const putRes = await fetch(`${YOUNG_MEDIA_BLOB_API}/?${params.toString()}`, {
+    method: "PUT",
+    headers: {
+      authorization: `Bearer ${token}`,
+      "x-api-blob-request-id": requestId,
+      "x-api-blob-request-attempt": "0",
+      "x-api-version": "11",
+      "x-content-type": contentType,
+    },
+    body: file,
+  });
+  const blob = await putRes.json().catch(() => ({}));
+  if (!putRes.ok || !blob.url) {
+    throw new Error(blob.error || "Could not upload that file.");
+  }
+  if (String(blob.url).length > YOUNG_MEDIA_MAX_URL_CHARS) {
+    throw new Error("That file link is too long. Please try another file.");
+  }
+  return blob;
+}
+
+async function uploadYoungCatMediaOnFelica(file, contentType) {
+  const pathname = youngMediaPathname(file, contentType);
+  const tokenRes = await fetch("/api/young-cat-media", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      type: "blob.generate-client-token",
+      payload: { pathname, clientPayload: null, multipart: false },
+    }),
+  });
+  const tokenJson = await tokenRes.json().catch(() => ({}));
+  if (!tokenRes.ok || !tokenJson.clientToken) {
+    throw new Error(tokenJson.error || "Could not host that file on Felica.");
+  }
+  const blob = await putYoungCatMediaToBlob(file, contentType, pathname, tokenJson.clientToken);
+  if (!isYoungCatMediaHttpsUrl(blob.url)) {
+    throw new Error("Felica did not return a public https link.");
+  }
+  return blob;
+}
+
+async function hostYoungCatMediaOnFelica() {
+  const items = getYoungCatMediaItems().slice(0, YOUNG_MEDIA_MAX_ITEMS);
+  const next = [];
+  for (const item of items) {
+    if (!item) continue;
+    let url = item.url;
+    if (!isYoungCatMediaHttpsUrl(url) && item.file instanceof File) {
+      const blob = await uploadYoungCatMediaOnFelica(
+        item.file,
+        item.content_type || item.contentType || item.file.type
+      );
+      url = blob.url;
+    }
+    if (!isYoungCatMediaHttpsUrl(url)) {
+      throw new Error("Photo or video needs a public https link before Call me.");
+    }
+    next.push({ ...item, url });
+  }
+  quizState.youngMedia = next;
+  return next;
+}
+
 function createYoungSessionId() {
   try {
     if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
@@ -1181,7 +1333,7 @@ function trackYoungCatStep(step, issueId) {
   if (!step) return;
   try {
     const sessionId = ensureYoungSessionId();
-    const url = new URL(`${SCREENING_API_BASE}/young-cat/analytics`);
+    const url = new URL(`${YOUNG_CAT_API_BASE}/young-cat/analytics`);
     url.searchParams.set("sessionId", sessionId);
     url.searchParams.set("step", step);
     if (issueId) url.searchParams.set("issueId", issueId);
@@ -1231,7 +1383,7 @@ function buildYoungPmsPayload(phoneNational) {
       : "Supplement call within 15–30 min",
   ];
 
-  return {
+  const payload = {
     schema_version: "1.0",
     source: {
       product: "felica",
@@ -1273,11 +1425,15 @@ function buildYoungPmsPayload(phoneNational) {
     },
     attribution: buildMetaAttribution(),
   };
+
+  payload.media = buildYoungCatMediaPayload();
+  return payload;
 }
 
 async function submitYoungCatLead(phoneNational) {
+  await hostYoungCatMediaOnFelica();
   const payload = buildYoungPmsPayload(phoneNational);
-  const response = await fetch(`${SCREENING_API_BASE}/young-cat`, {
+  const response = await fetch(`${YOUNG_CAT_API_BASE}/young-cat`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
@@ -2928,7 +3084,7 @@ const CALL_SCOPE_QUESTION = {
 function getYoungIssueFollowups(issueId) {
   if (!issueId) return [];
   const symptom = YOUNG_SYMPTOMS.find((s) => s.id === issueId);
-  return symptom?.online ? [{ id: "result" }] : [];
+  return symptom?.online ? [{ id: "result" }, { id: "media" }] : [];
 }
 
 const ISSUE_RESULT_CACHE = "hc161";
@@ -3572,7 +3728,6 @@ function isAmberClinicCase() {
 function getAmberReasons() {
   const reasons = [];
   if (hasOtherIssueOnCall()) {
-    reasons.push("This call is only for everyday supplements.");
     reasons.push("Other illnesses need a clinic visit.");
     return reasons;
   }
@@ -3583,7 +3738,7 @@ function getAmberReasons() {
     reasons.push("Vaccinations need an in-person clinic visit — we can't give them on a call.");
   }
   if (symptomIds.includes("hydration")) {
-    reasons.push("Drinking or peeing more usually needs blood and urine tests — not supplements on a call.");
+    reasons.push("Drinking or peeing more usually needs blood and urine tests — not a call.");
   }
   if (symptomIds.includes("appetite") && !symptomIds.includes("eating_less")) {
     const stopped = getIssueDetailAnswer("appetite", "stopped")?.id;
@@ -3592,7 +3747,7 @@ function getAmberReasons() {
     }
   }
   if (symptomIds.includes("vomiting")) {
-    reasons.push("This vomiting pattern needs a hands-on check, not a supplement prescription.");
+    reasons.push("This vomiting pattern needs a hands-on check, not a phone consultation.");
   }
   if (symptomIds.includes("litter")) {
     const changed = getIssueDetailAnswer("litter", "what_changed")?.id;
@@ -3627,7 +3782,7 @@ function getAmberReasons() {
   }
 
   if (!reasons.length) {
-    reasons.push("This isn't something we can treat or prescribe supplements for on a call.");
+    reasons.push("This isn't something we can treat on a call.");
   }
   return reasons;
 }
@@ -4350,6 +4505,7 @@ let quizState = {
   screeningResult: null,
   sessionId: null,
   youngLeadResult: null,
+  youngMedia: [],
   screeningSessionId: null,
   openedAt: null,
 };
@@ -4376,6 +4532,7 @@ function resetQuizState() {
     screeningResult: null,
     sessionId: null,
     youngLeadResult: null,
+    youngMedia: [],
     screeningSessionId: crypto.randomUUID(),
     openedAt: Date.now(),
   };
@@ -4604,6 +4761,7 @@ function commitAgeAndAdvance(years) {
   quizState.issuePickerView = "main";
   quizState.catName = null;
   quizState.youngLeadResult = null;
+  quizState.youngMedia = [];
   quizState.sessionId = useChronic ? null : createYoungSessionId();
   setFlowProgramLabel();
   track("screening_step_completed", {
@@ -5198,11 +5356,6 @@ function renderYoungSymptomStep() {
       <p class="flow-step-label">${formatYoungStepLabel(2)}</p>
       <h1 class="flow-title" id="assflow-title">${escapeHtml(title)}</h1>
       <p class="flow-lead">${escapeHtml(lead)}</p>
-      ${
-        isGeneralView
-          ? ""
-          : `<p class="young-issue-safety">Not for: <strong>not eating, hiding, vomiting, can't pee, or blood in poo. Those need a clinic.</strong></p>`
-      }
       <div class="young-issue-list" role="radiogroup" aria-label="${escapeHtml(title)}">
         ${issues.map(renderYoungIssueCard).join("")}
       </div>
@@ -5276,6 +5429,154 @@ function renderYoungIssueResultStep(issue) {
   });
 }
 
+function renderYoungMediaList() {
+  const items = getYoungCatMediaItems();
+  if (!items.length) {
+    return `<p class="young-media-empty">No photo or video added yet.</p>`;
+  }
+  return `<ul class="young-media-list">${items
+    .map((item, index) => {
+      const preview =
+        item.type === "image" && item.preview
+          ? `<img src="${escapeHtml(item.preview)}" alt="" width="72" height="72" />`
+          : `<span class="young-media-file-icon" aria-hidden="true"><i data-lucide="${
+              item.type === "video" ? "video" : "image"
+            }"></i></span>`;
+      return `<li class="young-media-item">
+        ${preview}
+        <span class="young-media-name">${escapeHtml(item.filename || item.type)}</span>
+        <button type="button" class="young-media-remove" data-media-remove="${index}">Remove</button>
+      </li>`;
+    })
+    .join("")}</ul>`;
+}
+
+function advancePastYoungMedia(issue) {
+  track("young_step_completed", {
+    step: "media",
+    symptom: issue?.id || null,
+    media_count: getYoungCatMediaItems().length,
+  });
+  quizState.step += 1;
+  renderFlowStep();
+}
+
+function bindYoungMediaStep(issue) {
+  const errorEl = assflowMain.querySelector("#young-media-error");
+  const fileInput = assflowMain.querySelector("#young-media-input");
+  const addBtn = assflowMain.querySelector("[data-media-add]");
+  const addLabel = assflowMain.querySelector("[data-media-add-label]");
+  const skipBtn = assflowMain.querySelector("[data-media-skip]");
+
+  const showError = (message) => {
+    if (!errorEl) return;
+    errorEl.hidden = !message;
+    errorEl.textContent = message || "";
+  };
+
+  const setAddBusy = (busy, label) => {
+    addBtn?.classList.toggle("is-disabled", busy || getYoungCatMediaItems().length >= YOUNG_MEDIA_MAX_ITEMS);
+    if (fileInput) fileInput.disabled = !!busy || getYoungCatMediaItems().length >= YOUNG_MEDIA_MAX_ITEMS;
+    if (skipBtn) skipBtn.disabled = !!busy;
+    if (addLabel) addLabel.textContent = label;
+  };
+
+  assflowMain.querySelectorAll("[data-media-remove]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const index = Number(btn.getAttribute("data-media-remove"));
+      const items = getYoungCatMediaItems();
+      const removed = items[index];
+      if (removed?.preview) URL.revokeObjectURL(removed.preview);
+      quizState.youngMedia = items.filter((_, i) => i !== index);
+      renderYoungMediaStep(issue);
+    });
+  });
+
+  fileInput?.addEventListener("change", async () => {
+    const file = fileInput.files?.[0];
+    fileInput.value = "";
+    if (!file) return;
+    if (getYoungCatMediaItems().length >= YOUNG_MEDIA_MAX_ITEMS) {
+      showError("You can add up to 4 photos or videos.");
+      return;
+    }
+    const kind = youngMediaKindFromFile(file);
+    if (!kind) {
+      showError("Please add a JPEG, PNG, WebP, MP4, or MOV file.");
+      return;
+    }
+    const maxBytes = kind.kind === "video" ? YOUNG_MEDIA_VIDEO_MAX_BYTES : YOUNG_MEDIA_IMAGE_MAX_BYTES;
+    if (file.size > maxBytes) {
+      showError(
+        kind.kind === "video"
+          ? "Videos need to be 50 MB or smaller."
+          : "Photos need to be 10 MB or smaller."
+      );
+      return;
+    }
+
+    showError("");
+    setAddBusy(true, "Adding…");
+
+    try {
+      const blob = await uploadYoungCatMediaOnFelica(file, kind.contentType);
+      if (!quizState.youngMedia) quizState.youngMedia = [];
+      quizState.youngMedia.push({
+        type: kind.kind,
+        url: blob.url,
+        content_type: kind.contentType,
+        filename: file.name,
+        preview: kind.kind === "image" ? URL.createObjectURL(file) : "",
+        file,
+      });
+      renderYoungMediaStep(issue);
+    } catch (err) {
+      showError(err?.message || "Could not host that file. You can skip this.");
+      const limited = getYoungCatMediaItems().length >= YOUNG_MEDIA_MAX_ITEMS;
+      setAddBusy(false, limited ? "Limit reached" : "Add photo or video");
+    }
+  });
+
+  skipBtn?.addEventListener("click", () => advancePastYoungMedia(issue));
+}
+
+function renderYoungMediaStep(issue) {
+  const items = getYoungCatMediaItems();
+  const atLimit = items.length >= YOUNG_MEDIA_MAX_ITEMS;
+  const hasMedia = items.length > 0;
+  const addClass = hasMedia
+    ? `young-media-add young-media-link${atLimit ? " is-disabled" : ""}`
+    : `btn btn-block btn-get-started young-media-add${atLimit ? " is-disabled" : ""}`;
+  const addControl = `<label class="${addClass}" data-media-add>
+        <span data-media-add-label>${atLimit ? "Limit reached" : "Add photo or video"}</span>
+        <input
+          id="young-media-input"
+          class="young-media-input"
+          type="file"
+          accept="image/jpeg,image/png,image/webp,video/mp4,video/quicktime,.jpg,.jpeg,.png,.webp,.mp4,.mov"
+          ${atLimit ? "disabled" : ""}
+        />
+      </label>`;
+  const skipControl = `<button type="button" class="${
+    hasMedia ? "btn btn-block btn-get-started" : "young-media-link"
+  }" data-media-skip>${hasMedia ? "Continue" : "Skip for now"}</button>`;
+  setFlowProgress(quizState.step - 1, getYoungStepCount());
+  assflowMain.innerHTML = `
+    <div class="flow-step young-media-screen">
+      <p class="flow-step-label">${formatYoungStepLabel(quizState.step)}</p>
+      <h1 class="flow-title" id="assflow-title">Add a photo or video (optional)</h1>
+      <p class="flow-lead">A clear photo or short video helps the vet see what's going on. You can skip this.</p>
+      ${renderYoungMediaList()}
+      <p class="flow-error" id="young-media-error" hidden></p>
+      ${hasMedia ? `${skipControl}${addControl}` : `${addControl}${skipControl}`}
+    </div>
+  `;
+  setFlowFooter({ visible: false });
+  refreshFlowIcons();
+  trackYoungCatStep("media", issue?.id);
+  bindYoungMediaStep(issue);
+}
+
 function renderYoungIssueDetailStep() {
   const issue = getPrimaryYoungSymptom();
   const followups = getYoungIssueFollowups(issue?.id);
@@ -5290,6 +5591,11 @@ function renderYoungIssueDetailStep() {
 
   if (question.id === "result") {
     renderYoungIssueResultStep(issue);
+    return;
+  }
+
+  if (question.id === "media") {
+    renderYoungMediaStep(issue);
     return;
   }
 
@@ -5388,18 +5694,16 @@ function renderYoungConnectStep() {
     getPrimaryYoungSymptom()?.shortLabel ||
     YOUNG_SYMPTOMS.find((s) => s.id === issueId)?.shortLabel ||
     "this";
-  const helpLine = CALL_HELP_LINE[issueId] || "medicine by courier";
   const connectLead =
     issueId === "second_opinion"
-      ? `We'll call for a second opinion. We send care if it fits.`
-      : `We'll call about ${issueLabel.toLowerCase()}. We send ${helpLine}.`;
+      ? "A vet will call for a second opinion."
+      : `A vet will call about ${issueLabel.toLowerCase()}.`;
 
   assflowMain.innerHTML = `
     <div class="flow-step young-connect-step">
       <p class="flow-step-label">${formatYoungStepLabel(connectStep)}</p>
     <h1 class="flow-title" id="assflow-title">Leave your number</h1>
       <p class="flow-lead">${escapeHtml(connectLead)}</p>
-      <p class="young-connect-not-for">Not for: <strong>not eating, hiding, vomiting, can't pee, or blood in poo.</strong> Those need a clinic.</p>
 
       <form class="young-connect-form" id="young-connect-form" novalidate>
         <label class="flow-age-label" for="young-cat-name">Cat's name</label>
@@ -5439,13 +5743,11 @@ function renderYoungConnectStep() {
         <p class="flow-error" id="young-connect-error" hidden>Enter a valid 10-digit mobile number.</p>
         <button type="submit" class="btn btn-block btn-get-started">Call me</button>
       </form>
-      <button type="button" class="young-clinic-escape" data-clinic-escape>My cat needs a clinic instead</button>
     </div>
   `;
 
   setFlowFooter({ visible: false });
   trackYoungCatStep("contact", issueId);
-  assflowMain.querySelector("[data-clinic-escape]")?.addEventListener("click", exitYoungFlowToClinic);
 
   const form = assflowMain.querySelector("#young-connect-form");
   form?.addEventListener("submit", (event) => {
@@ -5690,7 +5992,6 @@ function renderYoungCallPlanStep() {
   setFlowProgramLabel();
   flowCompleted = true;
 
-  const name = getCatDisplayName();
   const specialist = getYoungCallSpecialist();
   const phone = quizState.whatsappNumber || "";
   const issueLabel = (
@@ -5706,12 +6007,6 @@ function renderYoungCallPlanStep() {
     care_lane: "green",
     urgency: "consult",
   });
-
-  const plan = buildYoungCarePlan();
-  const productItems = (plan.products || [])
-    .slice(0, 3)
-    .map((product) => `<li>${escapeHtml(product.name)} — ${escapeHtml(product.note)}</li>`)
-    .join("");
 
   assflowMain.innerHTML = `
     <div class="flow-step flow-step-result young-plan-step young-call-plan">
@@ -5754,15 +6049,6 @@ function renderYoungCallPlanStep() {
             <li>If something else is wrong, they will tell you to go to a clinic</li>
           </ul>
         </section>
-
-        ${
-          productItems
-            ? `<section class="young-call-section" aria-labelledby="young-call-supplements-title">
-          <h2 class="young-call-section-title" id="young-call-supplements-title">What we may send</h2>
-          <ul class="young-call-list">${productItems}</ul>
-        </section>`
-            : ""
-        }
 
         <button type="button" class="btn btn-block young-plan-done" data-flow-done>Done for now</button>
         <p class="score-reassure">Not a diagnosis. The vet confirms on the call before anything is sent.</p>
@@ -5808,8 +6094,8 @@ function renderYoungClinicPlanStep() {
           }</h2>
           <p class="young-clinic-lead">${
             scopedOut
-              ? "We can only courier everyday medicine. For anything else, please take your cat to a vet near you."
-              : `${escapeHtml(name)} needs a clinic exam — not a call to prescribe supplements.`
+              ? "This call can't treat other illnesses. Please take your cat to a vet near you."
+            : `${escapeHtml(name)} needs a clinic exam — not a call.`
           }</p>
           <ul class="young-clinic-reasons">
             ${reasons.map((reason) => `<li>${escapeHtml(reason)}</li>`).join("")}
@@ -5872,7 +6158,7 @@ function renderYoungPlanStep() {
               .map((reason) => `<li>${escapeHtml(reason)}</li>`)
               .join("")}
           </ul>
-          <p class="young-urgent-note">Go to a clinic now. We don't take calls or prescribe supplements for emergencies.</p>
+          <p class="young-urgent-note">Go to a clinic now. We don't take calls for emergencies.</p>
         </div>
 
         <div class="young-plan-section">

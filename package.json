@@ -8,6 +8,7 @@
     "dev:age": "vite build --watch"
   },
   "dependencies": {
+    "@vercel/blob": "^1.1.1",
     "framer-motion": "^11.18.2",
     "lucide": "^1.22.0",
     "react": "^18.3.1",

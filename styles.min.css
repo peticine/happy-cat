@@ -8653,6 +8653,111 @@ body[data-age-theme="geriatric"] .hero-clinic {
   color: var(--ink);
 }
 
+.young-media-screen {
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.young-media-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0 0 16px;
+  padding: 0;
+  list-style: none;
+}
+
+.young-media-empty {
+  margin: 0 0 16px;
+  font-size: 0.875rem;
+  color: var(--ink-muted);
+}
+
+.young-media-item {
+  display: grid;
+  grid-template-columns: 72px 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+}
+
+.young-media-item img,
+.young-media-file-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: var(--accent-soft);
+}
+
+.young-media-file-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+}
+
+.young-media-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.young-media-remove {
+  border: none;
+  background: none;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.young-media-add {
+  position: relative;
+  cursor: pointer;
+}
+
+.young-media-link {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px 10px;
+  border: none;
+  background: none;
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  cursor: pointer;
+  text-align: center;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.young-media-link:hover {
+  color: var(--ink);
+}
+
+.young-media-add.is-disabled {
+  pointer-events: none;
+  opacity: 0.65;
+  text-decoration: none;
+}
+
+.young-media-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+}
+
 .young-issue-group-label {
   margin: 0 0 10px;
   font-size: 0.75rem;
