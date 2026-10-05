@@ -14,18 +14,21 @@ const ALLOWED_CONTENT_TYPES = new Set([
   "video/quicktime",
 ]);
 
+function safeFilename(value) {
+  const raw = Array.isArray(value) ? value[0] : value;
+  const name = String(raw || "upload")
+    .split(/[/\\]/)
+    .pop()
+    .replace(/[^a-zA-Z0-9._-]+/g, "-")
+    .replace(/^\.+/, "")
+    .slice(0, 80);
+  return name || "upload";
+}
+
 export default async function handler(request, response) {
   if (request.method !== "POST") {
     response.setHeader("Allow", "POST");
     return response.status(405).json({ error: "Method not allowed" });
-  }
-
-  const filename = String(request.query.filename || "").trim();
-  if (
-    !filename.startsWith("young-cat/") &&
-    !filename.startsWith("young-cat-media/")
-  ) {
-    return response.status(400).json({ error: "Invalid upload path" });
   }
 
   const contentType = String(request.headers["content-type"] || "")
@@ -35,6 +38,8 @@ export default async function handler(request, response) {
   if (!ALLOWED_CONTENT_TYPES.has(contentType)) {
     return response.status(400).json({ error: "That file type is not allowed." });
   }
+
+  const filename = `young-cat-media/${safeFilename(request.query.filename)}`;
 
   try {
     const { url } = await put(filename, request, {

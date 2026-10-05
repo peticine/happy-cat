@@ -1176,8 +1176,7 @@ function youngMediaKindFromFile(file) {
   return null;
 }
 
-function youngMediaPathname(file, contentType) {
-  const session = ensureYoungSessionId();
+function youngMediaFilename(file, contentType) {
   const ext =
     contentType === "image/jpeg"
       ? "jpg"
@@ -1193,7 +1192,7 @@ function youngMediaPathname(file, contentType) {
     .replace(/[^a-zA-Z0-9._-]+/g, "-")
     .replace(/^\.+/, "")
     .slice(0, 40) || "cat";
-  return `young-cat-media/${session}/${Date.now()}-${base}.${ext}`;
+  return `${Date.now()}-${base}.${ext}`;
 }
 
 function getYoungCatMediaItems() {
@@ -1231,9 +1230,9 @@ function buildYoungCatMediaPayload() {
 }
 
 async function uploadYoungCatMediaOnFelica(file, contentType) {
-  const pathname = youngMediaPathname(file, contentType);
+  const filename = youngMediaFilename(file, contentType);
   const res = await fetch(
-    `/api/young-cat-media?filename=${encodeURIComponent(pathname)}`,
+    `/api/young-cat-media?filename=${encodeURIComponent(filename)}`,
     {
       method: "POST",
       headers: { "content-type": contentType },
