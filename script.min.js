@@ -1096,6 +1096,7 @@ function getStoredFbclid() {
   }
 }
 
+// Channel for clinic (meta/google); raw landing.utm_source is sent separately.
 const META_UTM_SOURCES = new Set([
   "ig",
   "fb",
