@@ -2002,9 +2002,14 @@ html.assflow-open .site-shell {
 
 .footer-bottom p {
   margin: 0;
-  max-width: 480px;
+  max-width: 640px;
   font-size: 0.75rem;
   color: var(--ink-muted);
+}
+
+.footer-legal-entity {
+  max-width: 68ch;
+  line-height: 1.55;
 }
 
 .footer-legal {
