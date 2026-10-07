@@ -1096,8 +1096,30 @@ function getStoredFbclid() {
   }
 }
 
+const META_UTM_SOURCES = new Set([
+  "ig",
+  "fb",
+  "an",
+  "msg",
+  "facebook",
+  "instagram",
+  "meta",
+  "audience_network",
+  "audience-network",
+]);
+const GOOGLE_UTM_SOURCES = new Set([
+  "google",
+  "googleads",
+  "google_ads",
+  "google-ads",
+  "adwords",
+  "youtube",
+]);
+
 function resolveTrafficSource(landing = readStoredLandingAttribution()) {
   const utm = String(landing.utm_source || "").trim().toLowerCase();
+  if (META_UTM_SOURCES.has(utm)) return "meta";
+  if (GOOGLE_UTM_SOURCES.has(utm)) return "google";
   if (utm) return landing.utm_source.trim();
   if (landing.gclid || landing.gbraid || landing.wbraid) return "google";
   if (landing.fbclid || getStoredFbclid()) return "meta";
@@ -1131,7 +1153,7 @@ function buildMetaAttribution() {
     event_source_url: String(window.location.href || "").split("#")[0] || null,
     client_user_agent: navigator.userAgent || null,
     traffic_source: trafficSource,
-    utm_source: landing.utm_source || (trafficSource !== "direct" ? trafficSource : null),
+    utm_source: landing.utm_source || null,
     utm_medium: landing.utm_medium || null,
     utm_campaign: landing.utm_campaign || null,
     utm_content: landing.utm_content || null,
