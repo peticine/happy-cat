@@ -15,7 +15,10 @@
     { "source": "/eating-less", "destination": "/index.html" },
     { "source": "/appetite", "destination": "/index.html" },
     { "source": "/privacy", "destination": "/privacy.html" },
-    { "source": "/privacy-policy", "destination": "/privacy.html" }
+    { "source": "/privacy-policy", "destination": "/privacy.html" },
+    { "source": "/follow-up", "destination": "/index.html" },
+    { "source": "/followup", "destination": "/index.html" },
+    { "source": "/again", "destination": "/index.html" }
   ],
   "headers": [
     {

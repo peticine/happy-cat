@@ -119,6 +119,15 @@ const HERO_VARIANTS = {
     headlineHook: "Everyday cat issues, treated online.",
     headline: "A feline vet calls you and prescribes the right supplements — if a clinic visit isn't needed.",
   },
+  "follow-up": {
+    headlineHook: "Need another consult?",
+    headline: "Tell us what's going on with your cat. If we can treat it online, a vet will call.",
+    lead: "Use the same phone number as last time so we can find your cat's record.",
+    pageTitle: "Felica | Request another consult",
+    pageDescription:
+      "Already used Felica? Request another vet call for your cat. Use the same phone number so we can find the record.",
+    ctaLabel: "Request a call",
+  },
 };
 
 const HERO_BG_IMAGES = {
@@ -213,6 +222,14 @@ const HERO_FLOAT_TAGS = {
     { icon: "heart-pulse", label: "Appetite support" },
     { icon: "sparkles", label: "Energy dips" },
   ],
+  "follow-up": [
+    { icon: "phone", label: "Same number" },
+    { icon: "clipboard-list", label: "Same issue" },
+    { icon: "sparkles", label: "Something new" },
+    { icon: "stethoscope", label: "Check-in" },
+    { icon: "heart-pulse", label: "Vet call" },
+    { icon: "clock", label: "15–30 min" },
+  ],
 };
 
 const HERO_CONCERN_ALIASES = {
@@ -272,6 +289,11 @@ const HERO_CONCERN_ALIASES = {
   "skin-coat": "skin",
   "skin-and-coat": "skin",
   "coat-and-skin": "skin",
+  followup: "follow-up",
+  follow_up: "follow-up",
+  again: "follow-up",
+  returning: "follow-up",
+  "another-consult": "follow-up",
 };
 
 function normalizeHeroConcern(raw) {
@@ -289,6 +311,10 @@ function getConcernFromPath() {
 
 function isSkinCoatLanding() {
   return getHeroConcernFromUrl() === "skin";
+}
+
+function isFollowUpLanding() {
+  return getHeroConcernFromUrl() === "follow-up";
 }
 
 function getHeroConcernFromUrl() {
@@ -346,7 +372,7 @@ function initHeroPersonalization() {
 
   const headline = document.getElementById("hero-headline");
   const subhead = document.getElementById("hero-subhead");
-  const ctaLabel = PRIMARY_CTA_LABEL;
+  const ctaLabel = variant.ctaLabel || PRIMARY_CTA_LABEL;
 
   if (headline) {
     if (variant.headlineHook) {
@@ -389,6 +415,7 @@ function initHeroPersonalization() {
   document.body.dataset.heroConcern = concern;
   applySkinCoatLandingCopy(concern);
   applyEatingLandingCopy(concern);
+  applyFollowUpLandingCopy(concern);
 }
 
 function applySkinCoatLandingCopy(concern) {
@@ -417,6 +444,23 @@ function applyEatingLandingCopy(concern) {
     const group = card.getAttribute("data-coverage-group");
     if (group && group !== "eating") card.hidden = true;
   });
+}
+
+function applyFollowUpLandingCopy(concern) {
+  if (concern !== "follow-up") return;
+  const urgency = document.querySelector(".hero-landing-urgency");
+  if (urgency) {
+    urgency.textContent =
+      "Use the same phone number as last time so we can find your cat's record.";
+  }
+  const proof = document.querySelector(".hero-social-proof p");
+  if (proof) {
+    proof.innerHTML = "Already a Felica parent? <strong>Request another call</strong> in about 2 minutes.";
+  }
+  const howStep = document.querySelector(".how-step p");
+  if (howStep) {
+    howStep.textContent = "Tell us whether it's the same issue or something new.";
+  }
 }
 
 let catAge = null;
@@ -1360,6 +1404,7 @@ function buildYoungPmsPayload(phoneNational) {
       product: "felica",
       channel: "web_screening",
       flow: "young_cat",
+      intent: isFollowUpLanding() ? "follow_up" : "new",
       session_id: sessionId,
       submitted_at: formatYoungSubmittedAt(),
     },
@@ -1393,6 +1438,7 @@ function buildYoungPmsPayload(phoneNational) {
       supplement_call: true,
       call_scope: "just_this",
       prevention_only: CARE_CHECKIN_IDS.has(issueId),
+      follow_up: isFollowUpLanding(),
     },
     attribution: buildMetaAttribution(),
   };
@@ -3255,6 +3301,7 @@ function getEatingPickerIssues() {
 
 function getYoungSymptomFromUrl() {
   const concern = getHeroConcernFromUrl();
+  if (concern === "follow-up") return null;
   // Skin/coat ads land on a 4-issue picker — do not skip to one symptom.
   if (concern === "skin") return null;
   // Peeing-outside ad landings → litter-box issue (not diarrhoea-first confusion)
@@ -4686,7 +4733,12 @@ function openFlow(source = "unknown") {
     has_saved_age: catAge != null,
     prefilled_age: catAge,
     traffic_source: resolveTrafficSource(),
+    follow_up: isFollowUpLanding(),
   });
+  if (isFollowUpLanding() && quizState.age != null) {
+    commitAgeAndAdvance(quizState.age);
+    return;
+  }
   renderFlowStep();
 }
 
@@ -6299,6 +6351,10 @@ window.addEventListener("pageshow", (event) => {
 initHeroPersonalization();
 initAgeGate();
 initAssessment();
+
+if (isFollowUpLanding()) {
+  openFlow("follow_up_landing");
+}
 
 // Defer life-stage carousel until near viewport so Lighthouse/mobile
 // don't download ~1MB of stage photos during initial load.
