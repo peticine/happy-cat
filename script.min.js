@@ -121,7 +121,7 @@ const HERO_VARIANTS = {
   },
   "follow-up": {
     headlineHook: "Need another consult?",
-    headline: "Tell us what's going on with your cat. If we can treat it online, a vet will call.",
+    headline: "Tell us what's going on with your cat. If a vet can help remotely, we'll call you.",
     lead: "Use the same phone number as last time so we can find your cat's record.",
     pageTitle: "Felica | Request another consult",
     pageDescription:
@@ -228,7 +228,7 @@ const HERO_FLOAT_TAGS = {
     { icon: "sparkles", label: "Something new" },
     { icon: "stethoscope", label: "Check-in" },
     { icon: "heart-pulse", label: "Vet call" },
-    { icon: "clock", label: "15–30 min" },
+    { icon: "clock", label: "15–30 min", callbackCopy: "float-tag" },
   ],
 };
 
@@ -358,6 +358,7 @@ function applyHeroFloatTags(concern) {
     }
     if (labelEl) {
       labelEl.textContent = tag.label;
+      if (tag.callbackCopy) labelEl.dataset.callbackCopy = tag.callbackCopy;
     }
   });
 
@@ -451,7 +452,7 @@ function applyFollowUpLandingCopy(concern) {
   const urgency = document.querySelector(".hero-landing-urgency");
   if (urgency) {
     urgency.textContent =
-      "Use the same phone number as last time so we can find your cat's record.";
+      "Use the same phone number as last time so we can find your cat's record. Emergencies and clinic-only issues are sent to a vet in person.";
   }
   const proof = document.querySelector(".hero-social-proof p");
   if (proof) {
@@ -485,6 +486,7 @@ const CALLBACK_SCHEDULE = {
 const CALLBACK_DAYS = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
 const CALLBACK_PAGE_COPY = {
   "hero-pill": "Vet call from 10 AM",
+  "float-tag": "From 10 AM",
   "how-step": "Leave your number. {msg}",
   "faq-call":
     "Only if your answers look like something a vet can advise on remotely. {msg}",
