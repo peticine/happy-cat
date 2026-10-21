@@ -52,19 +52,19 @@ const HERO_VARIANTS = {
   },
   eating: {
     headlineHook: "Eating less than usual?",
-    headline: "A feline vet can treat picky eating and appetite dips on a call — then we courier the care.",
-    lead: "If your cat is still eating some food, we can often help online. A vet usually calls in 15–30 minutes.",
+    headline: "A feline vet can treat picky eating and appetite dips on a call.",
+    lead: "If your cat is still eating some food, we can often help online.",
     pageTitle: "Felica | Cat eating less",
     pageDescription:
-      "Eating less but still taking some food. If we can treat it online, a feline vet calls and we courier the care.",
+      "Eating less but still taking some food. If we can treat it online, a feline vet calls.",
   },
   appetite: {
     headlineHook: "Eating less than usual?",
-    headline: "A feline vet can treat picky eating and appetite dips on a call — then we courier the care.",
-    lead: "If your cat is still eating some food, we can often help online. A vet usually calls in 15–30 minutes.",
+    headline: "A feline vet can treat picky eating and appetite dips on a call.",
+    lead: "If your cat is still eating some food, we can often help online.",
     pageTitle: "Felica | Cat eating less",
     pageDescription:
-      "Eating less but still taking some food. If we can treat it online, a feline vet calls and we courier the care.",
+      "Eating less but still taking some food. If we can treat it online, a feline vet calls.",
   },
   sleeping: {
     headline: "Let's understand why your cat is sleeping more.",
@@ -109,11 +109,11 @@ const HERO_VARIANTS = {
   },
   skin: {
     headlineHook: "Itching, hairfall, or a dry coat?",
-    headline: "A feline vet can treat everyday skin and coat issues on a call — then we courier the care.",
-    lead: "Pick what's going on. If we can treat it online, a vet usually calls in 15–30 minutes.",
+    headline: "A feline vet can treat everyday skin and coat issues on a call.",
+    lead: "Pick what's going on. If we can treat it online, a vet will call.",
     pageTitle: "Felica | Cat skin and coat",
     pageDescription:
-      "Itching, dry coat, or hairfall. If we can treat it online, a feline vet calls and we courier the care.",
+      "Itching, dry coat, or hairfall. If we can treat it online, a feline vet calls.",
   },
   default: {
     headlineHook: "Everyday cat issues, treated online.",
@@ -423,6 +423,141 @@ let catAge = null;
 let catName = null;
 let catAgeProfile = null;
 
+// ---- Callback timing ----------------------------------------------------------
+// The call-back promise follows India time (Asia/Kolkata), whatever the
+// visitor's device timezone. Change hours, the closed day or wording here.
+// Inside working hours each spot keeps its own "15–30 minutes" copy.
+const CALLBACK_SCHEDULE = {
+  timeZone: "Asia/Kolkata",
+  openHour: 10,
+  closeHour: 19,
+  closedDay: "sun",
+  messages: {
+    today: "Our vet will call you today, from 10 AM.",
+    tomorrow: "Our vet will call you tomorrow, from 10 AM.",
+    afterClosedDay: "Our vet will call you on Monday, from 10 AM.",
+  },
+};
+const CALLBACK_DAYS = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+const CALLBACK_PAGE_COPY = {
+  "how-step": "Leave your number. {msg}",
+  "faq-call":
+    "Only if your answers look like something we can treat online. {msg} They'll prescribe the right supplements on the call.",
+  "faq-time": "About 2 minutes of questions. If it's a fit, you leave a number and get a vet call. {msg}",
+  "final-cta": "A 2-minute check, then a feline vet prescribes the right supplements. {msg}",
+};
+
+/** Returns "open", "today", "tomorrow" or "afterClosedDay" for a day and minutes past midnight. */
+function getCallbackWindow(day, minutes) {
+  const { openHour, closeHour, closedDay } = CALLBACK_SCHEDULE;
+  const dayIndex = CALLBACK_DAYS.indexOf(day);
+  const closedIndex = CALLBACK_DAYS.indexOf(closedDay);
+  if (dayIndex === closedIndex) return "tomorrow";
+  if (minutes < openHour * 60) return "today";
+  if (minutes < closeHour * 60) return "open";
+  return (dayIndex + 1) % 7 === closedIndex ? "afterClosedDay" : "tomorrow";
+}
+
+function getIndiaDayAndMinutes(date = new Date()) {
+  try {
+    const parts = new Intl.DateTimeFormat("en-US", {
+      timeZone: CALLBACK_SCHEDULE.timeZone,
+      weekday: "short",
+      hour: "2-digit",
+      minute: "2-digit",
+      hourCycle: "h23",
+    }).formatToParts(date);
+    const part = (type) => parts.find((p) => p.type === type)?.value || "";
+    const day = part("weekday").slice(0, 3).toLowerCase();
+    const hour = Number(part("hour")) % 24;
+    const minute = Number(part("minute"));
+    if (CALLBACK_DAYS.includes(day) && Number.isFinite(hour) && Number.isFinite(minute)) {
+      return { day, minutes: hour * 60 + minute };
+    }
+  } catch (err) {
+    /* fall through */
+  }
+  // India has no daylight saving: UTC+5:30.
+  const ist = new Date(date.getTime() + 330 * 60000);
+  return { day: CALLBACK_DAYS[ist.getUTCDay()], minutes: ist.getUTCHours() * 60 + ist.getUTCMinutes() };
+}
+
+// Preview-only test mode: ?testTime=sat-20:00 (India time) and/or
+// ?testScreen=thanks on localhost or *.vercel.app. Ignored on the live domain.
+// While active, nothing is tracked, uploaded or submitted.
+const TEST_TIME_PATTERN = /^(sun|mon|tue|wed|thu|fri|sat)-([01]\d|2[0-3]):([0-5]\d)$/;
+let felicaTestMode = null;
+
+function isPreviewHost(hostname = window.location.hostname) {
+  return hostname === "localhost" || hostname === "127.0.0.1" || /\.vercel\.app$/i.test(hostname);
+}
+
+function getFelicaTestMode() {
+  if (felicaTestMode) return felicaTestMode;
+  felicaTestMode = { active: false, time: null, screen: null };
+  try {
+    const params = new URLSearchParams(window.location.search);
+    if (isPreviewHost() && (params.has("testTime") || params.has("testScreen"))) {
+      const match = TEST_TIME_PATTERN.exec(String(params.get("testTime") || "").trim().toLowerCase());
+      felicaTestMode = {
+        active: true,
+        time: match
+          ? { day: match[1], minutes: Number(match[2]) * 60 + Number(match[3]), label: `${match[1]} ${match[2]}:${match[3]}` }
+          : null,
+        screen: params.get("testScreen") || null,
+      };
+    }
+  } catch (err) {
+    /* ignore */
+  }
+  return felicaTestMode;
+}
+
+function isFelicaTestMode() {
+  return getFelicaTestMode().active;
+}
+
+/** The off-hours sentence, or null inside working hours. */
+function getCallbackMessage(date = new Date()) {
+  const { day, minutes } = getFelicaTestMode().time || getIndiaDayAndMinutes(date);
+  const key = getCallbackWindow(day, minutes);
+  return key === "open" ? null : CALLBACK_SCHEDULE.messages[key];
+}
+
+function callbackCopy(openText, offTemplate) {
+  const message = getCallbackMessage();
+  return message ? offTemplate.replace("{msg}", message) : openText;
+}
+
+function applyCallbackPageCopy() {
+  document.querySelectorAll("[data-callback-copy]").forEach((el) => {
+    if (!el.dataset.callbackOpen) el.dataset.callbackOpen = el.textContent;
+    const offTemplate = CALLBACK_PAGE_COPY[el.dataset.callbackCopy];
+    el.textContent = offTemplate
+      ? callbackCopy(el.dataset.callbackOpen, offTemplate)
+      : el.dataset.callbackOpen;
+  });
+}
+
+function initCallbackCopy() {
+  applyCallbackPageCopy();
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") applyCallbackPageCopy();
+  });
+
+  const mode = getFelicaTestMode();
+  if (!mode.active) return;
+  const badge = document.createElement("div");
+  badge.className = "felica-test-badge";
+  const timeLabel = mode.time
+    ? `Test time: ${mode.time.label} IST`
+    : mode.screen
+      ? "Test mode"
+      : "Test mode · invalid testTime (use e.g. sat-20:00)";
+  badge.textContent = `${timeLabel} · tracking and submit off`;
+  document.body.appendChild(badge);
+}
+
 // ---- Analytics --------------------------------------------------------------
 // Vendor-agnostic event layer. Pushes to window.dataLayer (GA4 / GTM style),
 // dispatches a DOM CustomEvent ("felica:track"), and forwards funnel events
@@ -455,6 +590,7 @@ function lockLeadConversion() {
  * accepts the young-cat lead. Do not call this on form click or API failure.
  */
 function flushLeadConversionTags(props = {}) {
+  if (isFelicaTestMode()) return Promise.resolve();
   const lane = props.lane || props.care_lane;
   // Only paid-lead conversions: vet will prescribe supplements on the call.
   if (lane !== "green") return Promise.resolve();
@@ -630,6 +766,7 @@ function trackMetaPixel(event, props = {}) {
 }
 
 function track(event, props = {}) {
+  if (isFelicaTestMode()) return;
   const payload = {
     event,
     ts: Date.now(),
@@ -1027,6 +1164,8 @@ function initAgeGate() {
 const FELICA_NEWSLETTER_EMAIL = "hello@felica.in";
 const FELICA_WHATSAPP_URL = "https://chat.whatsapp.com/placeholder-felica-community";
 const FELICA_CALLBACK_NUMBER = "+91 80 4728 5635";
+const LEAD_CONSENT_TEXT =
+  "By submitting this form, you agree to receive WhatsApp messages from Felica about your consultation request.";
 const SCREENING_API_BASE = "https://digi-clinic-tau.vercel.app";
 const YOUNG_CAT_API_BASE = "https://clinic.tailhealthcare.com";
 const META_PIXEL_ID = "1068626952161985";
@@ -1234,6 +1373,7 @@ function buildYoungCatMediaPayload() {
 }
 
 async function uploadYoungCatMediaOnFelica(file) {
+  if (isFelicaTestMode()) throw new Error("Uploads are off in test mode.");
   const response = await fetch(
     `/api/young-cat-media?filename=${encodeURIComponent(file.name)}`,
     {
@@ -1301,7 +1441,7 @@ function formatYoungSubmittedAt(date = new Date()) {
 }
 
 function trackYoungCatStep(step, issueId) {
-  if (!step) return;
+  if (!step || isFelicaTestMode()) return;
   try {
     const sessionId = ensureYoungSessionId();
     const url = new URL(`${YOUNG_CAT_API_BASE}/young-cat/analytics`);
@@ -2684,7 +2824,7 @@ function renderWellnessConfirmationJourney(specialist, name) {
       </li>
       <li class="wellness-confirm-journey-item">
         <span class="wellness-confirm-journey-step">Then</span>
-        <span class="wellness-confirm-journey-copy">Confirmed plan + treatment ships</span>
+        <span class="wellness-confirm-journey-copy">Confirmed plan</span>
       </li>
     </ol>`;
 }
@@ -2755,7 +2895,7 @@ function renderWellnessSpecialistRx(specialist, name) {
       </div>
       <p class="wellness-specialist-rx-note">
         ${escapeHtml(specialist.shortName)} recommends this plan based on ${escapeHtml(possessive)} symptoms.
-        ${escapeHtml(specialist.shortName)} will confirm on WhatsApp before anything ships.
+        ${escapeHtml(specialist.shortName)} will confirm on WhatsApp.
       </p>
     </section>`;
 }
@@ -3016,23 +3156,6 @@ function formatYoungStepLabel(step) {
 function getYoungDetailAnswers() {
   return quizState.youngDetailAnswers || {};
 }
-
-const CALL_HELP_LINE = {
-  skin: "itch care by courier",
-  coat: "coat oil by courier",
-  shedding: "hairfall care by courier",
-  vomiting: "hairball paste by courier",
-  dental: "mouth care by courier",
-  bathing: "bathing care by courier",
-  grooming: "grooming care by courier",
-  dental_care: "dental care by courier",
-  eating_less: "appetite support by courier",
-  appetite: "appetite support by courier",
-  nutrition: "a food plan by courier",
-  chubby: "weight support by courier",
-  second_opinion: "a care plan if it fits",
-  general_care: "everyday care by courier",
-};
 
 const CALL_SCOPE_NOT_FOR = [
   "Not eating",
@@ -4512,7 +4635,7 @@ function resetQuizState() {
 
 function trackScreeningStep(step) {
   const sessionId = quizState.screeningSessionId;
-  if (!sessionId) return;
+  if (!sessionId || isFelicaTestMode()) return;
   try {
     const url = new URL("/screening/analytics", SCREENING_API_BASE);
     url.searchParams.set("sessionId", sessionId);
@@ -4990,8 +5113,10 @@ function renderChronicClinicResult(tier) {
 
 function renderWhatsAppGate(tier) {
   const preview = tier ? renderGateResultPreview(tier) : "";
-  const leadLine =
-    "A feline vet will call to prescribe prevention supplements if they fit — usually within 15–30 minutes.";
+  const leadLine = callbackCopy(
+    "A feline vet will call to prescribe prevention supplements if they fit — usually within 15–30 minutes.",
+    "A feline vet will call to prescribe prevention supplements if they fit. {msg}"
+  );
   const catPrefill = quizState.catName || catName || "";
 
   return `
@@ -5033,6 +5158,7 @@ function renderWhatsAppGate(tier) {
         <p class="whatsapp-gate-hint">Private · no spam</p>
         <p class="flow-error" id="whatsapp-gate-error" hidden></p>
         <button type="submit" class="btn btn-block btn-get-started">Get my vet call</button>
+        <p class="lead-consent">${LEAD_CONSENT_TEXT}</p>
       </form>
     </div>
   `;
@@ -5126,6 +5252,8 @@ function bindWhatsAppGateHandlers() {
     };
 
     showResult(clientResult, "client");
+    // Preview test mode: never send the screening to DigiClinic.
+    if (isFelicaTestMode()) return;
 
     fetchScreeningResult(number)
       .then((result) => {
@@ -5320,7 +5448,7 @@ function renderYoungSymptomStep() {
       ? "Itching, hairfall, or a dry coat. Pick one."
       : isEatingLanding()
         ? "Eating less, but still taking some food."
-        : "Pick one. We'll call you and courier the medicine.";
+        : "Pick one. We'll call you.";
 
   assflowMain.innerHTML = `
     <div class="flow-step young-issue-screen">
@@ -5365,7 +5493,7 @@ function renderYoungIssueResultStep(issue) {
     <div class="flow-step young-result-screen">
       <p class="flow-step-label">${formatYoungStepLabel(quizState.step)}</p>
       <h1 class="flow-title" id="assflow-title">${escapeHtml(title)}</h1>
-      <p class="flow-lead">A doctor calls, then we courier the medicine. This is the kind of change parents see.</p>
+      <p class="flow-lead">A doctor calls. This is the kind of change parents see.</p>
       <div class="young-result-ba" aria-label="Before and after">
         <figure class="young-result-card">
           <div class="young-result-photo">
@@ -5582,7 +5710,6 @@ function renderYoungIssueDetailStep() {
     question.id === "scope" && shortLabel
       ? `We can only help with: ${shortLabel}`
       : question.title;
-  const helpLine = CALL_HELP_LINE[issue.id] || "medicine by courier";
   const issuePhrase = (shortLabel || "this").toLowerCase();
   const okLabel =
     issue.id === "prevention"
@@ -5606,7 +5733,6 @@ function renderYoungIssueDetailStep() {
         <p class="young-scope-will-title">What we will do</p>
         <ul>
           <li>A doctor calls about ${escapeHtml(issuePhrase)}</li>
-          <li>We send ${escapeHtml(helpLine)}</li>
         </ul>
       </div>
       <div class="young-scope-wont">
@@ -5710,9 +5836,12 @@ function renderYoungConnectStep() {
           <input type="text" id="young-company" name="company" tabindex="-1" autocomplete="new-password" />
         </div>
 
-        <p class="young-connect-next">Private. A vet usually calls in 15–30 minutes.</p>
+        <p class="young-connect-next">${escapeHtml(
+          callbackCopy("Private. A vet usually calls in 15–30 minutes.", "Private. {msg}")
+        )}</p>
         <p class="flow-error" id="young-connect-error" hidden>Enter a valid 10-digit mobile number.</p>
         <button type="submit" class="btn btn-block btn-get-started">Call me</button>
+        <p class="lead-consent">${LEAD_CONSENT_TEXT}</p>
       </form>
     </div>
   `;
@@ -5792,6 +5921,8 @@ function renderYoungConnectStep() {
 
     quizState.step = getYoungReviewStep();
     renderFlowStep();
+    // Preview test mode: show the thank-you screen but never submit the lead.
+    if (isFelicaTestMode()) return;
 
     submitYoungCatLead(number)
       .then(() => {
@@ -5815,6 +5946,18 @@ function renderYoungConnectStep() {
         });
       });
   });
+}
+
+/** Preview-only ?testScreen=thanks: the thank-you screen with placeholder data, never submitted. */
+function openTestThanksScreen() {
+  if (!isFelicaTestMode() || getFelicaTestMode().screen !== "thanks") return;
+  openFlow("test_screen");
+  quizState.flowTrack = "young";
+  quizState.age = 3;
+  quizState.catName = "Mochi";
+  quizState.youngSymptoms = ["skin"];
+  quizState.whatsappNumber = "9876543210";
+  renderYoungCallPlanStep();
 }
 
 function renderYoungReviewStep() {
@@ -5872,7 +6015,7 @@ function renderYoungWellnessPlanStep() {
 
         <div class="wellness-trust-banner" role="status">
           <i data-lucide="shield"></i>
-          <span>Nothing ships until ${escapeHtml(specialist.shortName)} confirms the plan.</span>
+          <span>${escapeHtml(specialist.shortName)} confirms the plan first.</span>
         </div>
 
         ${renderWellnessSpecialistRx(specialist, name)}
@@ -5912,7 +6055,7 @@ function renderYoungWellnessPlanStep() {
 
         <div class="wellness-price-block">
           <p class="wellness-price-amount">${FELICA_PREVENTION_PROGRAM.price}<span>/${FELICA_PREVENTION_PROGRAM.period}</span></p>
-          <p class="wellness-price-note">Charged only after ${escapeHtml(specialist.shortName)} confirms. Nothing ships before that.</p>
+          <p class="wellness-price-note">Charged only after ${escapeHtml(specialist.shortName)} confirms.</p>
         </div>
 
         <div class="wellness-cta-stack">
@@ -5984,7 +6127,7 @@ function renderYoungCallPlanStep() {
       <div class="young-care-plan young-call-plan-card">
         <h1 class="young-call-plan-title" id="assflow-title">You're all set</h1>
         <p class="young-call-plan-lead">
-          This call is for ${escapeHtml(issueLabel)}. We courier the medicine after the call.
+          This call is for ${escapeHtml(issueLabel)}.
         </p>
 
         <section class="young-call-vet" aria-label="Your specialist">
@@ -6000,7 +6143,7 @@ function renderYoungCallPlanStep() {
           <div class="young-call-vet-meta">
             <p class="young-call-vet-name">${escapeHtml(specialist.fullName)}</p>
             <p class="young-call-vet-title">${escapeHtml(specialist.title)}</p>
-            <p class="young-call-vet-when">Usually calls within 15–30 minutes</p>
+            <p class="young-call-vet-when">${escapeHtml(callbackCopy("Usually calls within 15–30 minutes", "{msg}"))}</p>
           </div>
         </section>
 
@@ -6016,13 +6159,12 @@ function renderYoungCallPlanStep() {
           <h2 class="young-call-section-title" id="young-call-on-title">On the call</h2>
           <ul class="young-call-list">
             <li>Only ${escapeHtml(issueLabel)} — not other problems</li>
-            <li>Couriers the medicine after the call</li>
             <li>If something else is wrong, they will tell you to go to a clinic</li>
           </ul>
         </section>
 
         <button type="button" class="btn btn-block young-plan-done" data-flow-done>Done for now</button>
-        <p class="score-reassure">Not a diagnosis. The vet confirms on the call before anything is sent.</p>
+        <p class="score-reassure">Not a diagnosis. The vet confirms everything on the call.</p>
       </div>
     </div>
   `;
@@ -6299,6 +6441,8 @@ window.addEventListener("pageshow", (event) => {
 initHeroPersonalization();
 initAgeGate();
 initAssessment();
+initCallbackCopy();
+openTestThanksScreen();
 
 // Defer life-stage carousel until near viewport so Lighthouse/mobile
 // don't download ~1MB of stage photos during initial load.

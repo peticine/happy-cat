@@ -6470,6 +6470,29 @@ body[data-age-theme="geriatric"] .hero-clinic {
   color: var(--ink-faint);
 }
 
+.lead-consent {
+  margin: 8px 0 0;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  text-align: center;
+  color: var(--ink-faint);
+}
+
+/* Preview-only ?testTime= / ?testScreen= badge */
+.felica-test-badge {
+  position: fixed;
+  left: 12px;
+  bottom: 12px;
+  z-index: 10000;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: #1f2937;
+  color: #fff;
+  font-size: 0.75rem;
+  line-height: 1.3;
+  pointer-events: none;
+}
+
 .whatsapp-gate-privacy {
   margin: 12px 0 0;
   text-align: center;
