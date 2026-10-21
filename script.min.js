@@ -35,36 +35,36 @@ const PRIMARY_CTA_LABEL = "Speak to a vet";
 const HERO_VARIANTS = {
   water: {
     headlineHook: "Drinking more water than usual?",
-    headline: "We'll check if this needs a clinic — we don't prescribe for kidney disease on a call.",
-    lead: "A quick check. If it's something we can treat online, a vet will call to prescribe supplements.",
+    headline: "We'll check first whether this needs a clinic visit.",
+    lead: "A quick check. If a vet can advise on it remotely, a feline vet calls you with advice.",
     image: "./images/hero-water.webp?v=hc139",
   },
   drinking: {
     headlineHook: "Drinking more water than usual?",
-    headline: "We'll check if this needs a clinic — we don't prescribe for kidney disease on a call.",
-    lead: "A quick check. If it's something we can treat online, a vet will call to prescribe supplements.",
+    headline: "We'll check first whether this needs a clinic visit.",
+    lead: "A quick check. If a vet can advise on it remotely, a feline vet calls you with advice.",
     image: "./images/hero-water.webp?v=hc139",
   },
   weight: {
     headlineHook: "Has your cat lost weight?",
-    headline: "Find out if it's age and appetite — or something a vet should check soon.",
-    consequence: "Weight loss is often the first change owners notice — and a sign something may already be progressing.",
+    headline: "Find out if a vet can advise on this remotely, or if your cat should be seen soon.",
+    consequence: "Weight loss is worth raising with a vet early.",
   },
   eating: {
     headlineHook: "Eating less than usual?",
-    headline: "A feline vet can treat picky eating and appetite dips on a call.",
-    lead: "If your cat is still eating some food, we can often help online.",
+    headline: "A feline vet can advise on picky eating and appetite dips on a call.",
+    lead: "If your cat is still eating some food, a vet can often advise remotely.",
     pageTitle: "Felica | Cat eating less",
     pageDescription:
-      "Eating less but still taking some food. If we can treat it online, a feline vet calls.",
+      "Appetite concerns, answered by a feline vet. Share what's going on and a vet calls you with advice.",
   },
   appetite: {
     headlineHook: "Eating less than usual?",
-    headline: "A feline vet can treat picky eating and appetite dips on a call.",
-    lead: "If your cat is still eating some food, we can often help online.",
+    headline: "A feline vet can advise on picky eating and appetite dips on a call.",
+    lead: "If your cat is still eating some food, a vet can often advise remotely.",
     pageTitle: "Felica | Cat eating less",
     pageDescription:
-      "Eating less but still taking some food. If we can treat it online, a feline vet calls.",
+      "Appetite concerns, answered by a feline vet. Share what's going on and a vet calls you with advice.",
   },
   sleeping: {
     headline: "Let's understand why your cat is sleeping more.",
@@ -72,14 +72,14 @@ const HERO_VARIANTS = {
   },
   litter: {
     headlineHook: "Is your cat peeing outside the litter box?",
-    headline: "We'll check if this is an emergency, a clinic visit, or something a vet can treat online.",
-    lead: "If it's something we can treat online, a feline vet will call to prescribe the right supplements.",
+    headline: "We'll check if this is an emergency, a clinic visit, or something a vet can advise on remotely.",
+    lead: "If a vet can advise remotely, a feline vet calls you with advice.",
     image: "./images/hero-litter.webp?v=hc139",
   },
   urination: {
     headlineHook: "Is your cat peeing outside the litter box?",
-    headline: "We'll check if this is an emergency, a clinic visit, or something a vet can treat online.",
-    lead: "If it's something we can treat online, a feline vet will call to prescribe the right supplements.",
+    headline: "We'll check if this is an emergency, a clinic visit, or something a vet can advise on remotely.",
+    lead: "If a vet can advise remotely, a feline vet calls you with advice.",
     image: "./images/hero-litter.webp?v=hc139",
   },
   quiet: {
@@ -88,36 +88,36 @@ const HERO_VARIANTS = {
   },
   dental: {
     headlineHook: "Bad breath is not always a clinic visit.",
-    headline: "We'll check if a vet can prescribe dental support on a call — or if your cat needs to be seen.",
-    lead: "If it's something we can treat online, a feline vet will call to prescribe the right supplements.",
+    headline: "We'll check if a vet can advise on this remotely, or if your cat needs to be seen.",
+    lead: "If a vet can advise remotely, a feline vet calls you with advice.",
     image: "./images/hero-dental.webp?v=hc139",
   },
   breath: {
     headlineHook: "Bad breath is not always a clinic visit.",
-    headline: "We'll check if a vet can prescribe dental support on a call — or if your cat needs to be seen.",
-    lead: "If it's something we can treat online, a feline vet will call to prescribe the right supplements.",
+    headline: "We'll check if a vet can advise on this remotely, or if your cat needs to be seen.",
+    lead: "If a vet can advise remotely, a feline vet calls you with advice.",
     image: "./images/hero-dental.webp?v=hc139",
   },
   senior: {
     headlineHook: "Is your cat over 7?",
-    headline: "We'll check kidney-related signs first. Clinic cases stay at the clinic — we only call to prescribe prevention support.",
-    lead: "If nothing needs an exam, a feline vet will call to prescribe the right supplements.",
+    headline: "We'll check kidney-related signs first. Clinic cases stay at the clinic — we only call to advise on prevention.",
+    lead: "If nothing needs an exam, a feline vet will call to advise on prevention.",
     image: "./images/stage-senior.webp?v=hc139",
     pageTitle: "Felica | Senior cat check",
     pageDescription:
-      "Quick check for senior cats. If a clinic visit isn't needed, a feline vet calls to prescribe prevention supplements.",
+      "Quick check for senior cats. If a clinic visit isn't needed, a feline vet calls to advise on prevention.",
   },
   skin: {
     headlineHook: "Itching, hairfall, or a dry coat?",
-    headline: "A feline vet can treat everyday skin and coat issues on a call.",
-    lead: "Pick what's going on. If we can treat it online, a vet will call.",
+    headline: "A feline vet can advise on everyday skin and coat concerns on a call.",
+    lead: "Pick what's going on. If a vet can advise remotely, a vet will call.",
     pageTitle: "Felica | Cat skin and coat",
     pageDescription:
-      "Itching, dry coat, or hairfall. If we can treat it online, a feline vet calls.",
+      "Skin and coat concerns, answered by a feline vet. Share what's going on and a vet calls you with advice.",
   },
   default: {
-    headlineHook: "Everyday cat issues, treated online.",
-    headline: "A feline vet calls you and prescribes the right supplements — if a clinic visit isn't needed.",
+    headlineHook: "Everyday cat concerns, answered by a vet.",
+    headline: "Share what's going on and a feline vet calls you with advice, if a clinic visit isn't needed.",
   },
 };
 
@@ -138,56 +138,56 @@ const HERO_FLOAT_TAGS = {
     { icon: "sparkles", label: "Dull coat" },
     { icon: "wind", label: "Hairballs" },
     { icon: "eye", label: "Tear stains" },
-    { icon: "shield", label: "Gut support" },
+    { icon: "shield", label: "Digestion" },
     { icon: "heart-pulse", label: "Prevention" },
   ],
   dental: [
     { icon: "wind", label: "Bad breath" },
-    { icon: "stethoscope", label: "Gum inflammation" },
-    { icon: "utensils", label: "Pain while eating" },
-    { icon: "shield", label: "Tooth loss" },
-    { icon: "heart-pulse", label: "Kidney & heart" },
-    { icon: "eye", label: "Hiding pain" },
+    { icon: "stethoscope", label: "Gums" },
+    { icon: "utensils", label: "Chewing" },
+    { icon: "shield", label: "Teeth" },
+    { icon: "heart-pulse", label: "Mouth care" },
+    { icon: "eye", label: "Eating habits" },
   ],
   breath: [
     { icon: "wind", label: "Bad breath" },
-    { icon: "stethoscope", label: "Gum inflammation" },
-    { icon: "utensils", label: "Pain while eating" },
-    { icon: "shield", label: "Tooth loss" },
-    { icon: "heart-pulse", label: "Kidney & heart" },
-    { icon: "eye", label: "Hiding pain" },
+    { icon: "stethoscope", label: "Gums" },
+    { icon: "utensils", label: "Chewing" },
+    { icon: "shield", label: "Teeth" },
+    { icon: "heart-pulse", label: "Mouth care" },
+    { icon: "eye", label: "Eating habits" },
   ],
   litter: [
     { icon: "toilet", label: "Peeing outside" },
     { icon: "activity", label: "Straining" },
-    { icon: "droplets", label: "Blood in urine" },
+    { icon: "droplets", label: "Litter changes" },
     { icon: "clock", label: "Going more often" },
-    { icon: "eye", label: "Stress or pain" },
-    { icon: "heart-pulse", label: "Bladder & kidneys" },
+    { icon: "eye", label: "Stress" },
+    { icon: "heart-pulse", label: "Toilet habits" },
   ],
   urination: [
     { icon: "toilet", label: "Peeing outside" },
     { icon: "activity", label: "Straining" },
-    { icon: "droplets", label: "Blood in urine" },
+    { icon: "droplets", label: "Litter changes" },
     { icon: "clock", label: "Going more often" },
-    { icon: "eye", label: "Stress or pain" },
-    { icon: "heart-pulse", label: "Bladder & kidneys" },
+    { icon: "eye", label: "Stress" },
+    { icon: "heart-pulse", label: "Toilet habits" },
   ],
   water: [
-    { icon: "droplets", label: "Extra thirst" },
+    { icon: "droplets", label: "Thirst" },
     { icon: "toilet", label: "Peeing more" },
-    { icon: "scale", label: "Weight loss" },
-    { icon: "heart-pulse", label: "Kidney disease" },
-    { icon: "zap", label: "Thyroid changes" },
-    { icon: "activity", label: "Diabetes risk" },
+    { icon: "scale", label: "Weight changes" },
+    { icon: "heart-pulse", label: "Drinking more" },
+    { icon: "zap", label: "Appetite changes" },
+    { icon: "activity", label: "Energy levels" },
   ],
   drinking: [
-    { icon: "droplets", label: "Extra thirst" },
+    { icon: "droplets", label: "Thirst" },
     { icon: "toilet", label: "Peeing more" },
-    { icon: "scale", label: "Weight loss" },
-    { icon: "heart-pulse", label: "Kidney disease" },
-    { icon: "zap", label: "Thyroid changes" },
-    { icon: "activity", label: "Diabetes risk" },
+    { icon: "scale", label: "Weight changes" },
+    { icon: "heart-pulse", label: "Drinking more" },
+    { icon: "zap", label: "Appetite changes" },
+    { icon: "activity", label: "Energy levels" },
   ],
   senior: [
     { icon: "heart-pulse", label: "Kidney disease" },
@@ -201,16 +201,16 @@ const HERO_FLOAT_TAGS = {
     { icon: "bug", label: "Itching" },
     { icon: "wind", label: "Hairfall" },
     { icon: "sparkles", label: "Dry coat" },
-    { icon: "shield", label: "Flea care" },
-    { icon: "droplets", label: "Coat oil" },
-    { icon: "heart-pulse", label: "Skin support" },
+    { icon: "shield", label: "Fleas" },
+    { icon: "droplets", label: "Coat" },
+    { icon: "heart-pulse", label: "Skin" },
   ],
   eating: [
     { icon: "utensils", label: "Eating less" },
     { icon: "clock", label: "Skipping meals" },
     { icon: "scale", label: "Picky appetite" },
     { icon: "shield", label: "Still eating some" },
-    { icon: "heart-pulse", label: "Appetite support" },
+    { icon: "heart-pulse", label: "Appetite" },
     { icon: "sparkles", label: "Energy dips" },
   ],
 };
@@ -395,7 +395,7 @@ function applySkinCoatLandingCopy(concern) {
   if (concern !== "skin") return;
   const howStep = document.querySelector(".how-step p");
   if (howStep) {
-    howStep.textContent = "Pick one — itching, hairfall, or a dry coat.";
+    howStep.textContent = "Tell us about itching, hairfall or a dry coat.";
   }
   document.querySelectorAll(".coverage-card").forEach((card) => {
     const group = card.getAttribute("data-coverage-group");
@@ -411,7 +411,7 @@ function applyEatingLandingCopy(concern) {
   if (concern !== "eating") return;
   const howStep = document.querySelector(".how-step p");
   if (howStep) {
-    howStep.textContent = "Tell us your cat is eating less — still taking some food.";
+    howStep.textContent = "Tell us your cat is eating less but still taking some food.";
   }
   document.querySelectorAll(".coverage-card").forEach((card) => {
     const group = card.getAttribute("data-coverage-group");
@@ -440,11 +440,12 @@ const CALLBACK_SCHEDULE = {
 };
 const CALLBACK_DAYS = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
 const CALLBACK_PAGE_COPY = {
+  "hero-pill": "Vet call from 10 AM",
   "how-step": "Leave your number. {msg}",
   "faq-call":
-    "Only if your answers look like something we can treat online. {msg} They'll prescribe the right supplements on the call.",
+    "Only if your answers look like something a vet can advise on remotely. {msg}",
   "faq-time": "About 2 minutes of questions. If it's a fit, you leave a number and get a vet call. {msg}",
-  "final-cta": "A 2-minute check, then a feline vet prescribes the right supplements. {msg}",
+  "final-cta": "A 2-minute check, then a feline vet calls you. {msg}",
 };
 
 /** Returns "open", "today", "tomorrow" or "afterClosedDay" for a day and minutes past midnight. */
@@ -897,11 +898,11 @@ const AGE_CAROUSEL_STAGES = [
     label: "Kitten",
     ages: "0–2 yrs",
     title: "Building lifelong health",
-    summary: "What happens now shapes organ health for life — early problems often catch up in senior years.",
+    summary: "Good habits now help set your cat up for a healthy life.",
     keyPoints: [
-      "Early nutrition affects kidney health for life",
-      "Congenital issues may show up now",
-      "Growth problems can signal metabolic issues",
+      "Good nutrition supports healthy growth",
+      "Kitten check-ups at your clinic matter",
+      "Slow growth is worth raising with a vet",
     ],
     image: "./images/stage-young.webp?v=hc139",
     imageAlt: "Real kitten portrait",
@@ -910,12 +911,12 @@ const AGE_CAROUSEL_STAGES = [
     id: "prime",
     label: "Prime",
     ages: "3–6 yrs",
-    title: "Healthy doesn't always mean healthy",
-    summary: "Cats look completely healthy — blood work is often the only way to catch what's changing inside.",
+    title: "Staying on top of everyday health",
+    summary: "Cats often look fine even when something is changing. Regular clinic check-ups help you keep track.",
     keyPoints: [
       "Weight creeps up slowly, often unnoticed",
-      "Tartar and gum disease start building",
-      "Ideal time to set baseline bloodwork",
+      "Dental care becomes important",
+      "A good time for a routine clinic check-up",
     ],
     image: "./images/stage-prime.webp?v=hc139",
     imageAlt: "Real adult cat portrait",
@@ -924,12 +925,12 @@ const AGE_CAROUSEL_STAGES = [
     id: "mature",
     label: "Mature",
     ages: "7–10 yrs",
-    title: "When hidden decline starts",
-    summary: "One in three cats shows organ decline now — early detection makes the difference between months and years.",
+    title: "Watching for small changes",
+    summary: "Changes in older cats can be subtle. Noticing them early helps your vet guide you.",
     keyPoints: [
-      "Kidney disease becomes common",
-      "Dental disease accelerates systemic problems",
-      "Drinking or litter box changes are easy to miss",
+      "Drinking and litter box habits may change",
+      "Dental care matters more",
+      "Weight and appetite may shift",
     ],
     image: "./images/stage-mature.webp?v=hc139",
     imageAlt: "Real mature cat portrait",
@@ -938,12 +939,12 @@ const AGE_CAROUSEL_STAGES = [
     id: "senior",
     label: "Senior",
     ages: "11–14 yrs",
-    title: "Where chronic disease begins appearing",
-    summary: "Cats stop hiding illness — knowing exactly what changed helps your vet intervene fast.",
+    title: "Extra attention in the senior years",
+    summary: "Older cats often hide discomfort. Telling your vet exactly what changed helps them guide you.",
     keyPoints: [
-      "Kidney function often severely compromised",
-      "Chronic conditions frequently diagnosed now",
-      "Nausea, weight loss, and hiding increase",
+      "Energy and mobility may change",
+      "Regular clinic check-ups become more important",
+      "Appetite, weight and behaviour changes are worth noting",
     ],
     image: "./images/stage-senior.webp?v=hc139",
     imageAlt: "Real senior cat portrait",
@@ -953,11 +954,11 @@ const AGE_CAROUSEL_STAGES = [
     label: "Geriatric",
     ages: "15+ yrs",
     title: "Every day of comfort counts",
-    summary: "Even minor changes signal bigger problems — comfort-first decisions need clarity, fast.",
+    summary: "Comfort comes first. Note any changes and share them with your vet.",
     keyPoints: [
-      "Multiple organ systems may fail together",
-      "Refusing food for 24+ hours needs attention",
-      "Weakness or disorientation can appear suddenly",
+      "Rest, warmth and an easy-to-reach litter box help",
+      "If your cat refuses food for 24 hours or more, see a clinic",
+      "Sudden weakness or confusion needs an in-person vet",
     ],
     image: "./images/stage-geriatric.webp?v=hc139",
     imageAlt: "Real geriatric cat portrait",
@@ -3057,7 +3058,7 @@ function renderFlowTrustStrip() {
   return `
     <p class="flow-trust-strip">
       <span class="flow-trust-dot" aria-hidden="true"></span>
-      28,000+ cat parents screened · not a diagnosis
+      Cat parents across India use Felica · not a diagnosis
     </p>`;
 }
 
@@ -3632,7 +3633,7 @@ function getYoungSymptomLabel() {
 function getYoungUrgentReasons() {
   const reasons = [];
   if (hasOnlineSafetyRed()) {
-    reasons.push("This needs a clinic. We can't treat it on a call.");
+    reasons.push("This needs a clinic. A vet can't advise on this remotely.");
     return reasons;
   }
   const durationId = quizState.youngDuration?.id;
@@ -3837,7 +3838,7 @@ function getAmberReasons() {
   if (symptomIds.includes("appetite") && !symptomIds.includes("eating_less")) {
     const stopped = getIssueDetailAnswer("appetite", "stopped")?.id;
     if (stopped === "refusing" || stopped === "almost") {
-      reasons.push(`${name}'s appetite change should be examined in person before any treatment.`);
+      reasons.push(`${name}'s appetite change should be examined in person before anything else.`);
     }
   }
   if (symptomIds.includes("vomiting")) {
@@ -3852,10 +3853,10 @@ function getAmberReasons() {
     }
   }
   if (symptomIds.includes("mobility")) {
-    reasons.push("A limp or possible injury needs to be seen in person. We can't prescribe pain meds on a call.");
+    reasons.push("A limp or possible injury needs to be seen in person. Pain relief needs an in-person vet.");
   }
   if (symptomIds.includes("dental")) {
-    reasons.push("Mouth pain or gum changes need a dental exam — gel on a call won't treat this.");
+    reasons.push("Mouth pain or gum changes need a dental exam at a clinic.");
   }
   if (symptomIds.includes("energy")) {
     reasons.push("A sudden energy drop or hiding with poorer eating needs a clinic workup.");
@@ -3864,7 +3865,7 @@ function getAmberReasons() {
     reasons.push("Behaviour plus eating or drinking changes should be checked in clinic first.");
   }
   if (symptomIds.includes("eyes")) {
-    reasons.push("Cloudy or coloured eye discharge needs an in-person look, not drops over the phone.");
+    reasons.push("Cloudy or coloured eye discharge needs an in-person look at a clinic.");
   }
   if (symptomIds.includes("coat")) {
     if (getIssueDetailAnswer("coat", "weight_loss")?.id === "yes") {
@@ -3876,7 +3877,7 @@ function getAmberReasons() {
   }
 
   if (!reasons.length) {
-    reasons.push("This isn't something we can treat on a call.");
+    reasons.push("A vet can't advise on this remotely.");
   }
   return reasons;
 }
@@ -4071,17 +4072,17 @@ function buildYoungCarePlan() {
         summary: `You spotted fleas or ticks on ${name} — act quickly before they spread in the home.`,
         watch: [
           "Wash bedding on a hot cycle and vacuum sofas and corners.",
-          "Treat all pets in the home — not just the one you noticed.",
+          "Ask your vet about flea control for all pets in the home — not just the one you noticed.",
         ],
-        escalate: "See your vet within 48 hours to choose the right flea or tick treatment.",
+        escalate: "See your vet within 48 hours to choose the right flea or tick control.",
       },
       both: {
-        summary: `${name} is scratching and has parasites — treat both the cat and home together.`,
+        summary: `${name} is scratching and has parasites — deal with both the cat and home together.`,
         watch: [
-          "Start flea treatment on all pets — scratching often means fleas are active.",
+          "Ask your vet about flea control for all pets — scratching often means fleas are active.",
           "Wash bedding and vacuum corners where your cat rests.",
         ],
-        escalate: "See your vet within 48 hours for the right flea or tick treatment.",
+        escalate: "See your vet within 48 hours for the right flea or tick control.",
       },
       sores: {
         summary: `${name} has bald patches or sores from scratching — the skin needs attention.`,
@@ -4451,7 +4452,7 @@ function buildYoungCarePlan() {
       urgency,
       urgentReasons,
       planTitle: "Go to a vet clinic now",
-      summary: `${name} may need an in-person vet visit now. This isn't something we can treat or prescribe for on a call.`,
+      summary: `${name} may need an in-person vet visit now. A vet can't advise on this remotely.`,
       watch: [
         "Leave now for the nearest open veterinary clinic or emergency vet.",
         "If your clinic is closed, go to an emergency vet — don't wait until morning.",
@@ -4498,7 +4499,7 @@ const RISK_TIERS = {
     meterLabel: "Low",
     headline: "Looking good overall.",
     action: "Recheck in about 6 months",
-    detail: "Nothing worrying in your answers. A feline vet can prescribe prevention supplements on a call if you'd like a routine plan.",
+    detail: "Nothing worrying in your answers. A feline vet can advise on prevention on a call if you'd like a routine plan.",
     cta: "Got it",
     ctaTrust:
       "Recheck in 6 months. We'll remind you when it's time.",
@@ -4511,7 +4512,7 @@ const RISK_TIERS = {
     meterLabel: "Medium",
     headline: "Worth a closer look.",
     action: "See a vet clinic for tests",
-    detail: "These answers together usually need bloodwork or an exam — not supplements on a call.",
+    detail: "These answers together usually need bloodwork or an exam — not advice on a call.",
     cta: "Got it",
     ctaTrust:
       "Not a diagnosis, just clarity on whether a vet visit makes sense and what to ask for.",
@@ -4524,7 +4525,7 @@ const RISK_TIERS = {
     meterLabel: "High",
     headline: "Worth taking seriously.",
     action: "See a vet clinic today or tomorrow",
-    detail: "A few answers flagged together need a hands-on vet visit. We can't treat this or prescribe supplements on a call.",
+    detail: "A few answers flagged together need a hands-on vet visit. A vet can't advise on this remotely.",
     cta: "Got it",
     ctaTrust:
       "We'll help you walk in with the right questions, so your clinic visit is worth the time.",
@@ -4724,13 +4725,13 @@ function renderSpecialistCallout(riskLevel) {
   if (riskLevel === "low") {
     return `
       <p class="score-specialist score-specialist--low">
-        A feline vet will call to prescribe prevention supplements if they fit ${escapeHtml(getCatDisplayName())} — fleas, gut, coat, and daily support. If anything still looks like a clinic case, they'll say so.
+        A feline vet will call to advise on prevention for ${escapeHtml(getCatDisplayName())} — fleas, gut, coat, and daily care. If anything still looks like a clinic case, they'll say so.
       </p>`;
   }
 
   return `
     <p class="score-specialist">
-      This isn't something we can treat online. Please book an in-person vet visit for tests — we don't prescribe supplements for this on a call.
+      A vet can't advise on this remotely. Please book an in-person vet visit for tests.
     </p>`;
 }
 
@@ -4755,7 +4756,7 @@ function renderScoreResult(result) {
       ${renderSpecialistCallout(riskLevel)}
 
       <button type="button" class="btn btn-block btn-get-started" data-flow-done>Done</button>
-      <p class="score-reassure">Not a diagnosis. Your vet makes every treatment decision.</p>
+      <p class="score-reassure">Not a diagnosis. Your vet makes every care decision.</p>
     </div>
   `;
 }
@@ -5091,7 +5092,7 @@ function renderGateResultPreview(tier) {
 
 function renderChronicClinicResult(tier) {
   const headline = tier?.headline || "This needs a clinic visit.";
-  const detail = tier?.detail || "We can't treat this or prescribe supplements on a call.";
+  const detail = tier?.detail || "A vet can't advise on this remotely.";
   return `
     <div class="quiz-result score-result young-plan-step young-plan-step--clinic">
       <div class="young-clinic-panel" role="status">
@@ -5100,13 +5101,13 @@ function renderChronicClinicResult(tier) {
         <p class="young-clinic-lead">${escapeHtml(detail)}</p>
         <ul class="young-clinic-reasons">
           <li>Kidney, thyroid, and diabetes signs need blood and urine tests.</li>
-          <li>We don't prescribe supplements for this on a call.</li>
+          <li>This isn't something a vet can advise on by phone.</li>
           <li>Take these answers to your local vet so they know what to check.</li>
         </ul>
       </div>
       ${renderScreeningSummary()}
       <button type="button" class="btn btn-block btn-get-started" data-flow-done>Got it</button>
-      <p class="score-reassure">Not a diagnosis. Please see a vet in person for tests and treatment.</p>
+      <p class="score-reassure">Not a diagnosis. Please see a vet in person for tests and care.</p>
     </div>
   `;
 }
@@ -5114,8 +5115,8 @@ function renderChronicClinicResult(tier) {
 function renderWhatsAppGate(tier) {
   const preview = tier ? renderGateResultPreview(tier) : "";
   const leadLine = callbackCopy(
-    "A feline vet will call to prescribe prevention supplements if they fit — usually within 15–30 minutes.",
-    "A feline vet will call to prescribe prevention supplements if they fit. {msg}"
+    "A feline vet will call to advise on prevention — usually within 15–30 minutes.",
+    "A feline vet will call to advise on prevention. {msg}"
   );
   const catPrefill = quizState.catName || catName || "";
 
@@ -5728,11 +5729,11 @@ function renderYoungIssueDetailStep() {
   const scopeBody =
     question.id === "scope"
       ? `
-      <p class="flow-lead">Please read this. This call cannot treat every problem.</p>
+      <p class="flow-lead">Please read this. This call can't cover every problem.</p>
       <div class="young-scope-will">
         <p class="young-scope-will-title">What we will do</p>
         <ul>
-          <li>A doctor calls about ${escapeHtml(issuePhrase)}</li>
+          <li>A vet calls about ${escapeHtml(issuePhrase)}</li>
         </ul>
       </div>
       <div class="young-scope-wont">
@@ -6203,21 +6204,21 @@ function renderYoungClinicPlanStep() {
         <div class="young-clinic-panel" role="status">
           <p class="young-clinic-eyebrow">Needs an in-person vet</p>
           <h2 class="young-clinic-title" id="assflow-title">${
-            scopedOut ? "Please see a clinic" : "We can't treat this online"
+            scopedOut ? "Please see a clinic" : "A vet can't advise on this remotely"
           }</h2>
           <p class="young-clinic-lead">${
             scopedOut
-              ? "This call can't treat other illnesses. Please take your cat to a vet near you."
+              ? "This call can't cover other illnesses. Please take your cat to a vet near you."
             : `${escapeHtml(name)} needs a clinic exam — not a call.`
           }</p>
           <ul class="young-clinic-reasons">
             ${reasons.map((reason) => `<li>${escapeHtml(reason)}</li>`).join("")}
           </ul>
-          <p class="young-clinic-note">Please take ${escapeHtml(name)} to a nearby veterinary clinic. We don't collect a number for cases we can't treat online.</p>
+          <p class="young-clinic-note">Please take ${escapeHtml(name)} to a nearby veterinary clinic. We don't collect a number for cases a vet can't advise on remotely.</p>
         </div>
 
         <button type="button" class="btn btn-block btn-get-started" data-flow-done>Got it</button>
-        <p class="score-reassure">Not a diagnosis. Please see a vet in person for tests and treatment.</p>
+        <p class="score-reassure">Not a diagnosis. Please see a vet in person for tests and care.</p>
       </div>
     </div>
   `;
@@ -6282,7 +6283,7 @@ function renderYoungPlanStep() {
         </div>
 
         <button type="button" class="btn btn-block btn-get-started" data-flow-done>Got it</button>
-        <p class="score-reassure">Not a diagnosis. Your vet makes every treatment decision.</p>
+        <p class="score-reassure">Not a diagnosis. Your vet makes every care decision.</p>
       </div>
     </div>
   `;
