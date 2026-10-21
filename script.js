@@ -190,12 +190,12 @@ const HERO_FLOAT_TAGS = {
     { icon: "activity", label: "Energy levels" },
   ],
   senior: [
-    { icon: "heart-pulse", label: "Kidney disease" },
-    { icon: "zap", label: "Hyperthyroidism" },
-    { icon: "scale", label: "Diabetes" },
-    { icon: "moon", label: "Arthritis & pain" },
-    { icon: "utensils", label: "Dental disease" },
-    { icon: "activity", label: "Weight loss" },
+    { icon: "heart-pulse", label: "Drinking more" },
+    { icon: "zap", label: "Appetite changes" },
+    { icon: "scale", label: "Thirst" },
+    { icon: "moon", label: "Mobility" },
+    { icon: "utensils", label: "Teeth" },
+    { icon: "activity", label: "Weight changes" },
   ],
   skin: [
     { icon: "bug", label: "Itching" },
@@ -4359,7 +4359,7 @@ function buildYoungCarePlan() {
       preventive: {
         summary: `No urgent flags for ${name} — we'll cover preventive health on the call.`,
         watch: [
-          "Note the last deworming and flea treatment dates if you have them.",
+          "Note the last deworming and flea control dates if you have them.",
           "Check for flea dirt at the base of the tail before the call.",
         ],
         escalate: "A feline specialist will call with next steps for ongoing care.",
