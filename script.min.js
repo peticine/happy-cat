@@ -5548,7 +5548,7 @@ function renderYoungIssueResultStep(issue) {
     <div class="flow-step young-result-screen">
       <p class="flow-step-label">${formatYoungStepLabel(quizState.step)}</p>
       <h1 class="flow-title" id="assflow-title">${escapeHtml(title)}</h1>
-      <p class="flow-lead">A doctor calls. This is the kind of change parents see.</p>
+      <p class="flow-lead">A vet calls. This is the kind of change parents see.</p>
       <div class="young-result-ba" aria-label="Before and after">
         <figure class="young-result-card">
           <div class="young-result-photo">
