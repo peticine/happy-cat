@@ -28,12 +28,6 @@ const LEAD_CONSENT_TEXT =
  * Fields this page does not collect. Confirm with clinic/ops before SUBMIT_ENABLED = true.
  */
 const PICKY_EATERS_CASE_DEFAULTS = {
-  pet: {
-    // TODO: page does not ask age
-    age_years: null,
-    // TODO: page does not ask age band
-    age_band: null,
-  },
   triage: {
     // TODO: confirm green is correct for this consult campaign
     lane: "green",
@@ -347,9 +341,10 @@ function rememberLeadSubmission(phone) {
   writeLeadRateStore(store);
 }
 
-function getLeadSpamBlockReason({ honeypot = "", phone = "", catNameValue = "" } = {}) {
+function getLeadSpamBlockReason({ honeypot = "", phone = "", catNameValue = "", ageValue = "" } = {}) {
   if (isLeadSpamAllowlisted(phone)) {
     if (!normalizeCatNameInput(catNameValue)) return "cat_name";
+    if (parseCatAgeValue(ageValue) == null) return "age";
     if (!isValidIndianMobile(phone)) return "phone";
     return null;
   }
@@ -357,6 +352,7 @@ function getLeadSpamBlockReason({ honeypot = "", phone = "", catNameValue = "" }
   if (openedAt && Date.now() - openedAt < LEAD_MIN_ELAPSED_MS) return "too_fast";
   const nameReason = getCatNameBlockReason(catNameValue);
   if (nameReason) return nameReason;
+  if (parseCatAgeValue(ageValue) == null) return "age";
   if (!isPlausibleIndianMobile(phone)) return "phone";
   const rateReason = getLeadRateLimitReason(phone);
   if (rateReason) return rateReason;
@@ -368,6 +364,8 @@ function leadSpamErrorMessage(reason) {
     case "cat_name_multi":
     case "cat_name":
       return "Enter your cat's name.";
+    case "age":
+      return "Enter your cat's age.";
     case "too_fast":
       return "Take a moment, then try again.";
     case "rate_phone":
@@ -385,13 +383,59 @@ function isCatNameBlockReason(reason) {
   return reason === "cat_name" || reason === "cat_name_multi";
 }
 
-function buildPayload(catName, phoneNational) {
+/** "m1"–"m11" for months, "y1"–"y16" for years. 16 means 16 or older. */
+function parseCatAgeValue(raw) {
+  const value = String(raw || "").trim();
+  const months = value.match(/^m(\d{1,2})$/);
+  if (months) {
+    const n = Number(months[1]);
+    if (n >= 1 && n <= 11) return n / 12;
+    return null;
+  }
+  const years = value.match(/^y(\d{1,2})$/);
+  if (years) {
+    const n = Number(years[1]);
+    if (n >= 1 && n <= 16) return n;
+    return null;
+  }
+  return null;
+}
+
+function ageBandForYears(years) {
+  if (years < 1) return "Kitten";
+  if (years < 7) return "Adult";
+  if (years <= 10) return "Mature";
+  if (years <= 14) return "Senior";
+  return "Geriatric";
+}
+
+function formatCatAgeLabel(years) {
+  if (years < 1) {
+    const months = Math.max(1, Math.round(years * 12));
+    return `${months} ${months === 1 ? "month" : "months"}`;
+  }
+  const whole = Math.round(years);
+  if (whole >= 16) return "16+ years";
+  return `${whole} ${whole === 1 ? "year" : "years"}`;
+}
+
+function buildPet(name, ageYears) {
+  return {
+    name,
+    species: "cat",
+    age_years: ageYears,
+    age_band: ageBandForYears(ageYears),
+  };
+}
+
+function buildPayload(catName, phoneNational, ageYears) {
   const phone = String(phoneNational || "").replace(/\D/g, "");
   const name = catName || null;
   const displayName = name || "your cat";
   const complaint = PICKY_EATERS_CASE_DEFAULTS.chief_complaint;
+  const ageLabel = formatCatAgeLabel(ageYears);
   const summaryParts = [
-    `${displayName === "your cat" ? "Cat" : displayName}`,
+    ageLabel ? `${displayName}, ${ageLabel}` : displayName,
     complaint.issue_label,
     phone ? `Vet call requested at +91 ${phone}` : "Vet call requested",
   ];
@@ -413,12 +457,7 @@ function buildPayload(catName, phoneNational) {
       preferred_method: "call",
       callback_window: "15_30_min",
     },
-    pet: {
-      name,
-      species: "cat",
-      age_years: PICKY_EATERS_CASE_DEFAULTS.pet.age_years,
-      age_band: PICKY_EATERS_CASE_DEFAULTS.pet.age_band,
-    },
+    pet: buildPet(name, ageYears),
     triage: { ...PICKY_EATERS_CASE_DEFAULTS.triage },
     chief_complaint: { ...PICKY_EATERS_CASE_DEFAULTS.chief_complaint },
     answers: [],
@@ -531,34 +570,48 @@ function bindPage() {
   const form = document.getElementById("pe-form");
   if (!form) return;
 
+  const ageInput = form.querySelector("#pe-age");
+  const error = form.querySelector("#pe-error");
+  ageInput?.addEventListener("change", () => {
+    if (parseCatAgeValue(ageInput.value) == null) return;
+    ageInput.classList.remove("error");
+    if (error && !error.hidden && error.textContent === leadSpamErrorMessage("age")) {
+      error.hidden = true;
+    }
+  });
+
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     const nameInput = form.querySelector("#pe-cat-name");
     const phoneInput = form.querySelector("#pe-phone");
     const honeypot = form.querySelector("#pe-company");
-    const error = form.querySelector("#pe-error");
     const submitBtn = form.querySelector('button[type="submit"]');
     const number = normalizeIndianMobile(phoneInput?.value);
     const petName = normalizeCatNameInput(nameInput?.value);
+    const ageYears = parseCatAgeValue(ageInput?.value);
 
     const blockReason = getLeadSpamBlockReason({
       honeypot: honeypot?.value,
       phone: number,
       catNameValue: petName,
+      ageValue: ageInput?.value,
     });
     if (blockReason) {
       if (error) {
         error.hidden = false;
         error.textContent = leadSpamErrorMessage(blockReason);
       }
-      if (isCatNameBlockReason(blockReason)) {
-        nameInput?.classList.add("error");
-        nameInput?.focus();
-        setTimeout(() => nameInput?.classList.remove("error"), 2000);
-      } else if (blockReason === "phone") {
-        phoneInput?.classList.add("error");
-        phoneInput?.focus();
-        setTimeout(() => phoneInput?.classList.remove("error"), 2000);
+      const invalidField = isCatNameBlockReason(blockReason)
+        ? nameInput
+        : blockReason === "age"
+          ? ageInput
+          : blockReason === "phone"
+            ? phoneInput
+            : null;
+      if (invalidField) {
+        invalidField.classList.add("error");
+        invalidField.focus();
+        setTimeout(() => invalidField.classList.remove("error"), 2000);
       }
       return;
     }
@@ -566,7 +619,7 @@ function bindPage() {
     if (error) error.hidden = true;
     if (phoneInput) phoneInput.value = number;
 
-    const payload = buildPayload(petName, number);
+    const payload = buildPayload(petName, number, ageYears);
 
     if (!SUBMIT_ENABLED) {
       console.log("[picky-eaters] SUBMIT_ENABLED is false. Payload (not sent):", payload);
@@ -574,7 +627,6 @@ function bindPage() {
       return;
     }
 
-    rememberLeadSubmission(number);
     if (submitBtn) {
       submitBtn.disabled = true;
       submitBtn.textContent = "Submitting...";
@@ -582,6 +634,7 @@ function bindPage() {
 
     submitLead(payload)
       .then(() => {
+        rememberLeadSubmission(number);
         fireLeadPixel();
         showThanks(petName);
       })

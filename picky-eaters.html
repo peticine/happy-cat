@@ -149,9 +149,35 @@
         letter-spacing: 0;
         color: var(--ink);
       }
-      .pe-form .young-cat-name-input:focus {
+      .pe-form .young-cat-name-input:focus,
+      .pe-form .pe-age:focus {
         outline: none;
         border-color: var(--accent);
+      }
+      .pe-form .pe-age {
+        width: 100%;
+        min-height: 48px;
+        padding: 14px 40px 14px 14px;
+        border: 2px solid var(--line);
+        border-radius: 12px;
+        background-color: var(--surface);
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235c5670' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 14px center;
+        background-size: 16px;
+        font-family: var(--font);
+        font-size: 1rem;
+        color: var(--ink);
+        appearance: none;
+      }
+      .pe-form .pe-age:invalid {
+        color: var(--ink-muted);
+      }
+      .pe-form .pe-age option {
+        color: var(--ink);
+      }
+      .pe-form .pe-age.error {
+        border-color: #c45c5c;
       }
       .pe-form .whatsapp-gate-input {
         min-height: 48px;
@@ -319,6 +345,41 @@
                     maxlength="24"
                     required
                   />
+                  <label class="whatsapp-gate-label" for="pe-age">Age</label>
+                  <select class="pe-age" id="pe-age" name="age" required>
+                    <option value="">Select age</option>
+                    <optgroup label="Months">
+                      <option value="m1">1 month</option>
+                      <option value="m2">2 months</option>
+                      <option value="m3">3 months</option>
+                      <option value="m4">4 months</option>
+                      <option value="m5">5 months</option>
+                      <option value="m6">6 months</option>
+                      <option value="m7">7 months</option>
+                      <option value="m8">8 months</option>
+                      <option value="m9">9 months</option>
+                      <option value="m10">10 months</option>
+                      <option value="m11">11 months</option>
+                    </optgroup>
+                    <optgroup label="Years">
+                      <option value="y1">1 year</option>
+                      <option value="y2">2 years</option>
+                      <option value="y3">3 years</option>
+                      <option value="y4">4 years</option>
+                      <option value="y5">5 years</option>
+                      <option value="y6">6 years</option>
+                      <option value="y7">7 years</option>
+                      <option value="y8">8 years</option>
+                      <option value="y9">9 years</option>
+                      <option value="y10">10 years</option>
+                      <option value="y11">11 years</option>
+                      <option value="y12">12 years</option>
+                      <option value="y13">13 years</option>
+                      <option value="y14">14 years</option>
+                      <option value="y15">15 years</option>
+                      <option value="y16">16+ years</option>
+                    </optgroup>
+                  </select>
                   <label class="whatsapp-gate-label" for="pe-phone">Mobile number</label>
                   <div class="whatsapp-gate-input-wrap">
                     <span class="whatsapp-gate-prefix" aria-hidden="true">🇮🇳 +91</span>
@@ -381,13 +442,13 @@
           <div class="wrap">
             <div class="section-head section-head-center">
               <p class="eyebrow">How the callback works</p>
-              <h2>Share a name and number. A vet calls. Talk it through.</h2>
+              <h2>Share a name, age, and number. A vet calls. Talk it through.</h2>
             </div>
             <ol class="how-steps">
               <li class="how-step">
                 <span class="pe-step-num" aria-hidden="true">1</span>
-                <h3>Leave your cat's name and your number</h3>
-                <p>Two fields. No account and no card.</p>
+                <h3>Leave your cat's name, age, and your number</h3>
+                <p>No account and no card.</p>
               </li>
               <li class="how-step-arrow" aria-hidden="true">→</li>
               <li class="how-step">
@@ -452,7 +513,7 @@
             <div class="faq-list">
               <details class="faq-item">
                 <summary>Do I need an account or a card?</summary>
-                <p>No. Leave your cat's name and your number. No account and no card needed.</p>
+                <p>No. Leave your cat's name, age, and your number. No account and no card needed.</p>
               </details>
               <details class="faq-item">
                 <summary>What happens on the call?</summary>
@@ -486,7 +547,7 @@
         <section class="final-cta clinic-band" id="start">
           <div class="wrap final-cta-inner site-cta pe-final-cta">
             <h2>Ready for a vet to call?</h2>
-            <p class="final-cta-body">Leave a name and number. A feline vet will call you to talk it through.</p>
+            <p class="final-cta-body">Leave a name, age, and number. A feline vet will call you to talk it through.</p>
             <button type="button" class="btn btn-light btn-get-started pe-cta-btn" data-pe-cta>
               <span>Request a vet call</span>
               <span class="pe-cta-arrow" aria-hidden="true">→</span>
