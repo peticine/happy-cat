@@ -549,6 +549,27 @@ function showThanks(catName) {
   });
 }
 
+function restoreForm(message) {
+  submitted = false;
+  const form = document.getElementById("pe-form");
+  const thanks = document.getElementById("pe-thanks");
+  const error = form?.querySelector("#pe-error");
+  const submitBtn = form?.querySelector('button[type="submit"]');
+  if (form) form.hidden = false;
+  if (thanks) thanks.hidden = true;
+  document.querySelectorAll("[data-pe-cta]").forEach((btn) => {
+    btn.hidden = false;
+  });
+  if (error) {
+    error.hidden = false;
+    error.textContent = message;
+  }
+  if (submitBtn) {
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Request a vet call";
+  }
+}
+
 function bindPage() {
   captureLandingAttribution();
   ensureSessionId();
@@ -585,7 +606,6 @@ function bindPage() {
     const nameInput = form.querySelector("#pe-cat-name");
     const phoneInput = form.querySelector("#pe-phone");
     const honeypot = form.querySelector("#pe-company");
-    const submitBtn = form.querySelector('button[type="submit"]');
     const number = normalizeIndianMobile(phoneInput?.value);
     const petName = normalizeCatNameInput(nameInput?.value);
     const ageYears = parseCatAgeValue(ageInput?.value);
@@ -627,26 +647,17 @@ function bindPage() {
       return;
     }
 
-    if (submitBtn) {
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Submitting...";
-    }
+    // /young-cat takes several seconds to answer. Show the thank-you now,
+    // the same way the main flow does, and confirm the pixel after it accepts.
+    showThanks(petName);
 
     submitLead(payload)
       .then(() => {
         rememberLeadSubmission(number);
         fireLeadPixel();
-        showThanks(petName);
       })
       .catch(() => {
-        if (error) {
-          error.hidden = false;
-          error.textContent = "Something went wrong. Please try again.";
-        }
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.textContent = "Request a vet call";
-        }
+        restoreForm("Something went wrong. Please try again.");
       });
   });
 }

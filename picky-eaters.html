@@ -182,16 +182,84 @@
       .pe-form .whatsapp-gate-input {
         min-height: 48px;
       }
+      .pe-form {
+        gap: 12px;
+      }
+      .pe-field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        min-width: 0;
+      }
+      .pe-form .whatsapp-gate-label {
+        margin: 0;
+      }
       .pe-form .btn {
         min-height: 56px;
         font-size: 1.0625rem;
         box-shadow: 0 8px 20px rgba(109, 101, 137, 0.22);
+      }
+      .pe-form .flow-error {
+        margin: 0;
+      }
+      .pe-form .lead-consent {
+        margin: 0;
       }
       .pe-safety {
         margin: 0;
         font-size: 0.8125rem;
         line-height: 1.5;
         color: var(--ink-muted);
+      }
+      @media (max-width: 767px) {
+        .hero.pe-hero {
+          padding: 8px 0 28px;
+        }
+        .pe-hero-grid {
+          gap: 12px;
+        }
+        .pe-hero-media {
+          max-width: 168px;
+        }
+        .pe-title-sub {
+          margin-top: 2px;
+          font-size: 1.05rem;
+        }
+        .pe-request {
+          margin-top: 14px;
+          padding: 14px 12px 12px;
+        }
+        .pe-form {
+          gap: 8px;
+        }
+        .pe-fields {
+          display: grid;
+          grid-template-columns: minmax(0, 1.35fr) minmax(7.5rem, 0.9fr);
+          gap: 8px;
+        }
+        .pe-form .young-cat-name-input,
+        .pe-form .pe-age,
+        .pe-form .whatsapp-gate-input {
+          min-height: 44px;
+          padding-top: 10px;
+          padding-bottom: 10px;
+        }
+        .pe-form .pe-age {
+          padding-right: 32px;
+          background-position: right 10px center;
+        }
+        .pe-form .btn {
+          min-height: 48px;
+          font-size: 1rem;
+        }
+        .pe-safety {
+          font-size: 0.75rem;
+          line-height: 1.35;
+        }
+        .pe-form .lead-consent {
+          font-size: 0.6875rem;
+          line-height: 1.35;
+        }
       }
       .pe-thanks h2 {
         margin: 0 0 8px;
@@ -334,6 +402,8 @@
 
               <div class="pe-request" id="request">
                 <form class="whatsapp-gate-form pe-form" id="pe-form" novalidate>
+                  <div class="pe-fields">
+                  <div class="pe-field">
                   <label class="whatsapp-gate-label" for="pe-cat-name">Cat's name</label>
                   <input
                     class="young-cat-name-input"
@@ -345,6 +415,8 @@
                     maxlength="24"
                     required
                   />
+                  </div>
+                  <div class="pe-field">
                   <label class="whatsapp-gate-label" for="pe-age">Age</label>
                   <select class="pe-age" id="pe-age" name="age" required>
                     <option value="">Select age</option>
@@ -380,6 +452,9 @@
                       <option value="y16">16+ years</option>
                     </optgroup>
                   </select>
+                  </div>
+                  </div>
+                  <div class="pe-field">
                   <label class="whatsapp-gate-label" for="pe-phone">Mobile number</label>
                   <div class="whatsapp-gate-input-wrap">
                     <span class="whatsapp-gate-prefix" aria-hidden="true">🇮🇳 +91</span>
@@ -394,6 +469,7 @@
                       autocomplete="tel"
                       required
                     />
+                  </div>
                   </div>
                   <div class="lead-honeypot" aria-hidden="true">
                     <label for="pe-company">Company</label>
