@@ -7,6 +7,9 @@
       "memory": 1024
     }
   },
+  "redirects": [
+    { "source": "/picky-eaters.html", "destination": "/picky-eaters", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/skin", "destination": "/index.html" },
     { "source": "/coat", "destination": "/index.html" },
@@ -16,6 +19,7 @@
     { "source": "/appetite", "destination": "/index.html" },
     { "source": "/privacy", "destination": "/privacy.html" },
     { "source": "/privacy-policy", "destination": "/privacy.html" },
+    { "source": "/picky-eaters", "destination": "/picky-eaters.html" },
     { "source": "/follow-up", "destination": "/index.html" },
     { "source": "/followup", "destination": "/index.html" },
     { "source": "/again", "destination": "/index.html" }

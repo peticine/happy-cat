@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Felica | Help for picky-eating cats</title>
+    <meta
+      name="description"
+      content="If your cat is a picky eater, a Felica vet can call you to talk through feeding and behaviour. Request a callback."
+    />
+    <meta name="author" content="Tail Healthcare Private Limited" />
+    <meta name="copyright" content="Tail Healthcare Private Limited" />
+    <meta property="og:site_name" content="Felica" />
+    <meta property="og:title" content="Felica | Help for picky-eating cats" />
+    <meta
+      property="og:description"
+      content="A feline vet calls you to talk through picky eating, feeding, and next steps."
+    />
+    <link rel="canonical" href="https://www.felica.in/picky-eaters" />
+    <link rel="icon" href="./favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./images/apple-touch-icon.png" />
+    <link
+      rel="preload"
+      as="image"
+      href="./images/hero-picky-cat-640.jpg"
+      imagesrcset="./images/hero-picky-cat-640.jpg 640w, ./images/hero-picky-cat.jpg 1152w"
+      imagesizes="(min-width: 860px) 50vw, 260px"
+      fetchpriority="high"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&display=swap"
+      />
+    </noscript>
+    <link rel="stylesheet" href="./styles.min.css?v=hc170" />
+    <style>
+      .pe-header {
+        position: static;
+      }
+      .pe-header .header-inner {
+        justify-content: flex-start;
+      }
+      .hero.pe-hero {
+        padding: 20px 0 56px;
+      }
+      .pe-hero-grid {
+        display: grid;
+        gap: 24px;
+        align-items: center;
+      }
+      .pe-hero-media {
+        width: 100%;
+        max-width: 260px;
+        margin: 0 auto;
+        overflow: hidden;
+        border-radius: var(--radius-lg);
+        background: var(--surface-muted);
+        aspect-ratio: 4 / 3;
+      }
+      .pe-hero-main {
+        text-align: center;
+      }
+      .pe-hero-main .hero-landing-title {
+        align-items: center;
+      }
+      .pe-hero-media img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: 50% 50%;
+      }
+      .pe-title-sub {
+        display: block;
+        margin-top: 6px;
+        font-size: clamp(1.25rem, 4.6vw, 1.75rem);
+        font-weight: 500;
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+        color: var(--ink-soft);
+      }
+      .pe-cta-arrow {
+        transition: transform 200ms var(--ease);
+      }
+      .pe-cta-btn:hover .pe-cta-arrow {
+        transform: translateX(3px);
+      }
+      .pe-final-cta .pe-cta-btn {
+        min-height: 56px;
+        margin-top: 12px;
+        padding: 0 32px;
+        gap: 10px;
+        font-size: 1.0625rem;
+      }
+      @media (min-width: 860px) {
+        .hero.pe-hero {
+          padding: 48px 0 80px;
+        }
+        .pe-hero-grid {
+          grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+          gap: 56px;
+        }
+        .pe-hero-media {
+          order: 2;
+          max-width: none;
+          aspect-ratio: 5 / 4;
+        }
+      }
+      .pe-request {
+        margin: 28px auto 0;
+        text-align: left;
+        max-width: 420px;
+        padding: 24px 20px;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-lg);
+      }
+      .pe-request[hidden],
+      .pe-form[hidden],
+      .pe-thanks[hidden],
+      [data-pe-cta][hidden] {
+        display: none !important;
+      }
+      .pe-form .young-cat-name-input {
+        width: 100%;
+        min-height: 48px;
+        padding: 14px;
+        border: 2px solid var(--line);
+        border-radius: 12px;
+        background: var(--surface);
+        font-family: var(--font);
+        font-size: 1rem;
+        font-weight: 400;
+        letter-spacing: 0;
+        color: var(--ink);
+      }
+      .pe-form .young-cat-name-input:focus {
+        outline: none;
+        border-color: var(--accent);
+      }
+      .pe-form .whatsapp-gate-input {
+        min-height: 48px;
+      }
+      .pe-form .btn {
+        min-height: 56px;
+        font-size: 1.0625rem;
+        box-shadow: 0 8px 20px rgba(109, 101, 137, 0.22);
+      }
+      .pe-safety {
+        margin: 0;
+        font-size: 0.8125rem;
+        line-height: 1.5;
+        color: var(--ink-muted);
+      }
+      .pe-thanks h2 {
+        margin: 0 0 8px;
+        font-size: 1.25rem;
+      }
+      .pe-thanks p {
+        margin: 0;
+        color: var(--ink-soft);
+        line-height: 1.6;
+      }
+      .pe-signs {
+        display: grid;
+        gap: 12px;
+        max-width: 420px;
+        margin: 0 auto;
+        padding: 0;
+        list-style: none;
+      }
+      .pe-sign {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 16px 18px;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-md);
+      }
+      .pe-sign p {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 500;
+        line-height: 1.4;
+        color: var(--ink);
+      }
+      .pe-sign-icon {
+        display: grid;
+        flex-shrink: 0;
+        place-items: center;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: var(--accent-soft);
+        color: var(--accent);
+      }
+      .pe-step-num {
+        display: grid;
+        place-items: center;
+        width: 56px;
+        height: 56px;
+        margin: 0 auto 14px;
+        border-radius: 50%;
+        background: var(--accent-soft);
+        color: var(--accent);
+        font-size: 1.125rem;
+        font-weight: 600;
+      }
+      .pe-footer {
+        padding: 40px 0 28px;
+      }
+      .pe-footer .footer-legal-entity {
+        margin: 16px 0 0;
+      }
+      .pe-footer-links {
+        margin: 12px 0 0;
+        font-size: 0.75rem;
+      }
+      .pe-footer-links a {
+        color: var(--ink-muted);
+      }
+    </style>
+    <script>
+      !function(f){
+        if (f.fbq) return;
+        var n = f.fbq = function () {
+          n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
+        };
+        if (!f._fbq) f._fbq = n;
+        n.push = n;
+        n.loaded = !0;
+        n.version = "2.0";
+        n.queue = [];
+      }(window);
+      fbq("init", "1068626952161985");
+      fbq("track", "PageView");
+      function loadMarketingTags() {
+        if (window.__felicaTagsLoaded) return;
+        window.__felicaTagsLoaded = true;
+        var s = document.createElement("script");
+        s.async = true;
+        s.src = "https://connect.facebook.net/en_US/fbevents.js";
+        document.head.appendChild(s);
+      }
+      if ("requestIdleCallback" in window) {
+        requestIdleCallback(loadMarketingTags, { timeout: 3500 });
+      } else {
+        window.addEventListener("load", function () {
+          setTimeout(loadMarketingTags, 1500);
+        });
+      }
+    </script>
+  </head>
+  <body data-pet="cat">
+    <div class="site-shell is-visible">
+      <header class="site-header pe-header" id="top">
+        <div class="header-inner">
+          <a class="brand" href="#top" aria-label="Felica">
+            <img
+              class="brand-wordmark"
+              src="./images/felica-logo.webp"
+              alt="Felica"
+              width="132"
+              height="42"
+              decoding="async"
+            />
+          </a>
+        </div>
+      </header>
+
+      <main>
+        <section class="hero hero-landing pe-hero" id="hero">
+          <div class="wrap pe-hero-grid">
+            <figure class="pe-hero-media">
+              <img
+                src="./images/hero-picky-cat-640.jpg"
+                srcset="./images/hero-picky-cat-640.jpg 640w, ./images/hero-picky-cat.jpg 1152w"
+                sizes="(min-width: 860px) 50vw, 260px"
+                alt="A tabby cat looking away from a full bowl of food and a few treats"
+                width="1152"
+                height="864"
+                decoding="async"
+                fetchpriority="high"
+              />
+            </figure>
+
+            <div class="pe-hero-main">
+              <h1 class="hero-landing-title">
+                <span class="hero-landing-title-hook">Is your cat a fussy eater?</span>
+                <span class="pe-title-sub">Get feeding advice from a feline vet.</span>
+              </h1>
+
+              <div class="pe-request" id="request">
+                <form class="whatsapp-gate-form pe-form" id="pe-form" novalidate>
+                  <label class="whatsapp-gate-label" for="pe-cat-name">Cat's name</label>
+                  <input
+                    class="young-cat-name-input"
+                    id="pe-cat-name"
+                    type="text"
+                    name="cat_name"
+                    placeholder="e.g. Mochi"
+                    autocomplete="off"
+                    maxlength="24"
+                    required
+                  />
+                  <label class="whatsapp-gate-label" for="pe-phone">Mobile number</label>
+                  <div class="whatsapp-gate-input-wrap">
+                    <span class="whatsapp-gate-prefix" aria-hidden="true">🇮🇳 +91</span>
+                    <input
+                      class="whatsapp-gate-input"
+                      type="tel"
+                      id="pe-phone"
+                      name="phone"
+                      placeholder="9876543210"
+                      inputmode="numeric"
+                      maxlength="15"
+                      autocomplete="tel"
+                      required
+                    />
+                  </div>
+                  <div class="lead-honeypot" aria-hidden="true">
+                    <label for="pe-company">Company</label>
+                    <input type="text" id="pe-company" name="company" tabindex="-1" autocomplete="new-password" />
+                  </div>
+                  <p class="pe-safety">
+                    If your cat has not eaten for 24 hours or more, or seems unwell, contact a vet straight away. This
+                    page is not for emergencies.
+                  </p>
+                  <p class="flow-error" id="pe-error" hidden></p>
+                  <button type="submit" class="btn btn-block btn-get-started">Request a vet call</button>
+                  <p class="lead-consent" id="pe-consent"></p>
+                </form>
+                <div class="pe-thanks" id="pe-thanks" hidden>
+                  <h2>Thank you. A vet will call.</h2>
+                  <p id="pe-thanks-body">A Felica vet will call you. Please keep your phone close.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="clinic-section clinic-section-muted" id="problem">
+          <div class="wrap">
+            <div class="section-head section-head-center">
+              <h2>What picky eaters might look like</h2>
+            </div>
+            <ul class="pe-signs">
+              <li class="pe-sign">
+                <span class="pe-sign-icon" aria-hidden="true"><i data-lucide="utensils"></i></span>
+                <p>Sniffs the food, then walks away</p>
+              </li>
+              <li class="pe-sign">
+                <span class="pe-sign-icon" aria-hidden="true"><i data-lucide="sparkles"></i></span>
+                <p>Will only eat one flavour or brand</p>
+              </li>
+              <li class="pe-sign">
+                <span class="pe-sign-icon" aria-hidden="true"><i data-lucide="cat"></i></span>
+                <p>Skips meals, but still asks for treats</p>
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="how-steps-section clinic-section" id="how-it-works">
+          <div class="wrap">
+            <div class="section-head section-head-center">
+              <p class="eyebrow">How the callback works</p>
+              <h2>Share a name and number. A vet calls. Talk it through.</h2>
+            </div>
+            <ol class="how-steps">
+              <li class="how-step">
+                <span class="pe-step-num" aria-hidden="true">1</span>
+                <h3>Leave your cat's name and your number</h3>
+                <p>Two fields. No account and no card.</p>
+              </li>
+              <li class="how-step-arrow" aria-hidden="true">→</li>
+              <li class="how-step">
+                <span class="pe-step-num" aria-hidden="true">2</span>
+                <h3>A feline vet calls you</h3>
+                <p>We usually call within 15 to 30 minutes during working hours.</p>
+              </li>
+              <li class="how-step-arrow" aria-hidden="true">→</li>
+              <li class="how-step">
+                <span class="pe-step-num" aria-hidden="true">3</span>
+                <h3>Talk through feeding and next steps</h3>
+                <p>Advice on the call. If your cat needs a clinic visit, the vet will say so.</p>
+              </li>
+            </ol>
+          </div>
+        </section>
+
+        <section class="trust-section clinic-section clinic-section-muted" id="trust">
+          <div class="wrap">
+            <div class="section-head section-head-center">
+              <p class="eyebrow">Felica vets</p>
+              <h2>Feline vets who understand your cat.</h2>
+            </div>
+            <div class="vets-grid vets-grid--two">
+              <article class="vet-card">
+                <img
+                  class="vet-photo"
+                  src="./images/dr-shantanu-kalambi.webp"
+                  alt="Dr. Shantanu Kalambi"
+                  width="96"
+                  height="96"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <h3>Dr. Shantanu Kalambi</h3>
+                <p class="vet-specialty">Feline Internal Medicine</p>
+                <p class="vet-cred">20 years</p>
+              </article>
+              <article class="vet-card">
+                <img
+                  class="vet-photo"
+                  src="./images/dr-ankita-kawale.webp"
+                  alt="Dr. Ankita Kawale"
+                  width="96"
+                  height="96"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <h3>Dr. Ankita Kawale</h3>
+                <p class="vet-specialty">Feline Internal Medicine</p>
+                <p class="vet-cred">8 years</p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="faq clinic-section" id="faq">
+          <div class="wrap faq-wrap">
+            <div class="section-head section-head-center">
+              <h2>Before you request a call.</h2>
+            </div>
+            <div class="faq-list">
+              <details class="faq-item">
+                <summary>Do I need an account or a card?</summary>
+                <p>No. Leave your cat's name and your number. No account and no card needed.</p>
+              </details>
+              <details class="faq-item">
+                <summary>What happens on the call?</summary>
+                <p>
+                  The vet talks through picky eating, feeding routines, and behaviour. They share advice and next steps.
+                  This is guidance, not a diagnosis or a treatment plan for illness.
+                </p>
+              </details>
+              <details class="faq-item">
+                <summary>How soon will someone call?</summary>
+                <p>A feline vet usually calls within 15 to 30 minutes during working hours.</p>
+              </details>
+              <details class="faq-item">
+                <summary>Does this replace my regular vet?</summary>
+                <p>
+                  Never. Emergencies, bloodwork, and any hands-on care belong in a clinic. If your cat needs to be seen
+                  in person, the vet will tell you.
+                </p>
+              </details>
+              <details class="faq-item">
+                <summary>What if my cat has not eaten at all?</summary>
+                <p>
+                  If your cat has not eaten for 24 hours or more, or seems unwell, contact a vet straight away. Do not
+                  wait for this callback.
+                </p>
+              </details>
+            </div>
+          </div>
+        </section>
+
+        <section class="final-cta clinic-band" id="start">
+          <div class="wrap final-cta-inner site-cta pe-final-cta">
+            <h2>Ready for a vet to call?</h2>
+            <p class="final-cta-body">Leave a name and number. A feline vet will call you to talk it through.</p>
+            <button type="button" class="btn btn-light btn-get-started pe-cta-btn" data-pe-cta>
+              <span>Request a vet call</span>
+              <span class="pe-cta-arrow" aria-hidden="true">→</span>
+            </button>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer pe-footer">
+        <div class="wrap">
+          <span class="brand" aria-label="Felica">
+            <img
+              class="brand-wordmark"
+              src="./images/felica-logo.webp"
+              alt="Felica"
+              width="132"
+              height="42"
+              decoding="async"
+            />
+          </span>
+          <p class="footer-legal-entity">
+            Felica is a brand owned and operated by Tail Healthcare Private Limited.
+            &copy; 2026 Tail Healthcare Private Limited. All rights reserved.
+            Felica provides general veterinary guidance and does not replace an in-person vet visit. Not intended to
+            diagnose or treat disease.
+          </p>
+          <p class="pe-footer-links"><a href="./privacy.html">Privacy policy</a></p>
+        </div>
+      </footer>
+    </div>
+
+    <script src="./site-icons.js?v=hc6" defer></script>
+    <script src="./picky-eaters.js" defer></script>
+  </body>
+</html>
