@@ -99,6 +99,7 @@ let purchaseFired = false;
 let checkoutOpen = false;
 let checkoutSettled = false;
 let leadPosted = false;
+let leadSaving = false;
 
 function createSessionId() {
   try {
@@ -251,7 +252,18 @@ function clearError() {
   error.textContent = "";
 }
 
-function buildLead(name, phone, age, price) {
+function buildLead(name, phone, age, price, { queue = false, orderId = "", paymentId = "" } = {}) {
+  const contact = {
+    phone_e164: `+91${phone}`,
+    phone_national: phone,
+    country_code: "91",
+  };
+  // A callback window is what Digi Clinic turns into a doctor call.
+  // Unpaid leads omit it so the record stays in the CRM and out of the queue.
+  if (queue) {
+    contact.preferred_method = "call";
+    contact.callback_window = "15_30_min";
+  }
   return {
     schema_version: "1.0",
     source: {
@@ -262,13 +274,7 @@ function buildLead(name, phone, age, price) {
       session_id: ensureSessionId(),
       submitted_at: formatSubmittedAt(),
     },
-    contact: {
-      phone_e164: `+91${phone}`,
-      phone_national: phone,
-      country_code: "91",
-      preferred_method: "call",
-      callback_window: "15_30_min",
-    },
+    contact,
     pet: {
       name,
       species: "cat",
@@ -282,30 +288,52 @@ function buildLead(name, phone, age, price) {
       issue_label_full: "Gut issues",
     },
     answers: [],
-    summary_text: `${name}, ${age.label}. Gut issues. Paid vet call ₹${price}, payment pending.`,
+    summary_text: queue
+      ? `${name}, ${age.label}. Gut issues. Paid vet call ₹${price}.`
+      : `${name}, ${age.label}. Gut issues. Payment not completed.`,
     flags: {
       urgent: false,
       supplement_call: false,
       call_scope: "just_this",
       prevention_only: false,
       follow_up: false,
+      paid_consult: queue,
     },
     attribution: buildAttribution(),
-    payment: {
-      status: "payment_pending",
-      variant: price,
-      price_inr: Number(price),
-      currency: "INR",
-    },
+    payment: queue
+      ? {
+          status: "paid",
+          variant: price,
+          price_inr: Number(price),
+          currency: "INR",
+          order_id: orderId,
+          payment_id: paymentId,
+        }
+      : {
+          status: "payment_pending",
+          variant: price,
+          price_inr: Number(price),
+          currency: "INR",
+        },
   };
 }
 
+function fetchWithTimeout(url, options, ms) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), ms);
+  return fetch(url, { ...options, signal: controller.signal }).finally(() => clearTimeout(timer));
+}
+
 async function postLead(payload) {
-  const response = await fetch(`${YOUNG_CAT_API_BASE}/young-cat`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
+  const response = await fetchWithTimeout(
+    `${YOUNG_CAT_API_BASE}/young-cat`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    },
+    20000
+  );
   if (!response.ok) {
     const error = new Error("Lead was not saved.");
     error.status = response.status;
@@ -314,25 +342,49 @@ async function postLead(payload) {
   return response.json().catch(() => ({ ok: true }));
 }
 
+function saveLeadInBackground(name, phone, age, price) {
+  if (leadPosted || leadSaving) return;
+  leadSaving = true;
+  postLead(buildLead(name, phone, age, price, { queue: false }))
+    .then(() => {
+      leadPosted = true;
+      track("Lead", { variant: price, content_name: "paid_consult" }, ensureSessionId());
+    })
+    .catch(() => {
+      leadSaving = false;
+    });
+}
+
 function loadCheckout() {
   if (window.Razorpay) return Promise.resolve();
   return new Promise((resolve, reject) => {
     const script = document.createElement("script");
+    const timer = setTimeout(() => {
+      reject(new Error("Payment could not be opened. Please try again."));
+    }, 15000);
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
     script.async = true;
-    script.onload = () => resolve();
-    script.onerror = () => reject(new Error("Payment could not be opened."));
+    script.onload = () => {
+      clearTimeout(timer);
+      resolve();
+    };
+    script.onerror = () => {
+      clearTimeout(timer);
+      reject(new Error("Payment could not be opened."));
+    };
     document.head.appendChild(script);
   });
 }
 
-function showConfirmation(name, phone) {
+function showConfirmation(name, phone, queued = true) {
   const landing = document.getElementById("pc-landing");
   const confirm = document.getElementById("pc-confirm");
   const line = document.getElementById("pc-confirm-phone");
   const whatsapp = document.getElementById("pc-whatsapp");
   if (line) {
-    line.textContent = `You will receive a call from a feline vet on ${formatPhone(phone)} within 15 to 30 minutes.`;
+    line.textContent = queued
+      ? `You will receive a call from a feline vet on ${formatPhone(phone)} within 15 to 30 minutes.`
+      : `Payment was received. We could not book the call automatically. Message us on WhatsApp and a vet will call ${formatPhone(phone)}.`;
   }
   if (whatsapp) {
     const text = `Hi Felica, I booked a vet call for ${name}. What they eat: \nWhen it started: `;
@@ -385,7 +437,7 @@ function setSubmitBusy(submitBtn, label, busy) {
   else submitBtn.innerHTML = label;
 }
 
-async function openCheckout({ orderId, amount, currency, keyId, phone, name, price, onClose }) {
+async function openCheckout({ orderId, amount, currency, keyId, phone, name, age, price, onClose }) {
   await loadCheckout();
   const checkoutEventId = `fel_checkout_${ensureSessionId()}`;
   track(
@@ -443,7 +495,18 @@ async function openCheckout({ orderId, amount, currency, keyId, phone, name, pri
             result.eventId || `fel_purchase_${response.razorpay_payment_id}`
           );
         }
-        showConfirmation(name, phone);
+        try {
+          await postLead(
+            buildLead(name, phone, age, price, {
+              queue: true,
+              orderId: result.orderId || response.razorpay_order_id || orderId,
+              paymentId: result.paymentId || response.razorpay_payment_id || "",
+            })
+          );
+          showConfirmation(name, phone);
+        } catch {
+          showConfirmation(name, phone, false);
+        }
       } catch (error) {
         onClose();
         showError(error.message || "Payment could not be verified. Please try again.");
@@ -503,21 +566,21 @@ function bindForm(price) {
     setSubmitBusy(submitBtn, submitLabel, true);
 
     try {
-      if (!leadPosted) {
-        await postLead(buildLead(name, phone, age, price));
-        leadPosted = true;
-        track("Lead", { variant: price, content_name: "paid_consult" }, ensureSessionId());
-      }
-      const orderResponse = await fetch("/api/create-order", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          sessionId: ensureSessionId(),
-          phone,
-          catName: name,
-          issueId: "gut",
-        }),
-      });
+      saveLeadInBackground(name, phone, age, price);
+      const orderResponse = await fetchWithTimeout(
+        "/api/create-order",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            sessionId: ensureSessionId(),
+            phone,
+            catName: name,
+            issueId: "gut",
+          }),
+        },
+        20000
+      );
       const order = await orderResponse.json().catch(() => ({}));
       if (!orderResponse.ok || !order.orderId || !order.keyId) {
         throw new Error(order.error || "Payment could not be started.");
@@ -532,12 +595,18 @@ function bindForm(price) {
         keyId: order.keyId,
         phone,
         name,
+        age,
         price,
         onClose: release,
       });
     } catch (error) {
       release();
-      showError(error.message || "Something went wrong. Please try again.");
+      const timedOut = error?.name === "AbortError";
+      showError(
+        timedOut
+          ? "Payment could not be started. Please try again."
+          : error.message || "Something went wrong. Please try again."
+      );
     }
   });
 }
