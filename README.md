@@ -29,6 +29,19 @@ After editing the React age journey (`src/age-journey/`), rebuild:
 npm run build:age
 ```
 
+Paid vet consult: `http://localhost:8765/paid-consult.html`. The Vercel rewrite serves that file at `/paid-consult`. Payment routes need `vercel dev` (or a deployed preview) because `python3 -m http.server` does not run `/api`.
+
+## Paid consult payments
+
+The booking button on `/paid-consult` uses the same Razorpay routes as the vet-call checkout: `POST /api/create-order` and `POST /api/verify-payment`.
+
+| Variable | Used by |
+|----------|---------|
+| `RAZORPAY_KEY_ID` | `/api/create-order` (also returned to Checkout.js; this is the public key) |
+| `RAZORPAY_KEY_SECRET` | Creating orders and verifying the Checkout signature |
+
+The browser never sends an amount. This page charges Rs. 99 (9900 paise). Checkout is UPI only. The clinic `/young-cat` lead is saved as `payment_pending` before Checkout opens.
+
 ## Age journey (Framer Motion)
 
 Five-step flow on first visit:
