@@ -2,6 +2,8 @@
  * Paid gut consult landing.
  * Lead payload matches picky-eaters (cat, phone, age, Meta attribution).
  * The form CTA uses the existing Razorpay routes and charges Rs. 1 (100 paise) for testing.
+ * Digi Clinic turns every saved lead into a call, even with no callback window.
+ * The lead is posted only after payment is verified.
  */
 
 const YOUNG_CAT_API_BASE = "https://clinic.tailhealthcare.com";
@@ -98,8 +100,6 @@ let sessionId = "";
 let purchaseFired = false;
 let checkoutOpen = false;
 let checkoutSettled = false;
-let leadPosted = false;
-let leadSaving = false;
 
 function createSessionId() {
   try {
@@ -252,18 +252,7 @@ function clearError() {
   error.textContent = "";
 }
 
-function buildLead(name, phone, age, price, { queue = false, orderId = "", paymentId = "" } = {}) {
-  const contact = {
-    phone_e164: `+91${phone}`,
-    phone_national: phone,
-    country_code: "91",
-  };
-  // A callback window is what Digi Clinic turns into a doctor call.
-  // Unpaid leads omit it so the record stays in the CRM and out of the queue.
-  if (queue) {
-    contact.preferred_method = "call";
-    contact.callback_window = "15_30_min";
-  }
+function buildLead(name, phone, age, price, { orderId = "", paymentId = "" } = {}) {
   return {
     schema_version: "1.0",
     source: {
@@ -274,7 +263,13 @@ function buildLead(name, phone, age, price, { queue = false, orderId = "", payme
       session_id: ensureSessionId(),
       submitted_at: formatSubmittedAt(),
     },
-    contact,
+    contact: {
+      phone_e164: `+91${phone}`,
+      phone_national: phone,
+      country_code: "91",
+      preferred_method: "call",
+      callback_window: "15_30_min",
+    },
     pet: {
       name,
       species: "cat",
@@ -288,33 +283,24 @@ function buildLead(name, phone, age, price, { queue = false, orderId = "", payme
       issue_label_full: "Gut issues",
     },
     answers: [],
-    summary_text: queue
-      ? `${name}, ${age.label}. Gut issues. Paid vet call ₹${price}.`
-      : `${name}, ${age.label}. Gut issues. Payment not completed.`,
+    summary_text: `${name}, ${age.label}. Gut issues. Paid vet call ₹${price}.`,
     flags: {
       urgent: false,
       supplement_call: false,
       call_scope: "just_this",
       prevention_only: false,
       follow_up: false,
-      paid_consult: queue,
+      paid_consult: true,
     },
     attribution: buildAttribution(),
-    payment: queue
-      ? {
-          status: "paid",
-          variant: price,
-          price_inr: Number(price),
-          currency: "INR",
-          order_id: orderId,
-          payment_id: paymentId,
-        }
-      : {
-          status: "payment_pending",
-          variant: price,
-          price_inr: Number(price),
-          currency: "INR",
-        },
+    payment: {
+      status: "paid",
+      variant: price,
+      price_inr: Number(price),
+      currency: "INR",
+      order_id: orderId,
+      payment_id: paymentId,
+    },
   };
 }
 
@@ -340,19 +326,6 @@ async function postLead(payload) {
     throw error;
   }
   return response.json().catch(() => ({ ok: true }));
-}
-
-function saveLeadInBackground(name, phone, age, price) {
-  if (leadPosted || leadSaving) return;
-  leadSaving = true;
-  postLead(buildLead(name, phone, age, price, { queue: false }))
-    .then(() => {
-      leadPosted = true;
-      track("Lead", { variant: price, content_name: "paid_consult" }, ensureSessionId());
-    })
-    .catch(() => {
-      leadSaving = false;
-    });
 }
 
 function loadCheckout() {
@@ -498,11 +471,11 @@ async function openCheckout({ orderId, amount, currency, keyId, phone, name, age
         try {
           await postLead(
             buildLead(name, phone, age, price, {
-              queue: true,
               orderId: result.orderId || response.razorpay_order_id || orderId,
               paymentId: result.paymentId || response.razorpay_payment_id || "",
             })
           );
+          track("Lead", { variant: price, content_name: "paid_consult" }, ensureSessionId());
           showConfirmation(name, phone);
         } catch {
           showConfirmation(name, phone, false);
@@ -517,7 +490,7 @@ async function openCheckout({ orderId, amount, currency, keyId, phone, name, age
         checkoutOpen = false;
         if (checkoutSettled) return;
         onClose();
-        showError("Payment was not completed. Your details are saved. You can try again.");
+        showError("Payment was not completed. You can try again.");
       },
     },
   };
@@ -525,7 +498,7 @@ async function openCheckout({ orderId, amount, currency, keyId, phone, name, age
   checkout.on("payment.failed", () => {
     checkoutSettled = true;
     onClose();
-    showError("Payment did not go through. Your details are saved. You can try again.");
+    showError("Payment did not go through. You can try again.");
   });
   checkout.open();
 }
@@ -566,7 +539,6 @@ function bindForm(price) {
     setSubmitBusy(submitBtn, submitLabel, true);
 
     try {
-      saveLeadInBackground(name, phone, age, price);
       const orderResponse = await fetchWithTimeout(
         "/api/create-order",
         {

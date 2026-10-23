@@ -40,7 +40,7 @@ The booking button on `/paid-consult` uses the same Razorpay routes as the vet-c
 | `RAZORPAY_KEY_ID` | `/api/create-order` (also returned to Checkout.js; this is the public key) |
 | `RAZORPAY_KEY_SECRET` | Creating orders and verifying the Checkout signature |
 
-The browser never sends an amount. This page charges Rs. 1 (100 paise) while payment is being tested. Checkout is UPI only. An unpaid form is saved in the CRM without a callback. The doctor call is queued only after payment is verified.
+The browser never sends an amount. This page charges Rs. 1 (100 paise) while payment is being tested. Checkout is UPI only. The CRM turns every saved lead into a call, so the lead is sent only after payment is verified. An unpaid form is not stored.
 
 ## Age journey (Framer Motion)
 
