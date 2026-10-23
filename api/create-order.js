@@ -1,4 +1,4 @@
-const VET_CALL_AMOUNT_PAISE = 9900;
+const VET_CALL_AMOUNT_PAISE = 100;
 const VET_CALL_CURRENCY = "INR";
 
 function sendJson(res, status, body) {
@@ -93,7 +93,7 @@ export default async function handler(req, res) {
           phone,
           cat_name: catName,
           issue_id: issueId,
-          price_inr: "99",
+          price_inr: "1",
         },
       }),
     });
@@ -113,7 +113,7 @@ export default async function handler(req, res) {
       currency: data.currency,
       keyId,
       product: "vet_call",
-      label: "Speak to a vet for only Rs. 99",
+      label: "Speak to a vet for only Rs. 1",
     });
   } catch {
     sendJson(res, 502, { error: "Payment provider unavailable" });

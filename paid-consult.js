@@ -1,13 +1,13 @@
 /**
  * Paid gut consult landing.
  * Lead payload matches picky-eaters (cat, phone, age, Meta attribution).
- * The form CTA uses the existing Razorpay routes and charges Rs. 99 (9900 paise).
+ * The form CTA uses the existing Razorpay routes and charges Rs. 1 (100 paise) for testing.
  */
 
 const YOUNG_CAT_API_BASE = "https://clinic.tailhealthcare.com";
 const META_PIXEL_ID = "1068626952161985";
 const WHATSAPP_URL = "https://wa.me/918047285635";
-const PRICE = "99";
+const PRICE = "1";
 
 const TESTIMONIALS = [
   {
@@ -585,7 +585,7 @@ function bindForm(price) {
       if (!orderResponse.ok || !order.orderId || !order.keyId) {
         throw new Error(order.error || "Payment could not be started.");
       }
-      if (Number(order.amount) !== 9900) {
+      if (Number(order.amount) !== 100) {
         throw new Error("Payment could not be started.");
       }
       await openCheckout({

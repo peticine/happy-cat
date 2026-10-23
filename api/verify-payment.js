@@ -97,7 +97,7 @@ export default async function handler(req, res) {
     orderId,
     paymentId,
     sessionId: sessionId || null,
-    amount: 9900,
+    amount: 100,
     currency: "INR",
   });
 }
