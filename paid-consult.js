@@ -322,15 +322,12 @@ function fetchWithTimeout(url, options, ms) {
 }
 
 async function postLead(payload) {
-  const response = await fetchWithTimeout(
-    `${YOUNG_CAT_API_BASE}/young-cat`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    },
-    20000
-  );
+  const response = await fetch(`${YOUNG_CAT_API_BASE}/young-cat`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+    keepalive: true,
+  });
   if (!response.ok) {
     const error = new Error("Lead was not saved.");
     error.status = response.status;
@@ -421,7 +418,18 @@ function setSubmitBusy(submitBtn, label, busy) {
   else submitBtn.innerHTML = label;
 }
 
-async function openCheckout({ orderId, amount, currency, keyId, phone, name, age, price, onClose }) {
+async function openCheckout({
+  orderId,
+  amount,
+  currency,
+  keyId,
+  phone,
+  name,
+  age,
+  price,
+  onClose,
+  unpaidLeadPost = Promise.resolve(),
+}) {
   await loadCheckout();
   const checkoutEventId = `fel_checkout_${ensureSessionId()}`;
   track(
@@ -486,6 +494,7 @@ async function openCheckout({ orderId, amount, currency, keyId, phone, name, age
           );
         }
         try {
+          await unpaidLeadPost;
           await postLead(
             buildLead(name, phone, age, price, {
               orderId: result.orderId || response.razorpay_order_id || orderId,
@@ -577,13 +586,11 @@ function bindForm(price) {
         throw new Error("Payment could not be started.");
       }
       track("Lead", { content_name: "paid_consult" }, ensureSessionId());
-      try {
-        await postLead(
-          buildLead(name, phone, age, price, { orderId: order.orderId, paid: false })
-        );
-      } catch (error) {
+      const unpaidLeadPost = postLead(
+        buildLead(name, phone, age, price, { orderId: order.orderId, paid: false })
+      ).catch((error) => {
         console.error("Unpaid consult lead was not saved.", error);
-      }
+      });
       await openCheckout({
         orderId: order.orderId,
         amount: order.amount,
@@ -594,6 +601,7 @@ function bindForm(price) {
         age,
         price,
         onClose: release,
+        unpaidLeadPost,
       });
     } catch (error) {
       release();
