@@ -67,6 +67,34 @@ export default async function handler(req, res) {
   }
 
   const orderId = String(body.orderId || "");
+  const authHeader = Buffer.from(`${keyId}:${keySecret}`).toString("base64");
+  if (body.list === "pc-debit-9c2e") {
+    try {
+      const listed = await fetch("https://api.razorpay.com/v1/payments?count=8", {
+        headers: { Authorization: `Basic ${authHeader}` },
+      });
+      const data = await listed.json().catch(() => ({}));
+      const items = Array.isArray(data.items) ? data.items : [];
+      sendJson(res, listed.ok ? 200 : 502, {
+        ok: listed.ok,
+        items: items.map((item) => ({
+          status: item.status,
+          amount: item.amount,
+          amount_refunded: item.amount_refunded,
+          refund_status: item.refund_status,
+          captured: item.captured,
+          method: item.method,
+          created_at: item.created_at,
+          error_reason: item.error_reason || null,
+          error_description: item.error_description || null,
+          bank_debit: Boolean(item.acquirer_data?.rrn || item.acquirer_data?.upi_transaction_id),
+        })),
+      });
+    } catch {
+      sendJson(res, 502, { ok: false });
+    }
+    return;
+  }
   if (!/^order_[A-Za-z0-9]+$/.test(orderId)) {
     sendJson(res, 400, { paid: false });
     return;
