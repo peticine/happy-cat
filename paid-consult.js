@@ -5,7 +5,7 @@
  * Digi Clinic turns every saved lead into a call, even with no callback window.
  * The lead is posted only after payment is verified.
  */
-import { CONSULT_PRICE_INR, CONSULT_PRICE_PAISE } from "./consult-price.js?v=pc17";
+import { CONSULT_PRICE_INR, CONSULT_PRICE_PAISE } from "./consult-price.js?v=pc23";
 
 const YOUNG_CAT_API_BASE = "https://clinic.tailhealthcare.com";
 const META_PIXEL_ID = "1068626952161985";
