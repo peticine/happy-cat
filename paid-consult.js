@@ -252,7 +252,7 @@ function clearError() {
   error.textContent = "";
 }
 
-function buildLead(name, phone, age, price, { orderId = "", paymentId = "" } = {}) {
+function buildLead(name, phone, age, price, { orderId = "", paymentId = "", paid = true } = {}) {
   return {
     schema_version: "1.0",
     source: {
@@ -283,24 +283,35 @@ function buildLead(name, phone, age, price, { orderId = "", paymentId = "" } = {
       issue_label_full: "Gut issues",
     },
     answers: [],
-    summary_text: `${name}, ${age.label}. Gut issues. Paid vet call ₹${price}.`,
+    summary_text: paid
+      ? `${name}, ${age.label}. Gut issues. Paid vet call ₹${price}.`
+      : `${name}, ${age.label}. Gut issues. Payment not completed.`,
     flags: {
       urgent: false,
       supplement_call: false,
       call_scope: "just_this",
       prevention_only: false,
       follow_up: false,
-      paid_consult: true,
+      paid_consult: paid,
+      ...(paid ? {} : { payment_attempted: true }),
     },
     attribution: buildAttribution(),
-    payment: {
-      status: "paid",
-      variant: price,
-      price_inr: Number(price),
-      currency: "INR",
-      order_id: orderId,
-      payment_id: paymentId,
-    },
+    payment: paid
+      ? {
+          status: "paid",
+          variant: price,
+          price_inr: Number(price),
+          currency: "INR",
+          order_id: orderId,
+          payment_id: paymentId,
+        }
+      : {
+          status: "unpaid",
+          variant: price,
+          price_inr: Number(price),
+          currency: "INR",
+          order_id: orderId,
+        },
   };
 }
 
@@ -566,6 +577,13 @@ function bindForm(price) {
         throw new Error("Payment could not be started.");
       }
       track("Lead", { content_name: "paid_consult" }, ensureSessionId());
+      try {
+        await postLead(
+          buildLead(name, phone, age, price, { orderId: order.orderId, paid: false })
+        );
+      } catch (error) {
+        console.error("Unpaid consult lead was not saved.", error);
+      }
       await openCheckout({
         orderId: order.orderId,
         amount: order.amount,
