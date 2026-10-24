@@ -519,7 +519,10 @@ async function openCheckout({
     }
     showConfirmation(name, phone);
     onClose();
-    await unpaidLeadPost;
+    await Promise.race([
+      unpaidLeadPost,
+      new Promise((resolve) => setTimeout(resolve, 30000)),
+    ]);
     try {
       await postLead(
         buildLead(name, phone, age, price, {
