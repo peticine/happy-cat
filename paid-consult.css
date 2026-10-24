@@ -824,9 +824,10 @@
   font-size: clamp(2rem, 6vw, 3rem);
 }
 
-.pc-confirm .pc-phone-line {
-  margin-top: 12px;
+.pc-confirm p {
+  margin: 16px 0 0;
   font-size: 1.05rem;
+  line-height: 1.5;
 }
 
 .pc-next {

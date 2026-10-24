@@ -9,7 +9,6 @@ import { CONSULT_PRICE_INR, CONSULT_PRICE_PAISE } from "./consult-price.js?v=pc1
 
 const YOUNG_CAT_API_BASE = "https://clinic.tailhealthcare.com";
 const META_PIXEL_ID = "1068626952161985";
-const WHATSAPP_URL = "https://wa.me/918047285635";
 
 const TESTIMONIALS = [
   {
@@ -234,10 +233,6 @@ function formatSubmittedAt(date = new Date()) {
   )}:${pad(date.getMinutes())}:${pad(date.getSeconds())}${sign}${pad(Math.floor(abs / 60))}:${pad(abs % 60)}`;
 }
 
-function formatPhone(digits) {
-  return `+91 ${digits.slice(0, 5)} ${digits.slice(5)}`;
-}
-
 function showError(message) {
   const error = document.getElementById("pc-error");
   if (!error) return;
@@ -357,20 +352,9 @@ function loadCheckout() {
   });
 }
 
-function showConfirmation(name, phone, queued = true) {
+function showConfirmation() {
   const landing = document.getElementById("pc-landing");
   const confirm = document.getElementById("pc-confirm");
-  const line = document.getElementById("pc-confirm-phone");
-  const whatsapp = document.getElementById("pc-whatsapp");
-  if (line) {
-    line.textContent = queued
-      ? `You will receive a call from a feline vet on ${formatPhone(phone)} within 15 to 30 minutes.`
-      : `Payment was received. We could not book the call automatically. Message us on WhatsApp and a vet will call ${formatPhone(phone)}.`;
-  }
-  if (whatsapp) {
-    const text = `Hi Felica, I booked a vet call for ${name}. What they eat: \nWhen it started: `;
-    whatsapp.href = `${WHATSAPP_URL}?text=${encodeURIComponent(text)}`;
-  }
   if (landing) landing.hidden = true;
   if (confirm) {
     confirm.hidden = false;
@@ -517,7 +501,7 @@ async function openCheckout({
         `fel_purchase_${paymentId}`
       );
     }
-    showConfirmation(name, phone);
+    showConfirmation();
     onClose();
     await Promise.race([
       unpaidLeadPost,
