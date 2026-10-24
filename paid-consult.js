@@ -1,15 +1,15 @@
 /**
  * Paid gut consult landing.
  * Lead payload matches picky-eaters (cat, phone, age, Meta attribution).
- * The form CTA uses the existing Razorpay routes and charges Rs. 1 (100 paise) for testing.
+ * The form CTA uses the existing Razorpay routes and charges Rs. 99.
  * Digi Clinic turns every saved lead into a call, even with no callback window.
  * The lead is posted only after payment is verified.
  */
+import { CONSULT_PRICE_INR, CONSULT_PRICE_PAISE } from "./consult-price.js";
 
 const YOUNG_CAT_API_BASE = "https://clinic.tailhealthcare.com";
 const META_PIXEL_ID = "1068626952161985";
 const WHATSAPP_URL = "https://wa.me/918047285635";
-const PRICE = "1";
 
 const TESTIMONIALS = [
   {
@@ -97,7 +97,7 @@ const LANDING_ATTR_KEYS = [
 ];
 
 let sessionId = "";
-let purchaseFired = false;
+const purchaseEventIds = new Set();
 let checkoutOpen = false;
 let checkoutSettled = false;
 
@@ -415,7 +415,7 @@ async function openCheckout({ orderId, amount, currency, keyId, phone, name, age
   const checkoutEventId = `fel_checkout_${ensureSessionId()}`;
   track(
     "InitiateCheckout",
-    { value: Number(price), currency: "INR", variant: price },
+    { value: CONSULT_PRICE_INR, currency: "INR", variant: price },
     checkoutEventId
   );
   checkoutOpen = true;
@@ -460,22 +460,27 @@ async function openCheckout({ orderId, amount, currency, keyId, phone, name, age
         });
         const result = await verified.json().catch(() => ({}));
         if (!verified.ok || !result.ok) throw new Error(result.error || "Payment could not be verified.");
-        if (!purchaseFired) {
-          purchaseFired = true;
+        const paymentId = String(result.paymentId || response.razorpay_payment_id || "");
+        if (paymentId && !purchaseEventIds.has(paymentId)) {
+          purchaseEventIds.add(paymentId);
           track(
             "Purchase",
-            { value: Number(price), currency: "INR", variant: price },
-            result.eventId || `fel_purchase_${response.razorpay_payment_id}`
+            {
+              value: CONSULT_PRICE_INR,
+              currency: "INR",
+              content_name: "paid_consult",
+              content_category: "paid_consult",
+            },
+            `fel_purchase_${paymentId}`
           );
         }
         try {
           await postLead(
             buildLead(name, phone, age, price, {
               orderId: result.orderId || response.razorpay_order_id || orderId,
-              paymentId: result.paymentId || response.razorpay_payment_id || "",
+              paymentId: paymentId,
             })
           );
-          track("Lead", { variant: price, content_name: "paid_consult" }, ensureSessionId());
           showConfirmation(name, phone);
         } catch {
           showConfirmation(name, phone, false);
@@ -557,9 +562,10 @@ function bindForm(price) {
       if (!orderResponse.ok || !order.orderId || !order.keyId) {
         throw new Error(order.error || "Payment could not be started.");
       }
-      if (Number(order.amount) !== 100) {
+      if (Number(order.amount) !== CONSULT_PRICE_PAISE) {
         throw new Error("Payment could not be started.");
       }
+      track("Lead", { content_name: "paid_consult" }, ensureSessionId());
       await openCheckout({
         orderId: order.orderId,
         amount: order.amount,
@@ -583,7 +589,7 @@ function bindForm(price) {
   });
 }
 
-const price = PRICE;
+const price = String(CONSULT_PRICE_INR);
 clearStoredPriceTest();
 document.documentElement.dataset.price = price;
 document.documentElement.classList.remove("pc-price-pending");

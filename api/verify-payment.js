@@ -1,4 +1,5 @@
 import crypto from "crypto";
+import { CONSULT_PRICE_PAISE } from "../consult-price.js";
 
 function sendJson(res, status, body) {
   res.statusCode = status;
@@ -97,7 +98,7 @@ export default async function handler(req, res) {
     orderId,
     paymentId,
     sessionId: sessionId || null,
-    amount: 100,
+    amount: CONSULT_PRICE_PAISE,
     currency: "INR",
   });
 }

@@ -1,4 +1,5 @@
-const VET_CALL_AMOUNT_PAISE = 100;
+import { CONSULT_PRICE_INR, CONSULT_PRICE_PAISE } from "../consult-price.js";
+
 const VET_CALL_CURRENCY = "INR";
 
 function sendJson(res, status, body) {
@@ -84,7 +85,7 @@ export default async function handler(req, res) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        amount: VET_CALL_AMOUNT_PAISE,
+        amount: CONSULT_PRICE_PAISE,
         currency: VET_CALL_CURRENCY,
         receipt,
         notes: {
@@ -93,7 +94,7 @@ export default async function handler(req, res) {
           phone,
           cat_name: catName,
           issue_id: issueId,
-          price_inr: "1",
+          price_inr: String(CONSULT_PRICE_INR),
         },
       }),
     });
@@ -113,7 +114,7 @@ export default async function handler(req, res) {
       currency: data.currency,
       keyId,
       product: "vet_call",
-      label: "Speak to a vet for only Rs. 1",
+      label: `Speak to a vet for only Rs. ${CONSULT_PRICE_INR}`,
     });
   } catch {
     sendJson(res, 502, { error: "Payment provider unavailable" });
