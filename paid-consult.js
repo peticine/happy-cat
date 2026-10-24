@@ -372,7 +372,14 @@ function showConfirmation(name, phone, queued = true) {
     whatsapp.href = `${WHATSAPP_URL}?text=${encodeURIComponent(text)}`;
   }
   if (landing) landing.hidden = true;
-  if (confirm) confirm.hidden = false;
+  if (confirm) {
+    confirm.hidden = false;
+    confirm.style.position = "fixed";
+    confirm.style.inset = "0";
+    confirm.style.zIndex = "2147483647";
+    confirm.style.background = "#fff";
+    confirm.style.overflow = "auto";
+  }
   document.body.classList.add("pc-is-booked");
   confirm?.scrollIntoView({ block: "start" });
 }
@@ -419,6 +426,14 @@ function setSubmitBusy(submitBtn, label, busy) {
 }
 
 function dismissRazorpay() {
+  document.querySelectorAll("iframe").forEach((frame) => {
+    const src = frame.getAttribute("src") || "";
+    const name = frame.getAttribute("name") || "";
+    if (!src.includes("razorpay") && !name.includes("razorpay")) return;
+    const shell = frame.closest(".razorpay-container") || frame.parentElement;
+    shell?.remove();
+    frame.remove();
+  });
   document.querySelectorAll(".razorpay-container, .razorpay-backdrop").forEach((node) => node.remove());
   document.body.style.removeProperty("overflow");
 }

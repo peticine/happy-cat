@@ -83,14 +83,25 @@ export default async function handler(req, res) {
       return;
     }
     const items = Array.isArray(data.items) ? data.items : [];
-    const captured = items.find(
-      (item) => item?.status === "captured" && Number(item.amount) === CONSULT_PRICE_PAISE
-    );
-    if (!captured?.id) {
+    const payment = items.find((item) => item?.status === "captured" || item?.status === "authorized");
+    if (!payment?.id) {
       sendJson(res, 200, { paid: false });
       return;
     }
-    sendJson(res, 200, { paid: true, orderId, paymentId: String(captured.id) });
+    if (payment.status === "authorized") {
+      await fetch(`https://api.razorpay.com/v1/payments/${payment.id}/capture`, {
+        method: "POST",
+        headers: {
+          Authorization: `Basic ${auth}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          amount: Number(payment.amount) || CONSULT_PRICE_PAISE,
+          currency: payment.currency || "INR",
+        }),
+      });
+    }
+    sendJson(res, 200, { paid: true, orderId, paymentId: String(payment.id) });
   } catch {
     sendJson(res, 502, { paid: false });
   }
