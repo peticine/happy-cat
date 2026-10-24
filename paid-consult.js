@@ -465,50 +465,58 @@ async function openCheckout({
       },
     },
     theme: { color: "#6d6589" },
-    handler: async (response) => {
+    handler(response) {
       checkoutSettled = true;
       checkoutOpen = false;
-      try {
-        const verified = await fetch("/api/verify-payment", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            ...response,
-            sessionId: ensureSessionId(),
-          }),
-        });
-        const result = await verified.json().catch(() => ({}));
-        if (!verified.ok || !result.ok) throw new Error(result.error || "Payment could not be verified.");
-        const paymentId = String(result.paymentId || response.razorpay_payment_id || "");
-        if (paymentId && !purchaseEventIds.has(paymentId)) {
-          purchaseEventIds.add(paymentId);
-          track(
-            "Purchase",
-            {
-              value: CONSULT_PRICE_INR,
-              currency: "INR",
-              content_name: "paid_consult",
-              content_category: "paid_consult",
-            },
-            `fel_purchase_${paymentId}`
-          );
-        }
+      // Return immediately so Razorpay can close. The clinic save stays in the background.
+      void (async () => {
         try {
-          await unpaidLeadPost;
-          await postLead(
-            buildLead(name, phone, age, price, {
-              orderId: result.orderId || response.razorpay_order_id || orderId,
-              paymentId: paymentId,
-            })
+          const verified = await fetchWithTimeout(
+            "/api/verify-payment",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                ...response,
+                sessionId: ensureSessionId(),
+              }),
+            },
+            15000
           );
+          const result = await verified.json().catch(() => ({}));
+          if (!verified.ok || !result.ok) throw new Error(result.error || "Payment could not be verified.");
+          const paymentId = String(result.paymentId || response.razorpay_payment_id || "");
+          if (paymentId && !purchaseEventIds.has(paymentId)) {
+            purchaseEventIds.add(paymentId);
+            track(
+              "Purchase",
+              {
+                value: CONSULT_PRICE_INR,
+                currency: "INR",
+                content_name: "paid_consult",
+                content_category: "paid_consult",
+              },
+              `fel_purchase_${paymentId}`
+            );
+          }
           showConfirmation(name, phone);
-        } catch {
-          showConfirmation(name, phone, false);
+          onClose();
+          await unpaidLeadPost;
+          try {
+            await postLead(
+              buildLead(name, phone, age, price, {
+                orderId: result.orderId || response.razorpay_order_id || orderId,
+                paymentId: paymentId,
+              })
+            );
+          } catch (error) {
+            console.error("Paid consult lead was not saved.", error);
+          }
+        } catch (error) {
+          onClose();
+          showError(error.message || "Payment could not be verified. Please try again.");
         }
-      } catch (error) {
-        onClose();
-        showError(error.message || "Payment could not be verified. Please try again.");
-      }
+      })();
     },
     modal: {
       ondismiss() {
