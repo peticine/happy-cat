@@ -438,7 +438,14 @@ function dismissRazorpay() {
   document.body.style.removeProperty("overflow");
 }
 
-async function lookupPaidOrder(orderId) {
+function paymentFailureMessage(reason) {
+  if (reason === "payment_risk_check_failed") {
+    return "Razorpay blocked this payment, so the booking was not completed. If your bank shows a debit, it should reverse.";
+  }
+  return "Payment did not go through, so the booking was not completed.";
+}
+
+async function lookupOrder(orderId) {
   const response = await fetchWithTimeout(
     "/api/order-status",
     {
@@ -449,8 +456,12 @@ async function lookupPaidOrder(orderId) {
     8000
   );
   const data = await response.json().catch(() => ({}));
-  if (!response.ok || !data.paid || !data.paymentId) return null;
-  return { orderId: data.orderId || orderId, paymentId: String(data.paymentId) };
+  if (!response.ok) return null;
+  if (data.paid && data.paymentId) {
+    return { paid: true, orderId: data.orderId || orderId, paymentId: String(data.paymentId) };
+  }
+  if (data.failed) return { failed: true, reason: String(data.reason || "") };
+  return null;
 }
 
 async function openCheckout({
@@ -476,6 +487,16 @@ async function openCheckout({
   checkoutSettled = false;
   let recorded = false;
   let pollTimer = 0;
+  const finishFailedCheckout = (reason) => {
+    if (recorded) return;
+    recorded = true;
+    checkoutSettled = true;
+    checkoutOpen = false;
+    clearInterval(pollTimer);
+    dismissRazorpay();
+    onClose();
+    showError(paymentFailureMessage(reason));
+  };
   const recordPaidCheckout = async (paymentId, paidOrderId) => {
     if (recorded) return;
     recorded = true;
@@ -568,9 +589,13 @@ async function openCheckout({
       ondismiss() {
         void (async () => {
           if (recorded) return;
-          const paid = await lookupPaidOrder(orderId).catch(() => null);
-          if (paid) {
-            await recordPaidCheckout(paid.paymentId, paid.orderId);
+          const outcome = await lookupOrder(orderId).catch(() => null);
+          if (outcome?.paid) {
+            await recordPaidCheckout(outcome.paymentId, outcome.orderId);
+            return;
+          }
+          if (outcome?.failed) {
+            finishFailedCheckout(outcome.reason);
             return;
           }
           checkoutOpen = false;
@@ -582,12 +607,14 @@ async function openCheckout({
     },
   };
   const checkout = new window.Razorpay(options);
-  checkout.on("payment.failed", () => {
-    if (recorded) return;
-    checkoutSettled = true;
-    clearInterval(pollTimer);
-    onClose();
-    showError("Payment did not go through. You can try again.");
+  checkout.on("payment.failed", (response) => {
+    const reason = response?.error?.reason || "";
+    if (reason === "payment_risk_check_failed") {
+      finishFailedCheckout(reason);
+      return;
+    }
+    // A declined attempt can leave the QR up while a later debit still settles.
+    // Keep checking the payment record, and only close once that record is final.
   });
   checkout.open();
   const pollStarted = Date.now();
@@ -596,9 +623,10 @@ async function openCheckout({
       clearInterval(pollTimer);
       return;
     }
-    void lookupPaidOrder(orderId)
-      .then((paid) => {
-        if (paid) return recordPaidCheckout(paid.paymentId, paid.orderId);
+    void lookupOrder(orderId)
+      .then((outcome) => {
+        if (outcome?.paid) return recordPaidCheckout(outcome.paymentId, outcome.orderId);
+        if (outcome?.failed) finishFailedCheckout(outcome.reason);
       })
       .catch(() => {});
   }, 3000);
