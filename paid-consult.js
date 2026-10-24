@@ -418,6 +418,26 @@ function setSubmitBusy(submitBtn, label, busy) {
   else submitBtn.innerHTML = label;
 }
 
+function dismissRazorpay() {
+  document.querySelectorAll(".razorpay-container, .razorpay-backdrop").forEach((node) => node.remove());
+  document.body.style.removeProperty("overflow");
+}
+
+async function lookupPaidOrder(orderId) {
+  const response = await fetchWithTimeout(
+    "/api/order-status",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ orderId }),
+    },
+    8000
+  );
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok || !data.paid || !data.paymentId) return null;
+  return { orderId: data.orderId || orderId, paymentId: String(data.paymentId) };
+}
+
 async function openCheckout({
   orderId,
   amount,
@@ -439,6 +459,42 @@ async function openCheckout({
   );
   checkoutOpen = true;
   checkoutSettled = false;
+  let recorded = false;
+  let pollTimer = 0;
+  const recordPaidCheckout = async (paymentId, paidOrderId) => {
+    if (recorded) return;
+    recorded = true;
+    checkoutSettled = true;
+    checkoutOpen = false;
+    clearInterval(pollTimer);
+    dismissRazorpay();
+    if (paymentId && !purchaseEventIds.has(paymentId)) {
+      purchaseEventIds.add(paymentId);
+      track(
+        "Purchase",
+        {
+          value: CONSULT_PRICE_INR,
+          currency: "INR",
+          content_name: "paid_consult",
+          content_category: "paid_consult",
+        },
+        `fel_purchase_${paymentId}`
+      );
+    }
+    showConfirmation(name, phone);
+    onClose();
+    await unpaidLeadPost;
+    try {
+      await postLead(
+        buildLead(name, phone, age, price, {
+          orderId: paidOrderId || orderId,
+          paymentId,
+        })
+      );
+    } catch (error) {
+      console.error("Paid consult lead was not saved.", error);
+    }
+  };
   const options = {
     key: keyId,
     amount,
@@ -466,9 +522,6 @@ async function openCheckout({
     },
     theme: { color: "#6d6589" },
     handler(response) {
-      checkoutSettled = true;
-      checkoutOpen = false;
-      // Return immediately so Razorpay can close. The clinic save stays in the background.
       void (async () => {
         try {
           const verified = await fetchWithTimeout(
@@ -485,34 +538,12 @@ async function openCheckout({
           );
           const result = await verified.json().catch(() => ({}));
           if (!verified.ok || !result.ok) throw new Error(result.error || "Payment could not be verified.");
-          const paymentId = String(result.paymentId || response.razorpay_payment_id || "");
-          if (paymentId && !purchaseEventIds.has(paymentId)) {
-            purchaseEventIds.add(paymentId);
-            track(
-              "Purchase",
-              {
-                value: CONSULT_PRICE_INR,
-                currency: "INR",
-                content_name: "paid_consult",
-                content_category: "paid_consult",
-              },
-              `fel_purchase_${paymentId}`
-            );
-          }
-          showConfirmation(name, phone);
-          onClose();
-          await unpaidLeadPost;
-          try {
-            await postLead(
-              buildLead(name, phone, age, price, {
-                orderId: result.orderId || response.razorpay_order_id || orderId,
-                paymentId: paymentId,
-              })
-            );
-          } catch (error) {
-            console.error("Paid consult lead was not saved.", error);
-          }
+          await recordPaidCheckout(
+            String(result.paymentId || response.razorpay_payment_id || ""),
+            result.orderId || response.razorpay_order_id || orderId
+          );
         } catch (error) {
+          if (recorded) return;
           onClose();
           showError(error.message || "Payment could not be verified. Please try again.");
         }
@@ -520,20 +551,42 @@ async function openCheckout({
     },
     modal: {
       ondismiss() {
-        checkoutOpen = false;
-        if (checkoutSettled) return;
-        onClose();
-        showError("Payment was not completed. You can try again.");
+        void (async () => {
+          if (recorded) return;
+          const paid = await lookupPaidOrder(orderId).catch(() => null);
+          if (paid) {
+            await recordPaidCheckout(paid.paymentId, paid.orderId);
+            return;
+          }
+          checkoutOpen = false;
+          clearInterval(pollTimer);
+          onClose();
+          showError("Payment was not completed. You can try again.");
+        })();
       },
     },
   };
   const checkout = new window.Razorpay(options);
   checkout.on("payment.failed", () => {
+    if (recorded) return;
     checkoutSettled = true;
+    clearInterval(pollTimer);
     onClose();
     showError("Payment did not go through. You can try again.");
   });
   checkout.open();
+  const pollStarted = Date.now();
+  pollTimer = setInterval(() => {
+    if (recorded || Date.now() - pollStarted > 10 * 60 * 1000) {
+      clearInterval(pollTimer);
+      return;
+    }
+    void lookupPaidOrder(orderId)
+      .then((paid) => {
+        if (paid) return recordPaidCheckout(paid.paymentId, paid.orderId);
+      })
+      .catch(() => {});
+  }, 3000);
 }
 
 function bindForm(price) {
