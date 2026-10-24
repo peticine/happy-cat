@@ -67,12 +67,41 @@ export default async function handler(req, res) {
   }
 
   const orderId = String(body.orderId || "");
+  const auth = Buffer.from(`${keyId}:${keySecret}`).toString("base64");
+
+  // Temporary: list recent payment states so a stuck QR can be matched. No contact data.
+  if (body.list === "pc-list-7f3a") {
+    try {
+      const listed = await fetch("https://api.razorpay.com/v1/payments?count=12", {
+        headers: { Authorization: `Basic ${auth}` },
+      });
+      const data = await listed.json().catch(() => ({}));
+      const items = Array.isArray(data.items) ? data.items : [];
+      sendJson(res, listed.ok ? 200 : 502, {
+        ok: listed.ok,
+        items: items.map((item) => ({
+          status: item.status,
+          amount: item.amount,
+          currency: item.currency,
+          method: item.method,
+          order_id: item.order_id,
+          created_at: item.created_at,
+          captured: item.captured,
+          error_code: item.error_code || null,
+          error_reason: item.error_reason || null,
+        })),
+      });
+    } catch {
+      sendJson(res, 502, { ok: false });
+    }
+    return;
+  }
+
   if (!/^order_[A-Za-z0-9]+$/.test(orderId)) {
     sendJson(res, 400, { paid: false });
     return;
   }
 
-  const auth = Buffer.from(`${keyId}:${keySecret}`).toString("base64");
   try {
     const rzpRes = await fetch(`https://api.razorpay.com/v1/orders/${orderId}/payments`, {
       headers: { Authorization: `Basic ${auth}` },
