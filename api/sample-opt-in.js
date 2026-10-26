@@ -1,5 +1,5 @@
 /**
- * Same-origin proxy so the sample secret stays in the server env.
+ * Same-origin proxy for the thank-you sample address.
  * Forwards to digi-clinic POST /young-cat/sample.
  */
 
@@ -72,17 +72,6 @@ function clinicBase() {
   return "https://clinic.tailhealthcare.com";
 }
 
-function cleanSecret(value) {
-  let trimmed = String(value || "").trim();
-  if (
-    (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
-    (trimmed.startsWith("'") && trimmed.endsWith("'"))
-  ) {
-    trimmed = trimmed.slice(1, -1).trim();
-  }
-  return trimmed;
-}
-
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     sendJson(res, 405, { error: "Method not allowed" });
@@ -91,13 +80,6 @@ export default async function handler(req, res) {
 
   if (!allowIp(clientIp(req))) {
     sendJson(res, 429, { error: "Too many attempts. Please wait a minute and try again." });
-    return;
-  }
-
-  const secret = cleanSecret(process.env.SAMPLE_OPT_IN_SECRET);
-  if (!secret) {
-    console.error("POST /api/sample-opt-in: SAMPLE_OPT_IN_SECRET is not set");
-    sendJson(res, 500, { error: SAVE_FAILED });
     return;
   }
 
@@ -135,7 +117,6 @@ export default async function handler(req, res) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-sample-opt-in-secret": secret,
       },
       body: JSON.stringify({
         lead_id: leadId,
