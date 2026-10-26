@@ -107,6 +107,7 @@ let sessionId = "";
 let openedAt = Date.now();
 let leadConversionFired = false;
 let submitted = false;
+let leadSubmitPromise = null;
 
 function createSessionId() {
   try {
@@ -535,6 +536,7 @@ function showRequestPanel() {
 
 function showThanks(catName) {
   submitted = true;
+  if (typeof resetSampleOptIn === "function") resetSampleOptIn(document);
   const form = document.getElementById("pe-form");
   const thanks = document.getElementById("pe-thanks");
   const thanksBody = document.getElementById("pe-thanks-body");
@@ -589,6 +591,13 @@ function bindPage() {
   });
 
   const form = document.getElementById("pe-form");
+  const sampleMount = document.querySelector("#pe-thanks [data-sample-mount]");
+  if (sampleMount && typeof mountSampleOptIn === "function") {
+    mountSampleOptIn(sampleMount, {
+      pageSource: "picky-eaters",
+      getLead: () => leadSubmitPromise || Promise.resolve(null),
+    });
+  }
   if (!form) return;
 
   const ageInput = form.querySelector("#pe-age");
@@ -651,13 +660,15 @@ function bindPage() {
     // the same way the main flow does, and confirm the pixel after it accepts.
     showThanks(petName);
 
-    submitLead(payload)
-      .then(() => {
+    leadSubmitPromise = submitLead(payload)
+      .then((result) => {
         rememberLeadSubmission(number);
         fireLeadPixel();
+        return result;
       })
       .catch(() => {
         restoreForm("Something went wrong. Please try again.");
+        return null;
       });
   });
 }
