@@ -1,62 +1,13 @@
 /**
- * Picky-eaters campaign landing.
+ * Free cat treat request for /picky-eaters.
+ * Posts to /api/sample-request. Does not create a young-cat lead.
  *
- * Attribution mapping (URL / cookies -> payload.attribution):
- *   utm_source     -> attribution.utm_source
- *   utm_medium     -> attribution.utm_medium
- *   utm_campaign   -> attribution.utm_campaign
- *   utm_content    -> attribution.utm_content
- *   utm_term       -> attribution.utm_term
- *   fbclid         -> attribution.fbclid
- *   _fbp cookie    -> attribution.fbp
- *   _fbc cookie    -> attribution.fbc (or built from fbclid if cookie is missing)
- *   ad_id          -> attribution.ad_id
- *   adset_id       -> attribution.adset_id
- *   campaign_id    -> attribution.campaign_id
- *   traffic_source -> "meta" when utm_source is "meta" or fbclid is present
- *   event_id       -> same value as Pixel Lead eventID
+ * Pixel: PageView stays in the page. A successful save fires trackCustom "SampleRequest"
+ * with the same eventID as this session. UTM / fbclid capture is unchanged.
  */
 
-const SUBMIT_ENABLED = true;
-
-const YOUNG_CAT_API_BASE = "https://clinic.tailhealthcare.com";
-const META_PIXEL_ID = "1068626952161985";
-const LEAD_CONSENT_TEXT =
-  "By submitting, you agree that a Felica vet may call you on this number, and that we may send WhatsApp messages about this request.";
-
-/**
- * Fields this page does not collect. Confirm with clinic/ops before SUBMIT_ENABLED = true.
- */
-const PICKY_EATERS_CASE_DEFAULTS = {
-  pet: {
-    // TODO: page does not ask age
-    age_years: null,
-    // TODO: page does not ask age band
-    age_band: null,
-  },
-  triage: {
-    // TODO: confirm green is correct for this consult campaign
-    lane: "green",
-    // TODO: confirm urgency
-    urgency: "consult",
-    urgency_reasons: [],
-  },
-  chief_complaint: {
-    // TODO: confirm the issue_id the clinic PMS expects
-    issue_id: "picky_eating",
-    issue_label: "Picky eating",
-    issue_label_full: "Picky eating",
-  },
-  flags: {
-    urgent: false,
-    // TODO: this campaign is a nutritional / behavioural consult, not a supplement courier call
-    supplement_call: false,
-    call_scope: "just_this",
-    prevention_only: false,
-    follow_up: false,
-  },
-};
-
+const SAMPLE_DONE_KEY = "felica-sample-request-done";
+const SAMPLE_PIXEL_LOCK_KEY = "felica-sample-request-pixel";
 const FBCLID_STORAGE_KEY = "felica-fbclid";
 const LANDING_ATTR_KEY = "felica-landing-attr";
 const LANDING_ATTR_KEYS = [
@@ -73,46 +24,16 @@ const LANDING_ATTR_KEYS = [
   "adset_id",
   "campaign_id",
 ];
-const LEAD_CONVERSION_LOCK_KEY = "felica-lead-conversion-fired";
-const LEAD_RATE_KEY = "felica-lead-rate-v1";
-const LEAD_RATE_WINDOW_MS = 24 * 60 * 60 * 1000;
-const LEAD_MIN_ELAPSED_MS = 2000;
-const LEAD_SPAM_ALLOWLIST = new Set(["9884180000"]);
-const JUNK_PHONE_NUMBERS = new Set([
-  "9999999999",
-  "8888888888",
-  "7777777777",
-  "6666666666",
-  "9876543210",
-  "9123456789",
-  "9000000000",
-  "9898989898",
-  "9090909090",
-]);
-const JUNK_CAT_NAMES = new Set([
-  "test",
-  "testing",
-  "asdf",
-  "asdfg",
-  "qwerty",
-  "abc",
-  "abcd",
-  "name",
-  "cat",
-  "xxx",
-  "aaaa",
-  "bbbb",
-  "none",
-  "na",
-  "n/a",
-  "null",
-  "undefined",
-]);
+
+const THANKS_TEXT =
+  "Your cat's treat is on its way. We'll be in touch for the delivery and feedback after your cat has tried it.";
+const HOUSEHOLD_TEXT = "Looks like a treat is already on its way to this number. One per household.";
+const ADDRESS_WARNING =
+  "We couldn't find a house or flat number. Please add it so your treat reaches you.";
+const SAVE_FAILED = "Something went wrong. Please try again.";
 
 let sessionId = "";
-let openedAt = Date.now();
-let leadConversionFired = false;
-let submitted = false;
+let samplePixelFired = false;
 
 function createSessionId() {
   try {
@@ -128,18 +49,6 @@ function createSessionId() {
 function ensureSessionId() {
   if (!sessionId || sessionId.length < 8) sessionId = createSessionId();
   return sessionId;
-}
-
-function formatSubmittedAt(date = new Date()) {
-  const pad = (n) => String(Math.trunc(Math.abs(n))).padStart(2, "0");
-  const offsetMin = -date.getTimezoneOffset();
-  const sign = offsetMin >= 0 ? "+" : "-";
-  const abs = Math.abs(offsetMin);
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(
-    date.getHours()
-  )}:${pad(date.getMinutes())}:${pad(date.getSeconds())}${sign}${pad(Math.floor(abs / 60))}:${pad(
-    abs % 60
-  )}`;
 }
 
 function readCookieValue(name) {
@@ -182,70 +91,6 @@ function captureLandingAttribution() {
   }
 }
 
-function getStoredFbclid() {
-  try {
-    return (
-      readStoredLandingAttribution().fbclid ||
-      sessionStorage.getItem(FBCLID_STORAGE_KEY) ||
-      ""
-    );
-  } catch {
-    return "";
-  }
-}
-
-function getMetaFbp() {
-  return readCookieValue("_fbp") || null;
-}
-
-function getMetaFbc() {
-  const fbc = readCookieValue("_fbc");
-  if (fbc) return fbc;
-  const fbclid =
-    getStoredFbclid() ||
-    new URLSearchParams(window.location.search).get("fbclid")?.trim() ||
-    "";
-  if (!fbclid) return null;
-  return `fb.1.${Date.now()}.${fbclid}`;
-}
-
-function resolveTrafficSource(landing = readStoredLandingAttribution()) {
-  const utm = String(landing.utm_source || "").trim().toLowerCase();
-  if (utm === "meta" || landing.fbclid || getStoredFbclid()) return "meta";
-  if (landing.gclid || landing.gbraid || landing.wbraid) return "google";
-  if (utm) return landing.utm_source.trim();
-  return "direct";
-}
-
-function buildMetaAttribution() {
-  captureLandingAttribution();
-  const landing = readStoredLandingAttribution();
-  const attribution = {
-    meta_pixel_id: META_PIXEL_ID,
-    event_id: ensureSessionId(),
-    fbp: getMetaFbp(),
-    fbc: getMetaFbc(),
-    event_source_url: String(window.location.href || "").split("#")[0] || null,
-    client_user_agent: navigator.userAgent || null,
-    traffic_source: resolveTrafficSource(landing),
-    utm_source: landing.utm_source || null,
-    utm_medium: landing.utm_medium || null,
-    utm_campaign: landing.utm_campaign || null,
-    utm_content: landing.utm_content || null,
-    utm_term: landing.utm_term || null,
-    fbclid: landing.fbclid || getStoredFbclid() || null,
-    gclid: landing.gclid || null,
-    gbraid: landing.gbraid || null,
-    wbraid: landing.wbraid || null,
-    ad_id: landing.ad_id || null,
-    adset_id: landing.adset_id || null,
-    campaign_id: landing.campaign_id || null,
-  };
-  return Object.fromEntries(
-    Object.entries(attribution).filter(([, value]) => value != null && String(value).trim() !== "")
-  );
-}
-
 function normalizeIndianMobile(raw) {
   let digits = String(raw || "").replace(/\D/g, "");
   if (digits.length >= 12 && digits.startsWith("91")) {
@@ -263,200 +108,124 @@ function isValidIndianMobile(raw) {
   return digits.length === 10 && /^[6-9]\d{9}$/.test(digits);
 }
 
-function isLeadSpamAllowlisted(phone) {
-  return LEAD_SPAM_ALLOWLIST.has(normalizeIndianMobile(phone));
+function isValidPincode(raw) {
+  return /^\d{6}$/.test(String(raw || "").trim());
 }
 
-function isPlausibleIndianMobile(raw) {
-  const digits = normalizeIndianMobile(raw);
-  if (!isValidIndianMobile(digits)) return false;
-  if (JUNK_PHONE_NUMBERS.has(digits)) return false;
-  if (/^(\d)\1{9}$/.test(digits)) return false;
-  const ascending = "01234567890123456789";
-  const descending = "98765432109876543210";
-  if (ascending.includes(digits) || descending.includes(digits)) return false;
-  return true;
+function catAgeText(amount, unit) {
+  const digits = String(amount || "").trim();
+  if (!/^\d{1,3}$/.test(digits)) return "";
+  const n = Number(digits);
+  if (!Number.isInteger(n) || n < 1) return "";
+  if (unit === "years") return n === 1 ? "1 year" : `${n} years`;
+  if (unit === "months") return n === 1 ? "1 month" : `${n} months`;
+  return "";
 }
 
-function normalizeCatNameInput(raw) {
-  return String(raw || "").trim().replace(/\s+/g, " ");
-}
-
-function isPlausibleCatName(raw) {
-  const name = normalizeCatNameInput(raw);
-  if (!name || name.length < 2 || name.length > 24) return false;
-  if (/\s/.test(name)) return false;
-  if (!/^[A-Za-z][A-Za-z.'-]*$/.test(name)) return false;
-  if (JUNK_CAT_NAMES.has(name.toLowerCase())) return false;
-  if (/^(.)\1+$/i.test(name.replace(/[.'-]/g, ""))) return false;
-  return true;
-}
-
-function getCatNameBlockReason(raw) {
-  const name = normalizeCatNameInput(raw);
-  if (!name) return "cat_name";
-  if (/\s/.test(name)) return "cat_name_multi";
-  if (!isPlausibleCatName(name)) return "cat_name";
-  return null;
-}
-
-function readLeadRateStore() {
+function hasSampleFlag() {
   try {
-    const raw = localStorage.getItem(LEAD_RATE_KEY);
-    const data = raw ? JSON.parse(raw) : { phones: {}, deviceAt: 0 };
-    const phones = data?.phones && typeof data.phones === "object" ? data.phones : {};
-    const now = Date.now();
-    const pruned = {};
-    Object.keys(phones).forEach((phone) => {
-      const at = Number(phones[phone]) || 0;
-      if (at && now - at < LEAD_RATE_WINDOW_MS) pruned[phone] = at;
-    });
-    const deviceAt = Number(data?.deviceAt) || 0;
-    return {
-      phones: pruned,
-      deviceAt: deviceAt && now - deviceAt < LEAD_RATE_WINDOW_MS ? deviceAt : 0,
-    };
-  } catch {
-    return { phones: {}, deviceAt: 0 };
-  }
-}
-
-function writeLeadRateStore(store) {
-  try {
-    localStorage.setItem(LEAD_RATE_KEY, JSON.stringify(store));
-  } catch {
-    /* ignore quota / private mode */
-  }
-}
-
-function getLeadRateLimitReason(phone) {
-  const digits = normalizeIndianMobile(phone);
-  const store = readLeadRateStore();
-  if (store.deviceAt) return "rate_device";
-  if (digits && store.phones[digits]) return "rate_phone";
-  return null;
-}
-
-function rememberLeadSubmission(phone) {
-  if (isLeadSpamAllowlisted(phone)) return;
-  const digits = normalizeIndianMobile(phone);
-  const store = readLeadRateStore();
-  const now = Date.now();
-  store.deviceAt = now;
-  if (digits) store.phones[digits] = now;
-  writeLeadRateStore(store);
-}
-
-function getLeadSpamBlockReason({ honeypot = "", phone = "", catNameValue = "" } = {}) {
-  if (isLeadSpamAllowlisted(phone)) {
-    if (!normalizeCatNameInput(catNameValue)) return "cat_name";
-    if (!isValidIndianMobile(phone)) return "phone";
-    return null;
-  }
-  if (String(honeypot || "").trim()) return "bot_honeypot";
-  if (openedAt && Date.now() - openedAt < LEAD_MIN_ELAPSED_MS) return "too_fast";
-  const nameReason = getCatNameBlockReason(catNameValue);
-  if (nameReason) return nameReason;
-  if (!isPlausibleIndianMobile(phone)) return "phone";
-  const rateReason = getLeadRateLimitReason(phone);
-  if (rateReason) return rateReason;
-  return null;
-}
-
-function leadSpamErrorMessage(reason) {
-  switch (reason) {
-    case "cat_name_multi":
-    case "cat_name":
-      return "Enter your cat's name.";
-    case "too_fast":
-      return "Take a moment, then try again.";
-    case "rate_phone":
-      return "We already have a request from this number. A vet will call you soon.";
-    case "rate_device":
-      return "You've already submitted recently. A vet will call you soon.";
-    case "bot_honeypot":
-      return "Something went wrong. Please try again.";
-    default:
-      return "Enter a valid 10-digit mobile number.";
-  }
-}
-
-function isCatNameBlockReason(reason) {
-  return reason === "cat_name" || reason === "cat_name_multi";
-}
-
-function buildPayload(catName, phoneNational) {
-  const phone = String(phoneNational || "").replace(/\D/g, "");
-  const name = catName || null;
-  const displayName = name || "your cat";
-  const complaint = PICKY_EATERS_CASE_DEFAULTS.chief_complaint;
-  const summaryParts = [
-    `${displayName === "your cat" ? "Cat" : displayName}`,
-    complaint.issue_label,
-    phone ? `Vet call requested at +91 ${phone}` : "Vet call requested",
-  ];
-
-  return {
-    schema_version: "1.0",
-    source: {
-      product: "felica",
-      channel: "web_screening",
-      flow: "young_cat",
-      intent: "new",
-      session_id: ensureSessionId(),
-      submitted_at: formatSubmittedAt(),
-    },
-    contact: {
-      phone_e164: `+91${phone}`,
-      phone_national: phone,
-      country_code: "91",
-      preferred_method: "call",
-      callback_window: "15_30_min",
-    },
-    pet: {
-      name,
-      species: "cat",
-      age_years: PICKY_EATERS_CASE_DEFAULTS.pet.age_years,
-      age_band: PICKY_EATERS_CASE_DEFAULTS.pet.age_band,
-    },
-    triage: { ...PICKY_EATERS_CASE_DEFAULTS.triage },
-    chief_complaint: { ...PICKY_EATERS_CASE_DEFAULTS.chief_complaint },
-    answers: [],
-    summary_text: summaryParts.join(". ") + ".",
-    flags: { ...PICKY_EATERS_CASE_DEFAULTS.flags },
-    attribution: buildMetaAttribution(),
-  };
-}
-
-function hasLeadConversionLock() {
-  if (leadConversionFired) return true;
-  try {
-    return sessionStorage.getItem(LEAD_CONVERSION_LOCK_KEY) === "1";
+    return localStorage.getItem(SAMPLE_DONE_KEY) === "1";
   } catch {
     return false;
   }
 }
 
-function lockLeadConversion() {
-  leadConversionFired = true;
+function rememberSampleRequest() {
   try {
-    sessionStorage.setItem(LEAD_CONVERSION_LOCK_KEY, "1");
+    localStorage.setItem(SAMPLE_DONE_KEY, "1");
   } catch {
     /* private mode */
   }
 }
 
-function fireLeadPixel() {
-  if (hasLeadConversionLock()) return;
-  lockLeadConversion();
+function markError(node, on) {
+  const target =
+    node && node.classList && node.classList.contains("whatsapp-gate-input")
+      ? node.closest(".whatsapp-gate-input-wrap") || node
+      : node;
+  if (!target || !target.classList) return;
+  target.classList.toggle("error", Boolean(on));
+}
+
+function clearErrors(form) {
+  form.querySelectorAll(".error").forEach((node) => node.classList.remove("error"));
+}
+
+function showText(node, text) {
+  if (!node) return;
+  if (!text) {
+    node.hidden = true;
+    node.textContent = "";
+    return;
+  }
+  node.hidden = false;
+  node.textContent = text;
+}
+
+function readForm(form) {
+  const picky = form.querySelector('input[name="picky_eater"]:checked');
+  return {
+    catName: form.querySelector("#pe-cat-name")?.value.trim() || "",
+    ageAmount: form.querySelector("#pe-age")?.value.trim() || "",
+    ageUnit: form.querySelector("#pe-age-unit")?.value || "",
+    parentName: form.querySelector("#pe-parent-name")?.value.trim() || "",
+    phone: normalizeIndianMobile(form.querySelector("#pe-phone")?.value),
+    picky: picky ? picky.value === "yes" : null,
+    line1: form.querySelector("#pe-line1")?.value.trim() || "",
+    line2: form.querySelector("#pe-line2")?.value.trim() || "",
+    city: form.querySelector("#pe-city")?.value.trim() || "",
+    pincode: form.querySelector("#pe-pincode")?.value.trim() || "",
+    noNumber: Boolean(form.querySelector("#pe-no-number")?.checked),
+    honeypot: form.querySelector("#pe-company")?.value || "",
+  };
+}
+
+function firstProblem(values) {
+  if (!values.catName) return { id: "pe-cat-name", message: "Enter your cat's name." };
+  if (!catAgeText(values.ageAmount, values.ageUnit)) {
+    return { id: "pe-age", message: "Enter your cat's age." };
+  }
+  if (!values.parentName) return { id: "pe-parent-name", message: "Enter your name." };
+  if (!isValidIndianMobile(values.phone)) {
+    return { id: "pe-phone", message: "Enter a valid 10-digit mobile number." };
+  }
+  if (values.picky == null) {
+    return { id: "pe-picky-yes", message: "Tell us if your cat is a picky eater." };
+  }
+  if (!values.line1) {
+    return { id: "pe-line1", message: "Enter your flat or house number and building name." };
+  }
+  if (!/\d/.test(values.line1) && !values.noNumber) {
+    return { id: "pe-line1", address: true };
+  }
+  if (!values.city) return { id: "pe-city", message: "Enter your city." };
+  if (!isValidPincode(values.pincode)) {
+    return { id: "pe-pincode", message: "Enter a 6-digit pincode." };
+  }
+  return null;
+}
+
+function fireSampleRequestPixel() {
+  if (samplePixelFired) return;
+  try {
+    if (sessionStorage.getItem(SAMPLE_PIXEL_LOCK_KEY) === "1") return;
+  } catch {
+    /* private mode */
+  }
+  samplePixelFired = true;
+  try {
+    sessionStorage.setItem(SAMPLE_PIXEL_LOCK_KEY, "1");
+  } catch {
+    /* private mode */
+  }
   try {
     if (typeof window.fbq === "function") {
       window.fbq(
-        "track",
-        "Lead",
+        "trackCustom",
+        "SampleRequest",
         {
           content_name: "picky_eaters",
-          content_category: "picky_eaters_consult",
+          content_category: "free_sample",
         },
         { eventID: ensureSessionId() }
       );
@@ -466,135 +235,115 @@ function fireLeadPixel() {
   }
 }
 
-async function submitLead(payload) {
-  const response = await fetch(`${YOUNG_CAT_API_BASE}/young-cat`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-    mode: "cors",
-  });
-  if (!response.ok) {
-    const error = new Error("Lead submit failed");
-    error.status = response.status;
-    throw error;
-  }
-  return response.json().catch(() => ({ ok: true }));
-}
-
-function showRequestPanel() {
-  const panel = document.getElementById("request");
-  const thanks = document.getElementById("pe-thanks");
-  if (!panel) return;
-  panel.hidden = false;
-  panel.classList.add("is-open");
-  if (!thanks || thanks.hidden) {
-    const nameInput = document.getElementById("pe-cat-name");
-    nameInput?.focus();
-  }
-  panel.scrollIntoView({ behavior: "smooth", block: "start" });
-}
-
-function showThanks(catName) {
-  submitted = true;
+function showThanks() {
   const form = document.getElementById("pe-form");
+  const title = document.getElementById("pe-hero-title");
   const thanks = document.getElementById("pe-thanks");
   const thanksBody = document.getElementById("pe-thanks-body");
   if (form) form.hidden = true;
-  if (thanksBody) {
-    const safe = catName ? catName : "your cat";
-    thanksBody.textContent = `A Felica vet will call you about ${safe}. Please keep your phone close.`;
-  }
+  if (title) title.hidden = true;
+  if (thanksBody) thanksBody.textContent = THANKS_TEXT;
   if (thanks) thanks.hidden = false;
-  document.querySelectorAll("[data-pe-cta]").forEach((btn) => {
-    btn.hidden = true;
-  });
+}
+
+async function postSampleRequest(body) {
+  let response;
+  try {
+    response = await fetch("/api/sample-request", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+  } catch {
+    const error = new Error(SAVE_FAILED);
+    error.status = 0;
+    throw error;
+  }
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    const error = new Error(
+      typeof data.error === "string" && data.error ? data.error : SAVE_FAILED
+    );
+    error.status = response.status;
+    throw error;
+  }
+  return data;
+}
+
+function refreshAddressWarning(form) {
+  const warning = document.getElementById("pe-address-warning");
+  const line1 = form.querySelector("#pe-line1")?.value.trim() || "";
+  const show = Boolean(line1) && !/\d/.test(line1);
+  showText(warning, show ? ADDRESS_WARNING : "");
 }
 
 function bindPage() {
   captureLandingAttribution();
   ensureSessionId();
-  openedAt = Date.now();
 
-  const consent = document.getElementById("pe-consent");
-  if (consent) consent.textContent = LEAD_CONSENT_TEXT;
-
-  document.querySelectorAll("[data-pe-cta]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      if (submitted) {
-        document.getElementById("request")?.scrollIntoView({ behavior: "smooth", block: "start" });
-        return;
-      }
-      showRequestPanel();
-    });
-  });
+  if (hasSampleFlag()) {
+    showThanks();
+    return;
+  }
 
   const form = document.getElementById("pe-form");
   if (!form) return;
 
-  form.addEventListener("submit", (event) => {
+  const error = document.getElementById("pe-error");
+  const submitBtn = form.querySelector('button[type="submit"]');
+  const submitLabel = submitBtn ? submitBtn.textContent : "Send my cat's free treat";
+
+  form.querySelector("#pe-line1")?.addEventListener("input", () => refreshAddressWarning(form));
+
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
-    const nameInput = form.querySelector("#pe-cat-name");
+    if (!submitBtn || submitBtn.disabled) return;
+    submitBtn.disabled = true;
+
+    clearErrors(form);
+    const values = readForm(form);
+    refreshAddressWarning(form);
+    const problem = firstProblem(values);
+    if (problem) {
+      if (problem.address) {
+        showText(error, "");
+      } else {
+        showText(error, problem.message);
+      }
+      const field = document.getElementById(problem.id);
+      markError(field, true);
+      field?.focus();
+      submitBtn.disabled = false;
+      return;
+    }
+
+    showText(error, "");
     const phoneInput = form.querySelector("#pe-phone");
-    const honeypot = form.querySelector("#pe-company");
-    const error = form.querySelector("#pe-error");
-    const submitBtn = form.querySelector('button[type="submit"]');
-    const number = normalizeIndianMobile(phoneInput?.value);
-    const petName = normalizeCatNameInput(nameInput?.value);
+    if (phoneInput) phoneInput.value = values.phone;
+    submitBtn.textContent = "Sending…";
 
-    const blockReason = getLeadSpamBlockReason({
-      honeypot: honeypot?.value,
-      phone: number,
-      catNameValue: petName,
-    });
-    if (blockReason) {
-      if (error) {
-        error.hidden = false;
-        error.textContent = leadSpamErrorMessage(blockReason);
-      }
-      if (isCatNameBlockReason(blockReason)) {
-        nameInput?.classList.add("error");
-        nameInput?.focus();
-        setTimeout(() => nameInput?.classList.remove("error"), 2000);
-      } else if (blockReason === "phone") {
-        phoneInput?.classList.add("error");
-        phoneInput?.focus();
-        setTimeout(() => phoneInput?.classList.remove("error"), 2000);
-      }
-      return;
-    }
-
-    if (error) error.hidden = true;
-    if (phoneInput) phoneInput.value = number;
-
-    const payload = buildPayload(petName, number);
-
-    if (!SUBMIT_ENABLED) {
-      console.log("[picky-eaters] SUBMIT_ENABLED is false. Payload (not sent):", payload);
-      showThanks(petName);
-      return;
-    }
-
-    rememberLeadSubmission(number);
-    if (submitBtn) {
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Submitting...";
-    }
-
-    submitLead(payload)
-      .then(() => {
-        fireLeadPixel();
-        showThanks(petName);
-      })
-      .catch(() => {
-        if (error) {
-          error.hidden = false;
-          error.textContent = "Something went wrong. Please try again.";
-        }
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.textContent = "Request a vet call";
-        }
+    try {
+      await postSampleRequest({
+        parent_name: values.parentName,
+        phone: values.phone,
+        cat_name: values.catName,
+        cat_age_text: catAgeText(values.ageAmount, values.ageUnit),
+        picky_eater: values.picky,
+        address_line1: values.line1,
+        address_line2: values.line2,
+        city: values.city,
+        pincode: values.pincode,
+        honeypot: values.honeypot,
       });
+      fireSampleRequestPixel();
+      rememberSampleRequest();
+      showThanks();
+    } catch (err) {
+      const status = err && err.status;
+      showText(error, status === 409 ? HOUSEHOLD_TEXT : err && err.message ? err.message : SAVE_FAILED);
+      submitBtn.disabled = false;
+      submitBtn.textContent = submitLabel;
+    }
   });
 }
 
