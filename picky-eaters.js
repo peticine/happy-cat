@@ -340,6 +340,7 @@ function bindPage() {
       showThanks();
     } catch (err) {
       const status = err && err.status;
+      if (status === 409) rememberSampleRequest();
       showText(error, status === 409 ? HOUSEHOLD_TEXT : err && err.message ? err.message : SAVE_FAILED);
       submitBtn.disabled = false;
       submitBtn.textContent = submitLabel;
