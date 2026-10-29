@@ -8,7 +8,8 @@
     }
   },
   "redirects": [
-    { "source": "/picky-eaters.html", "destination": "/picky-eaters", "permanent": true }
+    { "source": "/picky-eaters.html", "destination": "/picky-eaters", "permanent": true },
+    { "source": "/paid-consult.html", "destination": "/paid-consult", "permanent": true }
   ],
   "rewrites": [
     { "source": "/skin", "destination": "/index.html" },
@@ -20,6 +21,7 @@
     { "source": "/privacy", "destination": "/privacy.html" },
     { "source": "/privacy-policy", "destination": "/privacy.html" },
     { "source": "/picky-eaters", "destination": "/picky-eaters.html" },
+    { "source": "/paid-consult", "destination": "/paid-consult.html" },
     { "source": "/follow-up", "destination": "/index.html" },
     { "source": "/followup", "destination": "/index.html" },
     { "source": "/again", "destination": "/index.html" }

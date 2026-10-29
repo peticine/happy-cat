@@ -1215,6 +1215,7 @@ const LEAD_CONSENT_TEXT =
   "By submitting this form, you agree to receive WhatsApp messages from Felica about your consultation request.";
 const SCREENING_API_BASE = "https://digi-clinic-tau.vercel.app";
 const YOUNG_CAT_API_BASE = "https://clinic.tailhealthcare.com";
+let youngLeadSubmitPromise = null;
 const META_PIXEL_ID = "1068626952161985";
 const FBCLID_STORAGE_KEY = "felica-fbclid";
 const LANDING_ATTR_KEY = "felica-landing-attr";
@@ -5974,13 +5975,15 @@ function renderYoungConnectStep() {
       care_lane: "green",
     });
 
+    youngLeadSubmitPromise = null;
+    quizState.youngLeadResult = null;
     quizState.step = getYoungReviewStep();
     renderFlowStep();
     // Preview test mode: show the thank-you screen but never submit the lead.
     if (isFelicaTestMode()) return;
 
-    submitYoungCatLead(number)
-      .then(() => {
+    youngLeadSubmitPromise = submitYoungCatLead(number)
+      .then((result) => {
         flushLeadConversionTags({ flow_track: "young", lane: "green" });
         track("young_cat_lead_submitted", {
           session_id: quizState.sessionId,
@@ -5989,6 +5992,7 @@ function renderYoungConnectStep() {
           care_lane: "green",
           ok: true,
         });
+        return result;
       })
       .catch((err) => {
         track("young_cat_lead_submitted", {
@@ -5999,6 +6003,7 @@ function renderYoungConnectStep() {
           ok: false,
           status: err?.status || null,
         });
+        return null;
       });
   });
 }
@@ -6210,6 +6215,8 @@ function renderYoungCallPlanStep() {
             : ""
         }
 
+        <div data-sample-mount></div>
+
         <section class="young-call-section" aria-labelledby="young-call-on-title">
           <h2 class="young-call-section-title" id="young-call-on-title">On the call</h2>
           <ul class="young-call-list">
@@ -6225,6 +6232,14 @@ function renderYoungCallPlanStep() {
   `;
 
   bindYoungPlanHandlers();
+  const sampleMount = assflowMain.querySelector("[data-sample-mount]");
+  if (sampleMount && typeof mountSampleOptIn === "function") {
+    mountSampleOptIn(sampleMount, {
+      pageSource: "felica",
+      preview: isFelicaTestMode(),
+      getLead: () => youngLeadSubmitPromise || Promise.resolve(quizState.youngLeadResult),
+    });
+  }
 }
 
 function renderYoungClinicPlanStep() {

@@ -8538,6 +8538,109 @@ body[data-age-theme="geriatric"] .hero-clinic {
   text-align: center;
 }
 
+.sample-opt-in {
+  margin: 0 0 16px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #fff;
+  text-align: left;
+}
+
+.sample-opt-in-choice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.sample-opt-in-choice input {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: 1px 0 0;
+  flex: 0 0 auto;
+  accent-color: #6d6589;
+}
+
+.sample-opt-in-more {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.sample-opt-in-more[hidden] {
+  display: none;
+}
+
+.sample-opt-in-label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.sample-opt-in-label textarea {
+  width: 100%;
+  min-height: 88px;
+  padding: 12px;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  font-family: var(--font);
+  font-size: 1rem;
+  line-height: 1.45;
+  font-weight: 400;
+  color: var(--ink);
+  resize: vertical;
+}
+
+.sample-opt-in-label textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.sample-opt-in-note,
+.sample-opt-in .sample-opt-in-note {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  font-weight: 400;
+  color: var(--ink-muted);
+}
+
+.sample-opt-in .btn {
+  min-height: 48px;
+  color: var(--surface);
+  background: #6d6589;
+  border-color: #6d6589;
+}
+
+.sample-opt-in .flow-error {
+  margin: 0;
+  color: #b54a4a;
+}
+
+.sample-opt-in .sample-opt-in-confirm {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.sample-opt-in .flow-error[hidden],
+.sample-opt-in .sample-opt-in-confirm[hidden] {
+  display: none;
+}
+
 .young-call-section {
   margin: 0 0 16px;
   padding: 16px;
