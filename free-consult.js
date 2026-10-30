@@ -848,18 +848,12 @@ function renderReviews() {
       initial: "R",
     },
   ];
-  const loop = [{ photo: true }].concat(reviews.map((review) => ({ photo: false, review })));
   const track = document.getElementById("fc-reviews");
-  loop.concat(loop).forEach((item, index) => {
+  reviews.forEach((review, index) => {
     const wrap = document.createElement("div");
     wrap.style.display = "flex";
     wrap.style.flexDirection = "column";
-    wrap.style.marginTop = index % 2 === 1 ? "24px" : "0px";
-    if (index >= loop.length) wrap.setAttribute("aria-hidden", "true");
-    if (item.photo) {
-      wrap.innerHTML = `<div class="fl-rphoto"><img src="./images/free-consult/tabby-hold.webp" width="886" height="881" alt="A man gently holding his tabby cat" /><span aria-label="5 out of 5 stars">★★★★★</span></div>`;
-    } else {
-      const figure = document.createElement("figure");
+    const figure = document.createElement("figure");
       figure.className = "fl-rcard";
       figure.style.margin = "0";
       figure.style.background = index % 2 === 1 ? "#E6DAD5" : "#6B2E1E";
@@ -874,7 +868,7 @@ function renderReviews() {
       quote.style.margin = "0";
       quote.style.fontSize = "14.5px";
       quote.style.lineHeight = "1.6";
-      quote.textContent = item.review.quote;
+      quote.textContent = review.quote;
       const caption = document.createElement("figcaption");
       caption.style.display = "flex";
       caption.style.alignItems = "center";
@@ -882,19 +876,18 @@ function renderReviews() {
       caption.style.marginTop = "auto";
       const initial = document.createElement("span");
       initial.style.cssText = "width:40px;height:40px;border-radius:50%;background:#F7EFEC;color:#6B2E1E;font-weight:700;display:flex;align-items:center;justify-content:center";
-      initial.textContent = item.review.initial;
+      initial.textContent = review.initial;
       const who = document.createElement("span");
       who.style.cssText = "font-size:13.5px;font-weight:600;line-height:1.4";
-      who.append(document.createTextNode(item.review.who), document.createElement("br"));
+      who.append(document.createTextNode(review.who), document.createElement("br"));
       const cat = document.createElement("span");
       cat.style.fontWeight = "400";
       cat.style.opacity = ".85";
-      cat.textContent = item.review.cat;
+      cat.textContent = review.cat;
       who.append(cat);
       caption.append(initial, who);
       figure.append(stars, quote, caption);
-      wrap.append(figure);
-    }
+    wrap.append(figure);
     track.append(wrap);
   });
 }

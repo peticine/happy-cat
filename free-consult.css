@@ -91,15 +91,17 @@ a{color:inherit}
 .fl-seal{flex:0 0 auto;width:112px;height:112px;border-radius:50%;background:#F2B531;color:#2A1A15;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;box-shadow:0 0 0 6px rgba(242,181,49,.28)}
 .fl-seal b{font-size:11.5px;font-weight:800;letter-spacing:1.2px;line-height:1.1;text-align:center}
 
-/* floating testimonials */
-.fl-marq{overflow:hidden;width:100%;padding:8px 0 30px}
-.fl-marq-track{display:flex;gap:16px;width:max-content;animation:fl-scroll 52s linear infinite}
-.fl-marq:hover .fl-marq-track{animation-play-state:paused}
-.fl-rcard{width:268px;flex:0 0 268px;border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:12px;box-shadow:0 12px 26px rgba(74,31,19,.16)}
-.fl-rphoto{width:220px;flex:0 0 220px;height:250px;border-radius:20px;overflow:hidden;position:relative;box-shadow:0 12px 26px rgba(74,31,19,.16)}
+.fl-trust{display:grid;gap:12px;grid-template-columns:minmax(0,1fr)}
+.fl-trust .fl-tile{flex:none;width:auto;max-width:none}
+
+/* testimonials, shown in place */
+.fl-marq{width:100%;max-width:1200px;margin:0 auto;padding:8px max(16px,env(safe-area-inset-right,0px)) 30px max(16px,env(safe-area-inset-left,0px))}
+.fl-marq-track{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;width:auto}
+.fl-marq-track>div{margin-top:0 !important}
+.fl-rcard{width:auto;flex:none;border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:12px;box-shadow:0 12px 26px rgba(74,31,19,.16)}
+.fl-rphoto{width:auto;flex:none;height:250px;border-radius:20px;overflow:hidden;position:relative;box-shadow:0 12px 26px rgba(74,31,19,.16)}
 .fl-rphoto img{width:100%;height:100%;object-fit:cover;filter:grayscale(1)}
 .fl-rphoto span{position:absolute;left:12px;bottom:12px;background:rgba(18,26,42,.7);color:#F2B531;border-radius:10px;padding:5px 10px;letter-spacing:2px;font-size:13px}
-@keyframes fl-scroll{from{transform:translateX(0)}to{transform:translateX(calc(-50% - 8px))}}
 @keyframes fl-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 
 /* how it works */
@@ -161,13 +163,12 @@ a{color:inherit}
 .fl-foot-nav{display:flex;flex-wrap:wrap;gap:12px 28px;font-size:14px}
 .fl-foot-nav a{text-decoration:none;min-height:24px}
 
-/* sticky phone CTA */
-.fl-sticky{position:sticky;bottom:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:12px;background:#FFFFFF;border-top:1px solid #DCCDC7;padding-top:10px;padding-bottom:calc(10px + env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-
 /* tablet and up */
 @media (min-width:700px){
   .fl-tiles{overflow:visible;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin:0;padding:4px 0 10px}
   .fl-tile{flex:none;max-width:none}
+  .fl-trust{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .fl-marq-track{grid-template-columns:repeat(2,minmax(0,1fr))}
   .fl-help{grid-template-columns:repeat(2,minmax(0,1fr))}
   .fl-hc-wide{grid-column:1/-1;flex-direction:row;align-items:center}
   .fl-hc-wide>img{width:52%}
@@ -198,9 +199,9 @@ a{color:inherit}
   .fl-tile{padding:26px;min-height:210px}
   .fl-tile-big{font-size:40px}
   .fl-tile p{font-size:15px}
-  .fl-rcard{width:340px;flex-basis:340px;padding:24px}
-  .fl-rphoto{width:260px;flex-basis:260px;height:280px}
-  .fl-marq-track{gap:20px}
+  .fl-rcard{padding:24px}
+  .fl-rphoto{height:280px}
+  .fl-marq-track{grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
   .fl-how{grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:56px;align-items:center}
   .fl-step{padding:20px 22px 20px 96px;min-height:104px}
   .fl-step i{left:14px;top:-8px;font-size:92px}
@@ -226,11 +227,9 @@ a{color:inherit}
   .fl-seal{width:148px;height:148px}
   .fl-seal b{font-size:14px}
   .pc-guarantee{padding:14px 16px}
-  .fl-sticky{display:none}
 }
 @media (prefers-reduced-motion:reduce){
-  .fl-marq-track,.fl-faq-media img{animation:none}
-  .fl-marq{overflow-x:auto}
+  .fl-faq-media img{animation:none}
 }
 
 /* unpaid additions */
@@ -335,11 +334,6 @@ a{color:inherit}
   background-repeat:no-repeat;
   padding-right:36px;
 }
-@media (max-width:959px){
-  .fl-sticky{position:fixed;left:0;right:0;bottom:0}
-  .fl-page{padding-bottom:78px}
-}
 .fc-submit{width:100%;margin-top:14px}
 .fc-modal-open{overflow:hidden}
-.fc-modal-open .fl-sticky{display:none}
 .uf-pill:focus-visible,.uf-kitten:focus-visible,.uf-sched:focus-visible,.cal-d:focus-visible,.cal-nav:focus-visible,.sy:focus-visible,.jr-dot:focus-visible{outline:3px solid #F2B531;outline-offset:2px}
