@@ -466,6 +466,18 @@ function showError(message) {
   const node = document.getElementById("fc-error");
   node.hidden = !message;
   node.textContent = message || "";
+  if (message) node.scrollIntoView({ block: "nearest" });
+}
+
+function submitAsap() {
+  const lead = readForm();
+  if (lead.error) {
+    showError(lead.error);
+    return;
+  }
+  showError("");
+  pendingLead = lead;
+  submitLead(lead, null);
 }
 
 function showSchedError(message) {
@@ -932,15 +944,9 @@ function init() {
 
   document.getElementById("fc-form").addEventListener("submit", (event) => {
     event.preventDefault();
-    const lead = readForm();
-    if (lead.error) {
-      showError(lead.error);
-      return;
-    }
-    showError("");
-    pendingLead = lead;
-    submitLead(lead, null);
+    submitAsap();
   });
+  document.getElementById("fc-asap").addEventListener("click", submitAsap);
   scheduleButton.addEventListener("click", () => {
     const lead = readForm();
     if (lead.error) {
