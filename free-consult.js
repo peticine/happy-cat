@@ -284,11 +284,6 @@ function trackMeta(event, props) {
   if (typeof window.fbq !== "function") return;
   try {
     if (event === "young_cat_lead_submitted" && props && props.ok) {
-      window.fbq("track", "CompleteRegistration", {
-        content_name: "young_cat_screening",
-        status: props.urgency || "submitted",
-        landing: "free-consult",
-      });
       window.fbq("trackCustom", "ScreeningCompleted", {
         flow: "young",
         urgency: props.urgency,
