@@ -117,6 +117,7 @@ const ageState = { years: null, months: null, kitten: false };
 const calState = { offset: 0, dateKey: 0, slotKey: "" };
 let pendingLead = null;
 let submitting = false;
+let takenSlots = new Set();
 
 function pad(n) {
   return String(Math.trunc(Math.abs(n))).padStart(2, "0");
@@ -419,6 +420,25 @@ function istIso(key, hour, minute) {
   return `${parts.year}-${pad(parts.month)}-${pad(parts.day)}T${pad(hour)}:${pad(minute)}:00+05:30`;
 }
 
+function slotInstant(key, hour, minute) {
+  return new Date(istIso(key, hour, minute)).toISOString();
+}
+
+async function loadTakenSlots() {
+  try {
+    const response = await fetch(`${YOUNG_CAT_API_BASE}/young-cat/availability`, {
+      method: "GET",
+      mode: "cors",
+    });
+    if (!response.ok) return;
+    const data = await response.json();
+    const taken = Array.isArray(data.taken) ? data.taken : [];
+    takenSlots = new Set(taken);
+  } catch {
+    /* keep the last list; saving still rejects a taken time */
+  }
+}
+
 function timeSlots() {
   const slots = [];
   for (let hour = 10; hour <= 18; hour += 1) {
@@ -557,8 +577,16 @@ async function postLead(payload) {
     clearTimeout(timer);
   }
   if (!response.ok) {
+    let code = "";
+    try {
+      const body = await response.json();
+      code = body && body.code ? body.code : "";
+    } catch {
+      /* ignore a non-JSON error */
+    }
     const error = new Error("Young cat lead submit failed");
     error.status = response.status;
+    error.code = code;
     throw error;
   }
   return response.json().catch(() => ({ ok: true }));
@@ -654,8 +682,10 @@ function renderCalendar() {
   timeSlots().forEach((slot) => {
     const label = slotLabel(slot.hour, slot.minute);
     const key = `${slot.hour}:${slot.minute}`;
-    let disabled = false;
-    if (calState.dateKey === todayKey) {
+    const booked = takenSlots.has(slotInstant(calState.dateKey, slot.hour, slot.minute));
+    if (booked && calState.slotKey === key) calState.slotKey = "";
+    let disabled = booked;
+    if (!disabled && calState.dateKey === todayKey) {
       disabled = slot.hour * 60 + slot.minute <= nowMinutes + 30;
     }
     const button = document.createElement("button");
@@ -739,10 +769,19 @@ async function submitLead(lead, schedule) {
       ok: true,
     });
     showDone(lead, schedule);
-  } catch {
-    const message = "We couldn't save that. Please try again.";
-    if (schedule) showSchedError(message);
-    else showError(message);
+  } catch (error) {
+    const taken = error && error.code === "slot_taken";
+    const message = taken
+      ? "That time was just taken. Please pick another."
+      : "We couldn't save that. Please try again.";
+    if (schedule) {
+      showSchedError(message);
+      if (taken) {
+        calState.slotKey = "";
+        await loadTakenSlots();
+        renderCalendar();
+      }
+    } else showError(message);
     trackGoogle("young_cat_lead_submitted", {
       session_id: ensureSessionId(),
       issue_id: lead.concern.id,
@@ -956,6 +995,10 @@ function init() {
     showSchedError("");
     showPanel("sched");
     renderCalendar();
+    void loadTakenSlots().then(() => {
+      if (document.getElementById("fc-sched").hidden) return;
+      renderCalendar();
+    });
   });
   document.getElementById("fc-back").addEventListener("click", () => {
     showPanel("form");
@@ -973,11 +1016,15 @@ function init() {
       return;
     }
     const [hour, minute] = calState.slotKey.split(":").map(Number);
+    const iso = istIso(calState.dateKey, hour, minute);
+    if (takenSlots.has(new Date(iso).toISOString())) {
+      calState.slotKey = "";
+      showSchedError("That time was just taken. Please pick another.");
+      renderCalendar();
+      return;
+    }
     const label = slotPhrase(calState.dateKey, slotLabel(hour, minute));
-    submitLead(pendingLead, {
-      label,
-      iso: istIso(calState.dateKey, hour, minute),
-    });
+    submitLead(pendingLead, { label, iso });
   });
 
   document.getElementById("fc-modal").addEventListener("click", (event) => {
