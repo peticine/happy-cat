@@ -368,6 +368,19 @@ function showConfirmation() {
   confirm?.scrollIntoView({ block: "start" });
 }
 
+function hideStickyWhileBooking() {
+  const sticky = document.querySelector(".fl-sticky");
+  const book = document.getElementById("book");
+  if (!sticky || !book || typeof IntersectionObserver !== "function") return;
+  const observer = new IntersectionObserver(
+    (entries) => {
+      sticky.hidden = entries.some((entry) => entry.isIntersecting);
+    },
+    { rootMargin: "-72px 0px -64px 0px" }
+  );
+  observer.observe(book);
+}
+
 function renderReviews() {
   const track = document.getElementById("pc-reviews");
   if (!track) return;
@@ -543,7 +556,7 @@ async function openCheckout({
         ],
       },
     },
-    theme: { color: "#6d6589" },
+    theme: { color: "#6B2E1E" },
     handler(response) {
       void (async () => {
         try {
@@ -712,6 +725,7 @@ document.documentElement.dataset.price = price;
 document.documentElement.classList.remove("pc-price-pending");
 renderReviews();
 renderVetCredentials();
+hideStickyWhileBooking();
 captureAttribution();
 ensureSessionId();
 track("PageView", { variant: price }, `fel_page_${ensureSessionId()}`);

@@ -25,10 +25,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
     />
-    <link rel="stylesheet" href="./styles.min.css?v=hc170" />
-    <link rel="stylesheet" href="./paid-consult.css?v=pc29" />
+    <link rel="stylesheet" href="./paid-consult.css?v=pc31" />
     <script>
       !function(f){
         if (f.fbq) return;
@@ -59,417 +58,557 @@
       }
     </script>
   </head>
-  <body class="pc-page">
-    <header class="pc-header">
-      <div class="pc-wrap pc-header-inner">
-        <a class="pc-logo" href="#top" aria-label="Felica">
-          <img src="./images/felica-logo.webp" alt="Felica" width="132" height="42" />
-        </a>
-        <nav class="pc-nav" aria-label="Page">
-          <a href="#help">What we help with</a>
-          <a href="#how">How it works</a>
-          <a href="#vets">Our vets</a>
-          <a href="#faq">FAQ</a>
-        </nav>
-        <a class="pc-btn pc-header-cta" href="#book">Speak to a vet for only Rs. 99</a>
-      </div>
-    </header>
+  <body>
+    <div id="pc-landing" class="fl-page">
+      <header class="fl-header">
+        <div class="fl-wrap fl-header-in">
+          <a class="fl-logo" href="#top" aria-label="Felica home">
+            <svg width="32" height="32" viewBox="0 0 200 200" fill="none" stroke="#F7EFEC" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M40 90 L48 28 L88 62 M160 90 L152 28 L112 62"></path><path d="M40 90 C40 140 70 168 100 168 C130 168 160 140 160 90 C160 70 140 56 100 56 C60 56 40 70 40 90Z"></path></svg>
+            <span>Felica</span>
+          </a>
+          <nav class="fl-nav" aria-label="Page sections">
+            <a href="#help">What we help with</a>
+            <a href="#how">How it works</a>
+            <a href="#vets">Our vets</a>
+            <a href="#faq">FAQ</a>
+          </nav>
+          <a class="fl-btn fl-btn-light fl-hbtn" href="#book"><span class="fl-short">Speak to a vet</span><span class="fl-long">Speak to a vet for only Rs. 99</span></a>
+        </div>
+      </header>
 
-    <div id="pc-landing">
-      <section class="pc-hero pc-section" id="top">
-        <div class="pc-wrap pc-hero-grid">
-          <div class="pc-hero-copy">
-            <h1><span class="pc-hero-line">Does your cat have gut issues?</span><span class="pc-hero-line pc-hero-sub">Talk to a vet <span class="pc-hero-accent">from the comfort of your home.</span></span></h1>
-            <div class="pc-hero-row">
-            <figure class="pc-photo pc-hero-photo">
-              <img
-                src="./images/hero-girl-cat.jpg"
-                alt="A woman smiling at her phone with her cat on her lap"
-                width="840"
-                height="958"
-                fetchpriority="high"
-              />
-            </figure>
-            <ul class="pc-checks">
-              <li>
-                <span class="pc-tick" aria-hidden="true">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-                </span>
-                <span>Feline internal medicine vets with 8 to 20 years of experience.</span>
-              </li>
-              <li>
-                <span class="pc-tick" aria-hidden="true">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-                </span>
-                <strong>Not happy with your call? Your next one is free.</strong>
-              </li>
-              <li>
-                <span class="pc-tick" aria-hidden="true">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-                </span>
-                <span>A typical clinic visit starts at ₹499, but your call is just <span class="js-price">₹99</span>.</span>
-              </li>
-            </ul>
-            </div>
-            <a class="pc-btn pc-hero-cta" href="#book">Speak to a vet for only Rs. 99</a>
-            <p class="pc-rating"><span class="pc-stars" aria-hidden="true">★★★★★</span> 4.8 rating from cat parents across India</p>
-          </div>
-
-          <form class="pc-card" id="book" novalidate>
-            <div class="pc-card-body">
-              <div class="pc-card-top">
-                <div>
-                  <h2>Book your vet call</h2>
-                  <p class="pc-card-sub">Takes 1 minute. You receive a call from a vet within 15 to 30 minutes.</p>
-                </div>
-                <div class="pc-card-price">
-                  <strong class="js-price">₹99</strong>
-                  <s>₹499</s>
-                </div>
+      <section id="top" class="fl-hero">
+        <div class="fl-hero-ring" aria-hidden="true"></div>
+        <div class="fl-hero-disc" aria-hidden="true"></div>
+        <div class="fl-wrap">
+          <div class="fl-hero-grid">
+            <div class="fl-intro">
+              <div style="display:flex;flex-wrap:wrap;gap:8px">
+                <div class="fl-gbadge"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6z"></path><path d="M8.5 12.2l2.6 2.6 4.4-5"></path></svg>Money-back guarantee</div>
+                <div class="fl-gbadge" style="background:#F7EFEC"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-3-6.7"></path><path d="M21 4v5h-5"></path></svg>Free follow-up</div>
+                <div class="fl-badge"><b aria-hidden="true">★★★★★</b><span>4.8 from cat parents across India</span></div>
               </div>
-              <p class="pc-card-alt">A typical clinic visit starts at ₹499.</p>
-              <div class="pc-form">
-                <div class="pc-field">
-                  <label for="pc-cat-name">Your cat's name</label>
-                  <input id="pc-cat-name" name="cat_name" type="text" placeholder="e.g. Mishti" autocomplete="off" maxlength="40" required />
-                </div>
-                <div class="pc-field">
-                  <label for="pc-age">Age</label>
-                  <select id="pc-age" name="age" required>
-                    <option value="">Select age</option>
-                    <optgroup label="Months">
-                      <option value="m1">1 month</option>
-                      <option value="m2">2 months</option>
-                      <option value="m3">3 months</option>
-                      <option value="m4">4 months</option>
-                      <option value="m5">5 months</option>
-                      <option value="m6">6 months</option>
-                      <option value="m7">7 months</option>
-                      <option value="m8">8 months</option>
-                      <option value="m9">9 months</option>
-                      <option value="m10">10 months</option>
-                      <option value="m11">11 months</option>
-                    </optgroup>
-                    <optgroup label="Years">
-                      <option value="y1">1 year</option>
-                      <option value="y2">2 years</option>
-                      <option value="y3">3 years</option>
-                      <option value="y4">4 years</option>
-                      <option value="y5">5 years</option>
-                      <option value="y6">6 years</option>
-                      <option value="y7">7 years</option>
-                      <option value="y8">8 years</option>
-                      <option value="y9">9 years</option>
-                      <option value="y10">10 years</option>
-                      <option value="y11">11 years</option>
-                      <option value="y12">12 years</option>
-                      <option value="y13">13 years</option>
-                      <option value="y14">14 years</option>
-                      <option value="y15">15 years</option>
-                      <option value="y16">16+ years</option>
-                    </optgroup>
-                  </select>
-                </div>
-                <div class="pc-field">
-                  <label for="pc-phone">Phone number for the vet call</label>
-                  <div class="pc-phone">
-                    <span aria-hidden="true">+91</span>
-                    <input id="pc-phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="10 digit mobile number" maxlength="15" required />
+              <h1 class="fl-h1">Does your cat have gut issues?</h1>
+              <p class="fl-sub">Check if your cat really needs a clinic visit, right from your couch. No carrier, no travel, no waiting room.</p>
+            </div>
+
+            <div class="fl-hero-media">
+              <img class="fl-hero-img" src="./images/paid-consult/hero.webp" width="885" height="881" alt="A woman resting at home hugging her Burmese cat" style="object-position:60% 55%" fetchpriority="high" />
+            </div>
+
+            <div class="fl-formwrap">
+              <form class="pc-card" id="book" novalidate>
+                <div class="pc-card-body">
+                  <div class="pc-card-top">
+                    <div>
+                      <h2>Book your vet call</h2>
+                      <p class="pc-card-sub">Takes 1 minute. You receive a call from a vet within 15 to 30 minutes.</p>
+                    </div>
+                    <div class="pc-card-price">
+                      <strong class="js-price">₹99</strong>
+                      <s>₹499</s>
+                    </div>
+                  </div>
+                  <p class="pc-card-alt">A typical clinic visit starts at ₹499.</p>
+                  <div class="pc-form">
+                    <div class="pc-field">
+                      <label for="pc-cat-name">Your cat's name</label>
+                      <input id="pc-cat-name" name="cat_name" type="text" placeholder="e.g. Mishti" autocomplete="off" maxlength="40" required />
+                    </div>
+                    <div class="pc-field">
+                      <label for="pc-age">Cat age</label>
+                      <select id="pc-age" name="age" required>
+                        <option value="">Select cat age</option>
+                        <optgroup label="Months">
+                          <option value="m1">1 month</option>
+                          <option value="m2">2 months</option>
+                          <option value="m3">3 months</option>
+                          <option value="m4">4 months</option>
+                          <option value="m5">5 months</option>
+                          <option value="m6">6 months</option>
+                          <option value="m7">7 months</option>
+                          <option value="m8">8 months</option>
+                          <option value="m9">9 months</option>
+                          <option value="m10">10 months</option>
+                          <option value="m11">11 months</option>
+                        </optgroup>
+                        <optgroup label="Years">
+                          <option value="y1">1 year</option>
+                          <option value="y2">2 years</option>
+                          <option value="y3">3 years</option>
+                          <option value="y4">4 years</option>
+                          <option value="y5">5 years</option>
+                          <option value="y6">6 years</option>
+                          <option value="y7">7 years</option>
+                          <option value="y8">8 years</option>
+                          <option value="y9">9 years</option>
+                          <option value="y10">10 years</option>
+                          <option value="y11">11 years</option>
+                          <option value="y12">12 years</option>
+                          <option value="y13">13 years</option>
+                          <option value="y14">14 years</option>
+                          <option value="y15">15 years</option>
+                          <option value="y16">16+ years</option>
+                        </optgroup>
+                      </select>
+                    </div>
+                    <div class="pc-field">
+                      <label for="pc-phone">Phone number for the vet call</label>
+                      <div class="pc-phone">
+                        <span aria-hidden="true">+91</span>
+                        <input id="pc-phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="10 digit mobile number" maxlength="15" required />
+                      </div>
+                    </div>
+                    <div class="pc-honeypot" aria-hidden="true">
+                      <label for="pc-company">Company</label>
+                      <input id="pc-company" name="company" type="text" tabindex="-1" autocomplete="off" />
+                    </div>
+                    <p class="pc-error" id="pc-error" hidden role="alert"></p>
+                    <button class="pc-btn pc-btn-block" type="submit">Speak to a vet for only Rs. 99</button>
+                    <p class="pc-rating"><span class="pc-stars" aria-hidden="true">★★★★★</span> 4.8 from cat parents across India</p>
+                    <p class="pc-pay-note pc-guarantee"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#6B2E1E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6z"></path><path d="M8.5 12.2l2.6 2.6 4.4-5"></path></svg><span><strong>Money-back guarantee</strong>Not happy with your call? Message us and get 100% of your money back.</span></p>
+                    <p class="pc-secure">Secure payment by Razorpay · UPI</p>
                   </div>
                 </div>
-                <div class="pc-honeypot" aria-hidden="true">
-                  <label for="pc-company">Company</label>
-                  <input id="pc-company" name="company" type="text" tabindex="-1" autocomplete="off" />
-                </div>
-                <p class="pc-error" id="pc-error" hidden role="alert"></p>
-                <button class="pc-btn pc-btn-block" type="submit">Speak to a vet for only Rs. 99</button>
-                <p class="pc-rating"><span class="pc-stars" aria-hidden="true">★★★★★</span> 4.8 from cat parents across India</p>
-                <p class="pc-pay-note">Not happy with your call? Your next one is free.</p>
-                <p class="pc-secure">Secure payment by Razorpay · UPI</p>
+              </form>
+            </div>
+
+            <ul class="fl-points">
+              <li>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F2B531" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M7.5 12.5l3 3 6-6.5"></path></svg>
+                <span>Feline internal medicine vets with <strong>8 to 20 years</strong> of experience.</span>
+              </li>
+              <li>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F2B531" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M7.5 12.5l3 3 6-6.5"></path></svg>
+                <span><strong style="color:#F2B531">Money-back guarantee.</strong> <strong>Not happy with your call? Get your ₹99 back.</strong></span>
+              </li>
+              <li>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F2B531" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M7.5 12.5l3 3 6-6.5"></path></svg>
+                <span>A typical clinic visit starts at ₹499. Your call is just <strong>₹99</strong>.</span>
+              </li>
+              <li>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F2B531" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M7.5 12.5l3 3 6-6.5"></path></svg>
+                <span><strong>Priority delivery</strong> to your house according to your cat's care plan.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="fl-section" aria-label="Why parents trust Felica" style="padding-bottom:12px">
+        <div class="fl-wrap">
+          <div class="fl-tiles">
+            <div class="fl-tile" style="background:#E6DAD5;color:#2A1A15">
+              <div class="fl-tile-text">
+                <span class="fl-tile-icon" style="background:#6B2E1E"><svg width="20" height="20" viewBox="0 0 24 24" fill="#F2B531" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4 6.1 20.5l1.2-6.5L2.5 9.4l6.6-.9z"></path></svg></span>
+                <div class="fl-tile-big" style="color:#4A1F13">4.8</div>
+                <p>rating from cat parents across India.</p>
+              </div>
+              <img class="fl-tile-img" src="./images/paid-consult/calico.webp" width="542" height="476" alt="A calico cat raising its paw" loading="lazy" />
+            </div>
+            <div class="fl-tile" style="background:#6B2E1E;color:#F7EFEC">
+              <div class="fl-tile-text">
+                <span class="fl-tile-icon" style="background:#F7EFEC"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B2E1E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3.5 2"></path></svg></span>
+                <div class="fl-tile-big">15 to 30 min</div>
+                <p>from payment to your call with a feline vet.</p>
+              </div>
+              <img class="fl-tile-img" src="./images/paid-consult/ginger.webp" width="454" height="450" alt="A ginger cat looking at the camera" loading="lazy" />
+            </div>
+            <div class="fl-tile" style="background:#F2B531;color:#2A1A15;box-shadow:0 0 0 3px #6B2E1E inset">
+              <div class="fl-tile-text">
+                <span class="fl-tile-icon" style="background:#6B2E1E"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6z"></path><path d="M8.5 12.2l2.6 2.6 4.4-5"></path></svg></span>
+                <div class="fl-tile-big" style="color:#2A1A15">Money back</div>
+                <p style="font-weight:500">if you are not happy with your call. Message us on WhatsApp within 48 hours.</p>
+              </div>
+              <img class="fl-tile-img" src="./images/paid-consult/siamese.webp" width="362" height="592" alt="A Siamese cat looking at the camera" loading="lazy" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="rev-h" style="padding-top:32px">
+        <div class="fl-wrap fl-stack" style="padding-bottom:18px">
+          <p class="fl-eyebrow">What cat parents say</p>
+          <h2 class="fl-h2" id="rev-h">Trusted by cat parents across India.</h2>
+        </div>
+        <div class="fl-marq">
+          <div class="fl-marq-track">
+            <div class="fl-marq-item">
+              <div class="fl-rphoto">
+                <img src="./images/paid-consult/review-hold.webp" width="886" height="881" alt="A man gently holding his tabby cat" loading="lazy" />
+                <span aria-label="5 out of 5 stars">★★★★★</span>
               </div>
             </div>
-          </form>
-        </div>
-      </section>
-
-      <section class="pc-muted pc-section" aria-labelledby="reviews-title">
-        <div class="pc-wrap pc-center">
-          <p class="pc-eyebrow">What cat parents say</p>
-          <h2 id="reviews-title" class="visually-hidden">Reviews</h2>
-        </div>
-        <div class="pc-marquee">
-          <div class="pc-marquee-track" id="pc-reviews"></div>
-        </div>
-      </section>
-
-      <section class="pc-white pc-section pc-banner" aria-label="Gut trouble can be hard to spot">
-        <div class="pc-wrap">
-          <img
-            src="./images/gut-trouble-banner.jpg"
-            alt="Gut trouble can be hard to spot. A cat resting on a bed beside a phone on a Felica call."
-            width="1024"
-            height="558"
-            loading="lazy"
-          />
-        </div>
-      </section>
-
-      <section class="pc-white pc-section">
-        <div class="pc-wrap pc-center">
-          <p class="pc-eyebrow">Why act early</p>
-          <h2>Getting your cat to a vet is not always easy.</h2>
-          <div class="pc-grid">
-            <article class="pc-stat">
-              <span class="pc-icon-box" aria-hidden="true">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-              </span>
-              <strong>32%</strong>
-              <p>of cat parents in India follow regular 3-month check-ups.</p>
-            </article>
-            <article class="pc-stat">
-              <span class="pc-icon-box" aria-hidden="true">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12"/><path d="M6 8h12"/><path d="M6 13l8.5 8"/><path d="M6 13h3"/><path d="M9 13c6.667 0 6.667-10 0-10"/></svg>
-              </span>
-              <strong>48%</strong>
-              <p>of pet parents in tier 1 cities say cost is the main challenge in reaching a vet.</p>
-            </article>
-            <article class="pc-stat">
-              <span class="pc-icon-box" aria-hidden="true">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-              </span>
-              <strong>50%</strong>
-              <p>of pet parents in big cities are open to online vet consultations, for the convenience.</p>
-            </article>
-          </div>
-          <p class="pc-source">Source: Supertails research of 400 Indian pet parents, reported by GlobalPETS, December 2023.</p>
-        </div>
-      </section>
-
-      <section class="pc-cream pc-section">
-        <div class="pc-wrap pc-center">
-          <p class="pc-eyebrow">Felica vs a clinic visit</p>
-          <h2>Start with a call, go to a clinic only if you need to.</h2>
-          <div class="pc-table-wrap">
-            <table class="pc-table">
-              <thead>
-                <tr>
-                  <th scope="col"></th>
-                  <th scope="col">Clinic visit</th>
-                  <th scope="col">Felica vet call</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th scope="row">Cost</th>
-                  <td>Starts at ₹499</td>
-                  <td class="js-price">₹99</td>
-                </tr>
-                <tr>
-                  <th scope="row">Getting there</th>
-                  <td>Carrier, car ride, waiting room</td>
-                  <td>None, your cat stays at home</td>
-                </tr>
-                <tr>
-                  <th scope="row">Time</th>
-                  <td>Travel plus waiting</td>
-                  <td>You receive a call in 15 to 30 minutes</td>
-                </tr>
-                <tr>
-                  <th scope="row">Written plan</th>
-                  <td>Depends on the clinic</td>
-                  <td>Yes, on WhatsApp</td>
-                </tr>
-                <tr>
-                  <th scope="row">Exam and tests</th>
-                  <td>Yes</td>
-                  <td>No, we tell you if your cat needs one</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <p class="pc-footnote">A call does not replace a clinic. It helps you decide what to do first, and whether you need to go at all.</p>
-        </div>
-      </section>
-
-      <section class="pc-muted pc-section" id="help">
-        <div class="pc-wrap pc-center">
-          <p class="pc-eyebrow">What you get</p>
-          <h2>What our vet can help with.</h2>
-          <p class="pc-lead">Everyday tummy concerns that a feline vet can guide you on by phone.</p>
-          <div class="pc-grid">
-            <article class="pc-help">
-              <span class="pc-tick" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span>
-              <h3>Loose or soft stools</h3>
-              <p>What to feed, what to avoid, and what to watch for over the next days.</p>
-            </article>
-            <article class="pc-help">
-              <span class="pc-tick" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span>
-              <h3>Hard stools and mild constipation</h3>
-              <p>Diet, water and routine changes that help things move.</p>
-            </article>
-            <article class="pc-help">
-              <span class="pc-tick" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span>
-              <h3>Occasional vomiting and hairballs</h3>
-              <p>Whether it is likely mild, and how to manage grooming and feeding.</p>
-            </article>
-            <article class="pc-help">
-              <span class="pc-tick" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span>
-              <h3>Fussy eating and a sensitive stomach</h3>
-              <p>Eating less but still eating, gas, or an upset after a food change.</p>
-            </article>
-            <article class="pc-help">
-              <span class="pc-tick" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span>
-              <h3>A gut-friendly feeding plan</h3>
-              <p>A clear routine you can follow at home, sent to you in writing.</p>
-            </article>
-          </div>
-          <aside class="pc-warn">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
-            <div>
-              <strong>Clinic first, not a call.</strong>
-              <p>Repeated vomiting, blood, not eating for a day or more, a weak or very sleepy cat, a swollen belly, or something swallowed. If you see these, go to a clinic now.</p>
+            <div class="fl-marq-item" style="margin-top:24px">
+              <figure class="fl-rcard" style="margin:0;background:#E6DAD5;color:#2A1A15">
+                <div style="letter-spacing:2px;font-size:15px;color:#E0A21B" aria-label="5 out of 5 stars">★★★★★</div>
+                <blockquote style="margin:0;font-size:14.5px;line-height:1.6">My cat had an upset stomach, and I wasn't sure what to do. Being able to speak to a vet from home made the whole process feel less overwhelming.</blockquote>
+                <figcaption style="display:flex;align-items:center;gap:12px;margin-top:auto">
+                  <span style="width:40px;height:40px;border-radius:50%;background:#F7EFEC;color:#6B2E1E;font-weight:700;display:flex;align-items:center;justify-content:center">A</span>
+                  <span style="font-size:13.5px;font-weight:600;line-height:1.4">Ananya, Pune<br /><span style="font-weight:400;opacity:.85">Cat parent to Mochi</span></span>
+                </figcaption>
+              </figure>
             </div>
-          </aside>
-        </div>
-      </section>
-
-      <section class="pc-white pc-section" id="how">
-        <div class="pc-wrap pc-center">
-          <p class="pc-eyebrow">How it works</p>
-          <h2>Three steps. No app, no account, no waiting room.</h2>
-          <div class="pc-grid">
-            <article class="pc-step">
-              <span class="pc-step-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/></svg></span>
-              <h3>1. Tell us about your cat</h3>
-              <p>Name, age and your phone number. It takes about a minute.</p>
-            </article>
-            <article class="pc-step">
-              <span class="pc-step-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></span>
-              <h3>2. Pay <span class="js-price">₹99</span>, receive your call</h3>
-              <p>Pay with UPI. You receive a call from a feline vet, usually within 15 to 30 minutes.</p>
-            </article>
-            <article class="pc-step">
-              <span class="pc-step-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h6"/></svg></span>
-              <h3>3. Get your care plan</h3>
-              <p>The vet talks you through next steps. A written plan follows on WhatsApp.</p>
-            </article>
+            <div class="fl-marq-item">
+              <figure class="fl-rcard" style="margin:0;background:#6B2E1E;color:#F7EFEC">
+                <div style="letter-spacing:2px;font-size:15px;color:#E0A21B" aria-label="5 out of 5 stars">★★★★★</div>
+                <blockquote style="margin:0;font-size:14.5px;line-height:1.6">As a first-time cat parent, I have a hundred questions! It's nice to have somewhere to turn for quick guidance.</blockquote>
+                <figcaption style="display:flex;align-items:center;gap:12px;margin-top:auto">
+                  <span style="width:40px;height:40px;border-radius:50%;background:#F7EFEC;color:#6B2E1E;font-weight:700;display:flex;align-items:center;justify-content:center">N</span>
+                  <span style="font-size:13.5px;font-weight:600;line-height:1.4">Nisha, Chennai<br /><span style="font-weight:400;opacity:.85">Cat parent to Lulu</span></span>
+                </figcaption>
+              </figure>
+            </div>
+            <div class="fl-marq-item" style="margin-top:24px">
+              <figure class="fl-rcard" style="margin:0;background:#E6DAD5;color:#2A1A15">
+                <div style="letter-spacing:2px;font-size:15px;color:#E0A21B" aria-label="5 out of 5 stars">★★★★★</div>
+                <blockquote style="margin:0;font-size:14.5px;line-height:1.6">Being able to start with an online vet consultation from home is a really convenient option when I have concerns about Luna.</blockquote>
+                <figcaption style="display:flex;align-items:center;gap:12px;margin-top:auto">
+                  <span style="width:40px;height:40px;border-radius:50%;background:#F7EFEC;color:#6B2E1E;font-weight:700;display:flex;align-items:center;justify-content:center">R</span>
+                  <span style="font-size:13.5px;font-weight:600;line-height:1.4">Ronak, Bengaluru<br /><span style="font-weight:400;opacity:.85">Cat parent to Luna</span></span>
+                </figcaption>
+              </figure>
+            </div>
+            <div class="fl-marq-dup fl-marq-item" aria-hidden="true">
+              <div class="fl-rphoto">
+                <img src="./images/paid-consult/review-hold.webp" width="886" height="881" alt="" loading="lazy" />
+                <span>★★★★★</span>
+              </div>
+            </div>
+            <div class="fl-marq-dup fl-marq-item" style="margin-top:24px" aria-hidden="true">
+              <figure class="fl-rcard" style="margin:0;background:#E6DAD5;color:#2A1A15">
+                <div style="letter-spacing:2px;font-size:15px;color:#E0A21B">★★★★★</div>
+                <blockquote style="margin:0;font-size:14.5px;line-height:1.6">My cat had an upset stomach, and I wasn't sure what to do. Being able to speak to a vet from home made the whole process feel less overwhelming.</blockquote>
+                <figcaption style="display:flex;align-items:center;gap:12px;margin-top:auto">
+                  <span style="width:40px;height:40px;border-radius:50%;background:#F7EFEC;color:#6B2E1E;font-weight:700;display:flex;align-items:center;justify-content:center">A</span>
+                  <span style="font-size:13.5px;font-weight:600;line-height:1.4">Ananya, Pune<br /><span style="font-weight:400;opacity:.85">Cat parent to Mochi</span></span>
+                </figcaption>
+              </figure>
+            </div>
+            <div class="fl-marq-dup fl-marq-item" aria-hidden="true">
+              <figure class="fl-rcard" style="margin:0;background:#6B2E1E;color:#F7EFEC">
+                <div style="letter-spacing:2px;font-size:15px;color:#E0A21B">★★★★★</div>
+                <blockquote style="margin:0;font-size:14.5px;line-height:1.6">As a first-time cat parent, I have a hundred questions! It's nice to have somewhere to turn for quick guidance.</blockquote>
+                <figcaption style="display:flex;align-items:center;gap:12px;margin-top:auto">
+                  <span style="width:40px;height:40px;border-radius:50%;background:#F7EFEC;color:#6B2E1E;font-weight:700;display:flex;align-items:center;justify-content:center">N</span>
+                  <span style="font-size:13.5px;font-weight:600;line-height:1.4">Nisha, Chennai<br /><span style="font-weight:400;opacity:.85">Cat parent to Lulu</span></span>
+                </figcaption>
+              </figure>
+            </div>
+            <div class="fl-marq-dup fl-marq-item" style="margin-top:24px" aria-hidden="true">
+              <figure class="fl-rcard" style="margin:0;background:#E6DAD5;color:#2A1A15">
+                <div style="letter-spacing:2px;font-size:15px;color:#E0A21B">★★★★★</div>
+                <blockquote style="margin:0;font-size:14.5px;line-height:1.6">Being able to start with an online vet consultation from home is a really convenient option when I have concerns about Luna.</blockquote>
+                <figcaption style="display:flex;align-items:center;gap:12px;margin-top:auto">
+                  <span style="width:40px;height:40px;border-radius:50%;background:#F7EFEC;color:#6B2E1E;font-weight:700;display:flex;align-items:center;justify-content:center">R</span>
+                  <span style="font-size:13.5px;font-weight:600;line-height:1.4">Ronak, Bengaluru<br /><span style="font-weight:400;opacity:.85">Cat parent to Luna</span></span>
+                </figcaption>
+              </figure>
+            </div>
           </div>
         </div>
       </section>
 
-      <section class="pc-muted pc-section" id="vets">
-        <div class="pc-wrap pc-center">
-          <p class="pc-eyebrow">Who you will speak to</p>
-          <h2>Feline vets who understand your cat.</h2>
-          <div class="pc-grid">
-            <article class="pc-vet" data-vet="dr-shantanu">
-              <img src="./images/dr-shantanu-kalambi.webp" alt="Dr. Shantanu Kalambi" width="96" height="96" loading="lazy" />
-              <div>
-                <h3>Dr. Shantanu Kalambi<span class="pc-vet-degree"></span></h3>
-                <p>Feline Internal Medicine</p>
-                <p>20 years of experience</p>
-                <p class="pc-vet-reg"></p>
+      <section id="how" class="fl-section" style="padding-top:24px;scroll-margin-top:12px">
+        <div class="fl-wrap fl-how">
+          <div class="fl-stack" style="gap:16px">
+            <div class="fl-stack">
+              <p class="fl-eyebrow">How it works</p>
+              <h2 class="fl-h2">Three steps. No app, no account, no waiting room.</h2>
+            </div>
+            <ol class="fl-steps">
+              <li class="fl-step">
+                <i aria-hidden="true">1</i>
+                <h3>Tell us about your cat</h3>
+                <p>Name, age and your phone number. It takes about a minute.</p>
+              </li>
+              <li class="fl-step">
+                <i aria-hidden="true">2</i>
+                <h3>Pay ₹99, receive your call</h3>
+                <p>Pay with UPI. You receive a call from a feline vet, usually within 15 to 30 minutes.</p>
+              </li>
+              <li class="fl-step">
+                <i aria-hidden="true">3</i>
+                <h3>Get your care plan</h3>
+                <p>The vet talks you through next steps. A written plan follows on WhatsApp.</p>
+              </li>
+            </ol>
+            <a class="fl-btn fl-book" href="#book">Speak to a vet for only Rs. 99</a>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="guar-h" style="padding-bottom:44px">
+        <div class="fl-wrap">
+          <div class="fl-guar">
+            <div class="fl-seal" aria-hidden="true">
+              <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6z"></path><path d="M8.5 12.2l2.6 2.6 4.4-5"></path></svg>
+              <b>MONEY BACK<br />GUARANTEE</b>
+            </div>
+            <div class="fl-stack" style="gap:12px">
+              <p class="fl-eyebrow" style="color:#F2B531">Our guarantee</p>
+              <h2 class="fl-h2" id="guar-h" style="color:#FFFFFF">Not happy with your call? Get your money back.</h2>
+              <p style="font-size:15.5px;line-height:1.6;color:#F1E9E6;max-width:560px">Pay ₹99 and speak to a feline vet. If the call did not help, message us on WhatsApp within 48 hours and we will refund your ₹99.</p>
+              <a class="fl-btn fl-btn-light" href="#book" style="align-self:flex-start;margin-top:4px">Speak to a vet for only Rs. 99</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="help" class="fl-help-bg fl-section" style="scroll-margin-top:12px">
+        <div class="fl-wrap" style="display:flex;flex-direction:column;gap:26px">
+          <div class="fl-stack" style="max-width:640px">
+            <p class="fl-eyebrow">What you get</p>
+            <h2 class="fl-h2">What our vet can help with.</h2>
+            <p class="fl-lead">Everyday tummy concerns that a feline vet can guide you on by phone.</p>
+          </div>
+          <div class="fl-help">
+            <article class="fl-hc" style="background:#6B2E1E;color:#F7EFEC">
+              <div class="fl-hc-body">
+                <h3>Loose or soft stools</h3>
+                <p style="color:#E6DAD5">What to feed, what to avoid, and what to watch for over the next days.</p>
               </div>
             </article>
-            <article class="pc-vet" data-vet="dr-ankita">
-              <img src="./images/dr-ankita-kawale.webp" alt="Dr. Ankita Kawale" width="96" height="96" loading="lazy" />
-              <div>
-                <h3>Dr. Ankita Kawale<span class="pc-vet-degree"></span></h3>
-                <p>Feline Internal Medicine</p>
-                <p>8 years of experience</p>
-                <p class="pc-vet-reg"></p>
+            <article class="fl-hc" style="background:#E6DAD5;color:#2A1A15">
+              <div class="fl-hc-body">
+                <h3>Hard stools and mild constipation</h3>
+                <p>Diet, water and routine changes that help things move.</p>
+              </div>
+            </article>
+            <article class="fl-hc" style="background:#E6DAD5;color:#2A1A15">
+              <img src="./images/paid-consult/brush.webp" width="880" height="436" alt="A ginger cat being brushed" loading="lazy" />
+              <div class="fl-hc-body">
+                <h3>Occasional vomiting and hairballs</h3>
+                <p>Whether it is likely mild, and how to manage grooming and feeding.</p>
+              </div>
+            </article>
+            <article class="fl-hc" style="background:#6B2E1E;color:#F7EFEC">
+              <img src="./images/paid-consult/eating.webp" width="966" height="438" alt="A tabby cat eating from a spoon" loading="lazy" />
+              <div class="fl-hc-body">
+                <h3>Fussy eating and a sensitive stomach</h3>
+                <p style="color:#E6DAD5">Eating less but still eating, gas, or an upset after a food change.</p>
+              </div>
+            </article>
+            <article class="fl-hc fl-hc-warn fl-hc-span">
+              <div class="fl-hc-body" style="gap:10px">
+                <span aria-hidden="true" style="width:38px;height:38px;border-radius:50%;background:#6B2E1E;display:flex;align-items:center;justify-content:center">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v5M12 17h.01"></path><path d="M10.3 3.9L2.6 17.5A2 2 0 0 0 4.3 20.5h15.4a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"></path></svg>
+                </span>
+                <h3 style="color:#6B2E1E;font-weight:700">Clinic first, not a call.</h3>
+                <p>Repeated vomiting, blood, not eating for a day or more, a weak or very sleepy cat, a swollen belly, or something swallowed. If you see these, go to a clinic now.</p>
+              </div>
+            </article>
+            <article class="fl-hc fl-hc-wide" style="background:#6B2E1E;color:#F7EFEC">
+              <img src="./images/paid-consult/vet-exam.webp" width="1304" height="436" alt="A vet examining a tabby cat" loading="lazy" />
+              <div class="fl-hc-body">
+                <h3>A gut-friendly feeding plan</h3>
+                <p style="color:#E6DAD5">A clear routine you can follow at home, sent to you in writing on WhatsApp after the call.</p>
+                <a class="fl-btn fl-btn-light" href="#book" style="align-self:flex-start;margin-top:6px">Speak to a vet for only Rs. 99</a>
               </div>
             </article>
           </div>
         </div>
       </section>
 
-      <section class="pc-white pc-section" id="faq">
-        <div class="pc-wrap">
-          <h2 class="pc-center">Questions before you book.</h2>
-          <div class="pc-faq">
-            <details open>
-              <summary>Is this a real vet?</summary>
-              <p>Yes. Every call is with a registered feline vet. Their experience and registration details are on this page.</p>
-            </details>
-            <details>
-              <summary>Why pay when I can search online?</summary>
-              <p>Online advice is generic. A vet asks about your cat's age, food and history, and tells you what applies to your cat, including when it is time to see a clinic.</p>
-            </details>
-            <details>
-              <summary>Why not just go to a clinic?</summary>
-              <p>If your cat has warning signs, go to a clinic. For milder tummy trouble, a call can save you a stressful trip, and a typical clinic visit starts at ₹499. If the vet thinks your cat needs an exam, they will say so.</p>
-            </details>
-            <details>
-              <summary>What if I am not happy with the call?</summary>
-              <p>Message us on WhatsApp within 48 hours and your next consult is free. One free consult per booking.</p>
-            </details>
-            <details>
-              <summary>What if my cat is seriously sick?</summary>
-              <p>Go to a clinic now. This service is for everyday tummy concerns and is not for emergencies. Check the warning signs above if you are unsure.</p>
-            </details>
-            <details>
-              <summary>What do I need ready for the call?</summary>
-              <p>Your cat's age, what they eat, when the problem started, and how often it happens. A photo or a short note helps but is optional.</p>
-            </details>
-            <details>
-              <summary>What if I miss the call?</summary>
-              <p>Our vets will try to call you up to three times over a short period. Please keep your phone nearby after booking, and if you miss the first call, we will try again.</p>
-            </details>
-            <details>
-              <summary>Is my payment safe?</summary>
-              <p>Payments are processed by Razorpay over UPI. We never see or store your payment details.</p>
-            </details>
-            <details>
-              <summary>Do I need an app or an account?</summary>
-              <p>No. Just your phone number. You receive a call from the vet and the care plan arrives on WhatsApp.</p>
-            </details>
-            <details>
-              <summary>Can kittens and senior cats use this?</summary>
-              <p>Yes, for everyday tummy concerns. Very young kittens and older cats can get unwell quickly, so if you are worried, go to a clinic.</p>
-            </details>
+      <section aria-labelledby="stats-h" class="fl-section">
+        <div class="fl-wrap fl-why">
+          <div class="fl-stack" style="gap:14px">
+            <p class="fl-eyebrow">Why act early</p>
+            <h2 class="fl-h2" id="stats-h">Getting your cat to a vet is not always easy.</h2>
+            <p class="fl-lead">A call removes the carrier, the car ride and the cost of a first visit, so small tummy problems get looked at sooner.</p>
+            <img class="fl-why-img" src="./images/paid-consult/kittens.webp" width="1616" height="864" alt="Two tabby kittens playing with a ball of wool" loading="lazy" />
+          </div>
+          <div class="fl-chart">
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="display:flex;align-items:baseline;gap:14px">
+                <span class="fl-stat-n">32%</span>
+                <span style="font-size:14px;line-height:1.5;color:#2A1A15">of cat parents in India follow regular 3-month check-ups.</span>
+              </div>
+              <div class="fl-bar" role="img" aria-label="32 percent"><div class="fl-bar-fill" style="width:32%"></div></div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="display:flex;align-items:baseline;gap:14px">
+                <span class="fl-stat-n">48%</span>
+                <span style="font-size:14px;line-height:1.5;color:#2A1A15">of pet parents in tier 1 cities say cost is the main challenge in reaching a vet.</span>
+              </div>
+              <div class="fl-bar" role="img" aria-label="48 percent"><div class="fl-bar-fill" style="width:48%"></div></div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="display:flex;align-items:baseline;gap:14px">
+                <span class="fl-stat-n">50%</span>
+                <span style="font-size:14px;line-height:1.5;color:#2A1A15">of pet parents in big cities are open to online vet consultations, for the convenience.</span>
+              </div>
+              <div class="fl-bar" role="img" aria-label="50 percent"><div class="fl-bar-fill" style="width:50%"></div></div>
+            </div>
+            <p style="font-size:12.5px;line-height:1.5;color:#5C4740;border-top:1px solid #CDBFB9;padding-top:14px">Source: Supertails research of 400 Indian pet parents, reported by GlobalPETS, December 2023.</p>
           </div>
         </div>
       </section>
 
-      <section class="pc-cream pc-section pc-final">
-        <div class="pc-wrap">
-          <div class="pc-final-band">
-            <h2>Get your cat's tummy question answered by a vet today.</h2>
-            <p>You receive a call in 15 to 30 minutes. Not happy? Your next one is free.</p>
-            <a class="pc-btn pc-btn-light" href="#book">Speak to a vet for only Rs. 99</a>
-            <p class="pc-rating"><span class="pc-stars" aria-hidden="true">★★★★★</span> 4.8 from cat parents across India</p>
+      <section aria-labelledby="cmp-h" style="padding-bottom:44px">
+        <div class="fl-wrap" style="display:flex;flex-direction:column;gap:22px">
+          <div class="fl-stack" style="max-width:680px">
+            <p class="fl-eyebrow">Felica vs a clinic visit</p>
+            <h2 class="fl-h2" id="cmp-h">Start with a call. Go to a clinic only if you need to.</h2>
+          </div>
+          <img class="fl-peek" src="./images/paid-consult/peek.webp" width="1318" height="1036" alt="Three cats peeking over a ledge" loading="lazy" />
+          <div class="fl-cmp" role="table" aria-label="Clinic visit compared with a Felica vet call">
+            <div class="h" role="columnheader" style="background:#F1E9E6"></div>
+            <div class="h" role="columnheader" style="background:#E6DAD5;color:#4A1F13">Clinic visit</div>
+            <div class="h" role="columnheader" style="background:#6B2E1E;color:#FFFFFF">Felica vet call</div>
+            <div role="cell" style="font-weight:600;color:#4A1F13;border-top:1px solid #DCCDC7">Cost</div>
+            <div role="cell" style="color:#4A3730;border-top:1px solid #DCCDC7;background:#F7F1EE">Starts at ₹499</div>
+            <div role="cell" style="color:#F7EFEC;font-weight:500;border-top:1px solid rgba(255,255,255,.15);background:#6B2E1E">₹99</div>
+            <div role="cell" style="font-weight:600;color:#4A1F13;border-top:1px solid #DCCDC7">Getting there</div>
+            <div role="cell" style="color:#4A3730;border-top:1px solid #DCCDC7;background:#F7F1EE">Carrier, car ride, waiting room</div>
+            <div role="cell" style="color:#F7EFEC;font-weight:500;border-top:1px solid rgba(255,255,255,.15);background:#6B2E1E">None, your cat stays at home</div>
+            <div role="cell" style="font-weight:600;color:#4A1F13;border-top:1px solid #DCCDC7">Time</div>
+            <div role="cell" style="color:#4A3730;border-top:1px solid #DCCDC7;background:#F7F1EE">Travel plus waiting</div>
+            <div role="cell" style="color:#F7EFEC;font-weight:500;border-top:1px solid rgba(255,255,255,.15);background:#6B2E1E">You receive a call in 15 to 30 minutes</div>
+            <div role="cell" style="font-weight:600;color:#4A1F13;border-top:1px solid #DCCDC7">Written plan</div>
+            <div role="cell" style="color:#4A3730;border-top:1px solid #DCCDC7;background:#F7F1EE">Depends on the clinic</div>
+            <div role="cell" style="color:#F7EFEC;font-weight:500;border-top:1px solid rgba(255,255,255,.15);background:#6B2E1E">Yes, on WhatsApp</div>
+            <div role="cell" style="font-weight:600;color:#4A1F13;border-top:1px solid #DCCDC7">Exam and tests</div>
+            <div role="cell" style="color:#4A3730;border-top:1px solid #DCCDC7;background:#F7F1EE">Yes</div>
+            <div role="cell" style="color:#F7EFEC;font-weight:500;border-top:1px solid rgba(255,255,255,.15);background:#6B2E1E">No, we tell you if your cat needs one</div>
           </div>
         </div>
       </section>
 
-      <footer class="pc-muted pc-section pc-footer">
-        <div class="pc-wrap">
-          <a class="pc-logo" href="#top" aria-label="Felica">
-            <img src="./images/felica-logo.webp" alt="Felica" width="132" height="42" loading="lazy" />
-          </a>
-          <p>Cat gut concerns, answered by a feline vet.</p>
-          <ul class="pc-footer-links">
-            <li><a href="#help">What we help with</a></li>
-            <li><a href="#how">How it works</a></li>
-            <li><a href="#vets">Our vets</a></li>
-            <li><a href="#faq">FAQ</a></li>
-            <li><span>Terms</span></li>
-            <li><a href="./privacy.html">Privacy policy</a></li>
-            <li><a href="https://wa.me/918047285635">Contact us</a></li>
-          </ul>
-          <p class="pc-legal">Felica is a brand owned and operated by Tail Healthcare Private Limited. © 2026 Tail Healthcare Private Limited. All rights reserved. Felica provides general veterinary guidance and does not replace an in-person vet visit. Not intended to diagnose or treat disease. Not for emergencies.</p>
+      <section id="vets" class="fl-section" style="background:#E6DAD5;scroll-margin-top:12px">
+        <div class="fl-wrap" style="display:flex;flex-direction:column;gap:24px">
+          <div class="fl-stack">
+            <p class="fl-eyebrow">Who you will speak to</p>
+            <h2 class="fl-h2">Feline vets who understand your cat.</h2>
+          </div>
+          <div class="fl-vets">
+            <article class="fl-vet" data-vet="dr-shantanu">
+              <img class="fl-vet-ph" src="./images/dr-shantanu-kalambi.webp" width="154" height="154" alt="Dr. Shantanu Kalambi" style="object-fit:cover;object-position:center 25%" loading="lazy" />
+              <div style="min-width:0;display:flex;flex-direction:column;gap:5px">
+                <h3 style="font-size:19px;font-weight:700;line-height:1.25">Dr. Shantanu Kalambi<span class="pc-vet-degree"></span></h3>
+                <p style="font-size:14px;color:#E6DAD5">Feline Internal Medicine</p>
+                <p style="font-size:14px;font-weight:700">20 years of experience</p>
+                <p class="pc-vet-reg" style="font-size:12.5px;color:#E6DAD5;margin-top:4px"></p>
+              </div>
+            </article>
+            <article class="fl-vet" data-vet="dr-ankita">
+              <img class="fl-vet-ph" src="./images/dr-ankita-kawale.webp" width="154" height="154" alt="Dr. Ankita Kawale" style="object-fit:cover;object-position:center 25%" loading="lazy" />
+              <div style="min-width:0;display:flex;flex-direction:column;gap:5px">
+                <h3 style="font-size:19px;font-weight:700;line-height:1.25">Dr. Ankita Kawale<span class="pc-vet-degree"></span></h3>
+                <p style="font-size:14px;color:#E6DAD5">Feline Internal Medicine</p>
+                <p style="font-size:14px;font-weight:700">8 years of experience</p>
+                <p class="pc-vet-reg" style="font-size:12.5px;color:#E6DAD5;margin-top:4px"></p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="faq" class="fl-section" style="scroll-margin-top:12px">
+        <div class="fl-wrap">
+          <div class="fl-faq">
+            <div class="fl-faq-head">
+              <h2 style="font-size:30px;font-weight:700;line-height:1.1;text-wrap:balance">Questions before you book.</h2>
+              <p style="font-size:15px;line-height:1.6;color:#E6DAD5">The two things parents ask most: yes, every call is with a registered feline vet, and if you are not happy you get your money back.</p>
+              <a class="fl-btn fl-btn-light" href="#book" style="align-self:flex-start">Speak to a vet for only Rs. 99</a>
+            </div>
+            <div class="fl-faq-list">
+              <details class="fl-faq-item" open>
+                <summary class="fl-faq-q">Is this a real vet?</summary>
+                <p class="fl-faq-a">Yes. Every call is with a registered feline vet. Their experience and registration details are on this page.</p>
+              </details>
+              <details class="fl-faq-item">
+                <summary class="fl-faq-q">Why pay when I can search online?</summary>
+                <p class="fl-faq-a">Online advice is generic. A vet asks about your cat's age, food and history, and tells you what applies to your cat, including when it is time to see a clinic.</p>
+              </details>
+              <details class="fl-faq-item">
+                <summary class="fl-faq-q">Why not just go to a clinic?</summary>
+                <p class="fl-faq-a">If your cat has warning signs, go to a clinic. For milder tummy trouble, a call can save you a stressful trip, and a typical clinic visit starts at ₹499. If the vet thinks your cat needs an exam, they will say so.</p>
+              </details>
+              <details class="fl-faq-item">
+                <summary class="fl-faq-q">What if I am not happy with the call?</summary>
+                <p class="fl-faq-a">Message us on WhatsApp within 48 hours and we will refund your ₹99. One refund per booking.</p>
+              </details>
+              <details class="fl-faq-item">
+                <summary class="fl-faq-q">What if my cat is seriously sick?</summary>
+                <p class="fl-faq-a">Go to a clinic now. This service is for everyday tummy concerns and is not for emergencies. Check the warning signs above if you are unsure.</p>
+              </details>
+              <details class="fl-faq-item">
+                <summary class="fl-faq-q">What do I need ready for the call?</summary>
+                <p class="fl-faq-a">Your cat's age, what they eat, when the problem started, and how often it happens. A photo or a short note helps but is optional.</p>
+              </details>
+              <details class="fl-faq-item">
+                <summary class="fl-faq-q">What if I miss the call?</summary>
+                <p class="fl-faq-a">Our vets will try to call you up to three times over a short period. Please keep your phone nearby after booking, and if you miss the first call, we will try again.</p>
+              </details>
+              <details class="fl-faq-item">
+                <summary class="fl-faq-q">Is my payment safe?</summary>
+                <p class="fl-faq-a">Payments are processed by Razorpay over UPI. We never see or store your payment details.</p>
+              </details>
+              <details class="fl-faq-item">
+                <summary class="fl-faq-q">Do I need an app or an account?</summary>
+                <p class="fl-faq-a">No. Just your phone number. You receive a call from the vet and the care plan arrives on WhatsApp.</p>
+              </details>
+              <details class="fl-faq-item">
+                <summary class="fl-faq-q">Can kittens and senior cats use this?</summary>
+                <p class="fl-faq-a">Yes, for everyday tummy concerns. Very young kittens and older cats can get unwell quickly, so if you are worried, go to a clinic.</p>
+              </details>
+            </div>
+            <div class="fl-faq-media">
+              <img src="./images/paid-consult/faq-cat.webp" width="1308" height="794" alt="A tabby and white cat lying down and looking up" loading="lazy" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="fl-footer">
+        <div class="fl-wrap" style="display:flex;flex-direction:column;gap:24px">
+          <div style="display:flex;flex-direction:column;gap:20px">
+            <div class="fl-stack" style="gap:8px">
+              <span style="font-weight:300;font-size:32px;color:#2A1A15;line-height:1">Felica</span>
+              <p style="font-size:14px;line-height:1.5;color:#4A3730">Cat gut concerns, answered by a feline vet.</p>
+            </div>
+            <nav class="fl-foot-nav" aria-label="Footer">
+              <a href="#help">What we help with</a>
+              <a href="#how">How it works</a>
+              <a href="#vets">Our vets</a>
+              <a href="#faq">FAQ</a>
+              <a href="#top">Terms</a>
+              <a href="./privacy.html">Privacy policy</a>
+              <a href="https://wa.me/918047285635">Contact us</a>
+            </nav>
+          </div>
+          <p style="font-size:12px;line-height:1.6;color:#5C4740;border-top:1px solid #DCCDC7;padding-top:18px">Felica is a brand owned and operated by Tail Healthcare Private Limited. © 2026 Tail Healthcare Private Limited. All rights reserved. Felica provides general veterinary guidance and does not replace an in-person vet visit. Not intended to diagnose or treat disease. Not for emergencies.</p>
         </div>
       </footer>
+
+      <div class="fl-sticky">
+        <div style="display:flex;flex-direction:column;line-height:1.2">
+          <span style="font-size:20px;font-weight:700;color:#6B2E1E">₹99 <s style="font-size:12.5px;font-weight:400;color:#5C4740">₹499</s></span>
+          <span style="font-size:11.5px;font-weight:700;color:#4A1F13">Money-back guarantee</span>
+        </div>
+        <a class="fl-btn" href="#book" style="padding:12px 20px;min-height:48px;font-size:15px">Speak to a vet</a>
+      </div>
     </div>
 
     <section class="pc-confirm" id="pc-confirm" hidden aria-live="polite">
-      <div class="pc-wrap pc-confirm-card">
-        <h1>Thank you for your payment.</h1>
-        <p>A vet will call you within 15-30 minutes. Or the next day if it's outside of working hours.</p>
+      <div class="fl-wrap pc-confirm-card">
+        <h1>You are booked.</h1>
+        <p class="pc-phone-line" id="pc-confirm-phone"></p>
+        <h2>What happens next</h2>
+        <ol class="pc-next">
+          <li>Keep your phone nearby. The call may show as an unknown number.</li>
+          <li>The vet talks through your cat's tummy trouble and next steps.</li>
+          <li>Your written care plan arrives on WhatsApp.</li>
+        </ol>
+        <div class="pc-speed">
+          <h2>Speed things up</h2>
+          <p>What does your cat eat, and when did this start?</p>
+          <a class="pc-btn" id="pc-whatsapp" href="https://wa.me/918047285635">Send a note on WhatsApp</a>
+        </div>
+        <p class="pc-pay-note">Not happy with your call? Message us within 48 hours and we will refund your ₹99.</p>
       </div>
     </section>
 
-    <script type="module" src="./paid-consult.js?v=pc23"></script>
+    <script type="module" src="./paid-consult.js?v=pc24"></script>
   </body>
 </html>
