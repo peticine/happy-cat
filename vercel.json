@@ -13,6 +13,8 @@
     { "source": "/free-consult.html", "destination": "/free-consult", "permanent": true }
   ],
   "rewrites": [
+    { "source": "/health-score", "destination": "https://ai-diagnose-neon.vercel.app/health-score" },
+    { "source": "/health-score/:path*", "destination": "https://ai-diagnose-neon.vercel.app/health-score/:path*" },
     { "source": "/skin", "destination": "/index.html" },
     { "source": "/coat", "destination": "/index.html" },
     { "source": "/skin-and-coat", "destination": "/index.html" },
