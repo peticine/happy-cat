@@ -337,3 +337,25 @@ a{color:inherit}
 .fc-submit{width:100%;margin-top:14px}
 .fc-modal-open{overflow:hidden}
 .uf-pill:focus-visible,.uf-kitten:focus-visible,.uf-sched:focus-visible,.cal-d:focus-visible,.cal-nav:focus-visible,.sy:focus-visible,.jr-dot:focus-visible{outline:3px solid #F2B531;outline-offset:2px}
+
+.fc-done{text-align:center;padding:10px 0 0}
+.fc-done-mark{width:56px;height:56px;border-radius:50%;background:#6B2E1E;margin:0 auto 12px;display:flex;align-items:center;justify-content:center}
+.fc-done-close{margin-top:16px}
+#fc-sample{margin-top:16px;text-align:left}
+#fc-done .sample-opt-in{margin:0;padding:14px;border:1.5px solid #E6DAD5;border-radius:16px;background:#FFFFFF}
+#fc-done .sample-opt-in-choice{display:flex;align-items:flex-start;gap:10px;margin:0;font-size:14.5px;line-height:1.4;font-weight:600;color:#4A1F13;cursor:pointer}
+#fc-done .sample-opt-in-choice input{width:20px;height:20px;margin:1px 0 0;flex:0 0 auto;accent-color:#6B2E1E}
+#fc-done .sample-opt-in-more{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+#fc-done .sample-opt-in-label{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;color:#4A1F13}
+#fc-done .sample-opt-in-label textarea{width:100%;min-height:88px;padding:12px 14px;border:1.5px solid #CDBFB9;border-radius:10px;background:#FFFFFF;color:#2A1A15;font-family:'Poppins',system-ui,sans-serif;font-size:16px;line-height:1.45;font-weight:400;resize:vertical}
+#fc-done .sample-opt-in-label textarea::placeholder{color:#7C6A64}
+#fc-done .sample-opt-in-label textarea:focus{outline:3px solid #F2B531;outline-offset:2px;border-color:#6B2E1E}
+#fc-done .sample-opt-in-note{margin:0;font-size:12.5px;line-height:1.45;font-weight:400;color:#5C4740}
+#fc-done .sample-opt-in .btn{display:flex;align-items:center;justify-content:center;width:100%;min-height:52px;margin:0;padding:14px 22px;border:0;border-radius:12px;background:#6B2E1E;color:#FFFFFF;font-family:'Poppins',system-ui,sans-serif;font-weight:600;font-size:16px;line-height:1.25;cursor:pointer}
+#fc-done .sample-opt-in .btn:hover{background:#541F12}
+#fc-done .sample-opt-in .btn:disabled{opacity:.7;cursor:default}
+#fc-done .sample-opt-in .flow-error{margin:0;font-size:13.5px;font-weight:600;color:#B3261E}
+#fc-done .sample-opt-in .sample-opt-in-confirm{margin:0;font-size:14px;line-height:1.45;font-weight:600;color:#4A1F13}
+#fc-done .sample-opt-in-more[hidden],
+#fc-done .sample-opt-in .flow-error[hidden],
+#fc-done .sample-opt-in .sample-opt-in-confirm[hidden]{display:none !important}

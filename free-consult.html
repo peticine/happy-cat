@@ -27,7 +27,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
     />
-    <link rel="stylesheet" href="./free-consult.css?v=fc3" />
+    <link rel="stylesheet" href="./free-consult.css?v=fc4" />
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
@@ -459,17 +459,19 @@
           <p class="uf-note">Free. No card or account. We will call you at the time you pick.</p>
         </div>
 
-        <div id="fc-done" class="fc-panel" hidden style="text-align:center;padding:10px 0">
-          <div style="width:56px;height:56px;border-radius:50%;background:#6B2E1E;margin:0 auto 12px;display:flex;align-items:center;justify-content:center" aria-hidden="true">
+        <div id="fc-done" class="fc-panel fc-done" hidden>
+          <div class="fc-done-mark" aria-hidden="true">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
           </div>
           <h2 class="uf-h" id="fc-done-title"></h2>
           <p class="uf-s" id="fc-done-copy"></p>
-          <button type="button" class="fl-btn" style="margin-top:16px" data-close>Done</button>
+          <div id="fc-sample"></div>
+          <button type="button" class="fl-btn fc-done-close" data-close>Done</button>
         </div>
       </div>
     </div>
 
-    <script src="./free-consult.js?v=fc4"></script>
+    <script src="./sample-opt-in.js?v=fc5"></script>
+    <script src="./free-consult.js?v=fc5"></script>
   </body>
 </html>
