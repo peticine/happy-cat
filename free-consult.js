@@ -725,13 +725,33 @@ function closeForm() {
   document.body.classList.remove("fc-modal-open");
 }
 
-function showDone(lead, schedule) {
+let sampleLead = null;
+
+function rememberSampleLead(result) {
+  const leadId = result && typeof result.lead_id === "string" ? result.lead_id.trim() : "";
+  const caseId = result && typeof result.case_id === "string" ? result.case_id.trim() : "";
+  sampleLead = leadId && caseId ? { lead_id: leadId, case_id: caseId } : null;
+}
+
+function mountThankYouSample() {
+  const mount = document.getElementById("fc-sample");
+  if (!mount || typeof mountSampleOptIn !== "function") return;
+  mountSampleOptIn(mount, {
+    pageSource: "free-consult",
+    getLead: () => sampleLead,
+  });
+  if (typeof resetSampleOptIn === "function") resetSampleOptIn(mount);
+}
+
+function showDone(lead, schedule, result) {
+  rememberSampleLead(result);
   document.getElementById("fc-done-title").textContent = `You're all set, ${lead.name}'s parent.`;
   const phone = lead.phone;
   document.getElementById("fc-done-copy").textContent = schedule
     ? `Your free consultation is booked for ${schedule.label}. A feline vet will call ${phone}.`
     : `A feline vet will call ${phone} in about 15 to 30 minutes. Please keep your phone nearby.`;
   showPanel("done");
+  mountThankYouSample();
 }
 
 async function submitLead(lead, schedule) {
@@ -753,7 +773,7 @@ async function submitLead(lead, schedule) {
   };
   trackGoogle("whatsapp_number_collected", props);
   try {
-    await postLead(buildPayload(lead, schedule));
+    const result = await postLead(buildPayload(lead, schedule));
     flushLeadConversion();
     trackGoogle("young_cat_lead_submitted", {
       session_id: ensureSessionId(),
@@ -768,7 +788,7 @@ async function submitLead(lead, schedule) {
       issue_id: lead.concern.id,
       ok: true,
     });
-    showDone(lead, schedule);
+    showDone(lead, schedule, result);
   } catch (error) {
     const taken = error && error.code === "slot_taken";
     const message = taken
