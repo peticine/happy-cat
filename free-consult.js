@@ -12,6 +12,8 @@ const LEAD_CONVERSION_LOCK_KEY = "felica-lead-conversion-fired";
 const LANDING_ATTR_KEY = "felica-landing-attr";
 const FBCLID_STORAGE_KEY = "felica-fbclid";
 const SESSION_KEY = "felica-free-consult-session";
+const SUBMITTED_KEY = "felica-free-consult-submitted";
+const ALREADY_TODAY = "This number already has a free consultation request today.";
 const LANDING_ATTR_KEYS = [
   "utm_source",
   "utm_medium",
@@ -330,6 +332,39 @@ function flushLeadConversion() {
     }
   } catch {
     /* ads tag must not break the form */
+  }
+}
+
+function istDayKey(date = new Date()) {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Kolkata",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(date);
+}
+
+function submittedPhonesToday() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(SUBMITTED_KEY) || "");
+    if (!parsed || parsed.day !== istDayKey() || !Array.isArray(parsed.phones)) return [];
+    return parsed.phones.filter((phone) => typeof phone === "string");
+  } catch {
+    return [];
+  }
+}
+
+function alreadySubmittedToday(phone) {
+  return submittedPhonesToday().includes(phone);
+}
+
+function rememberSubmittedToday(phone) {
+  try {
+    const phones = submittedPhonesToday();
+    if (!phones.includes(phone)) phones.push(phone);
+    localStorage.setItem(SUBMITTED_KEY, JSON.stringify({ day: istDayKey(), phones }));
+  } catch {
+    /* the server still rejects a repeat if this browser cannot store it */
   }
 }
 
@@ -756,6 +791,12 @@ function showDone(lead, schedule, result) {
 
 async function submitLead(lead, schedule) {
   if (submitting) return;
+  if (alreadySubmittedToday(lead.phone)) {
+    const message = ALREADY_TODAY;
+    if (schedule) showSchedError(message);
+    else showError(message);
+    return;
+  }
   submitting = true;
   const asap = document.getElementById("fc-asap");
   const confirm = document.getElementById("fc-confirm");
@@ -788,12 +829,17 @@ async function submitLead(lead, schedule) {
       issue_id: lead.concern.id,
       ok: true,
     });
+    rememberSubmittedToday(lead.phone);
     showDone(lead, schedule, result);
   } catch (error) {
+    const already = error && error.code === "already_submitted";
     const taken = error && error.code === "slot_taken";
-    const message = taken
-      ? "That time was just taken. Please pick another."
-      : "We couldn't save that. Please try again.";
+    if (already) rememberSubmittedToday(lead.phone);
+    const message = already
+      ? ALREADY_TODAY
+      : taken
+        ? "That time was just taken. Please pick another."
+        : "We couldn't save that. Please try again.";
     if (schedule) {
       showSchedError(message);
       if (taken) {
