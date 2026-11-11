@@ -606,6 +606,7 @@ async function postLead(payload) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
       mode: "cors",
+      keepalive: true,
       signal: controller.signal,
     });
   } finally {
@@ -779,18 +780,31 @@ function mountThankYouSample() {
 }
 
 function showDone(lead, schedule, result) {
-  rememberSampleLead(result);
-  document.getElementById("fc-done-title").textContent = `You're all set, ${lead.name}'s parent.`;
+  const saved = result !== undefined;
+  const heading = document.getElementById("fc-done-title");
+  heading.textContent = `You're all set, ${lead.name}'s parent.`;
   const phone = lead.phone;
   document.getElementById("fc-done-copy").textContent = schedule
     ? `Your free consultation is booked for ${schedule.label}. A feline vet will call ${phone}.`
     : `A feline vet will call ${phone} in about 15 to 30 minutes. Please keep your phone nearby.`;
   showPanel("done");
-  mountThankYouSample();
+  if (saved) {
+    rememberSampleLead(result);
+    mountThankYouSample();
+    return;
+  }
+  sampleLead = null;
+  const mount = document.getElementById("fc-sample");
+  if (mount) mount.replaceChildren();
+  heading.tabIndex = -1;
+  heading.focus();
 }
 
 async function submitLead(lead, schedule) {
-  if (submitting) return;
+  if (submitting) {
+    showDone(lead, schedule);
+    return;
+  }
   if (alreadySubmittedToday(lead.phone)) {
     const message = ALREADY_TODAY;
     if (schedule) showSchedError(message);
@@ -800,8 +814,12 @@ async function submitLead(lead, schedule) {
   submitting = true;
   const asap = document.getElementById("fc-asap");
   const confirm = document.getElementById("fc-confirm");
+  const asapLabel = asap.textContent;
+  const confirmLabel = confirm.textContent;
   asap.disabled = true;
   confirm.disabled = true;
+  asap.textContent = "Sending…";
+  confirm.textContent = "Sending…";
   const props = {
     cat_age: lead.ageYears,
     flow_track: "young",
@@ -813,6 +831,8 @@ async function submitLead(lead, schedule) {
     landing: "free-consult",
   };
   trackGoogle("whatsapp_number_collected", props);
+  // Show success before the clinic answers. A failed save returns to the form.
+  showDone(lead, schedule);
   try {
     const result = await postLead(buildPayload(lead, schedule));
     flushLeadConversion();
@@ -840,6 +860,7 @@ async function submitLead(lead, schedule) {
       : taken
         ? "That time was just taken. Please pick another."
         : "We couldn't save that. Please try again.";
+    showPanel(schedule ? "sched" : "form");
     if (schedule) {
       showSchedError(message);
       if (taken) {
@@ -858,6 +879,8 @@ async function submitLead(lead, schedule) {
     submitting = false;
     asap.disabled = false;
     confirm.disabled = false;
+    asap.textContent = asapLabel;
+    confirm.textContent = confirmLabel;
   }
 }
 
