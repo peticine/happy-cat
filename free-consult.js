@@ -596,12 +596,32 @@ function buildPayload(lead, schedule) {
   return payload;
 }
 
-async function postLead(payload) {
+function leadIds(result) {
+  const leadId = result && typeof result.lead_id === "string" ? result.lead_id.trim() : "";
+  const caseId = result && typeof result.case_id === "string" ? result.case_id.trim() : "";
+  return leadId && caseId ? { lead_id: leadId, case_id: caseId } : null;
+}
+
+async function readJson(response) {
+  try {
+    return await response.json();
+  } catch {
+    return null;
+  }
+}
+
+function leadError(status, code) {
+  const error = new Error("Young cat lead submit failed");
+  error.status = status;
+  error.code = code || "";
+  return error;
+}
+
+async function sendLead(payload) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 20000);
-  let response;
   try {
-    response = await fetch(`${YOUNG_CAT_API_BASE}/young-cat`, {
+    return await fetch(`${YOUNG_CAT_API_BASE}/young-cat`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -612,20 +632,28 @@ async function postLead(payload) {
   } finally {
     clearTimeout(timer);
   }
+}
+
+async function postLead(payload) {
+  const response = await sendLead(payload);
   if (!response.ok) {
-    let code = "";
-    try {
-      const body = await response.json();
-      code = body && body.code ? body.code : "";
-    } catch {
-      /* ignore a non-JSON error */
-    }
-    const error = new Error("Young cat lead submit failed");
-    error.status = response.status;
-    error.code = code;
-    throw error;
+    const body = await readJson(response);
+    throw leadError(response.status, body && body.code);
   }
-  return response.json().catch(() => ({ ok: true }));
+  let result = await readJson(response);
+  if (leadIds(result)) return result;
+  // The lead can already be saved while this reply has no ids. The same
+  // session finds that lead and returns the ids, instead of creating another.
+  try {
+    const again = await sendLead(payload);
+    if (again.ok) {
+      const parsed = await readJson(again);
+      if (leadIds(parsed)) return parsed;
+    }
+  } catch {
+    /* the first reply already succeeded */
+  }
+  return result && result.ok ? result : { ok: true };
 }
 
 function paintAge() {
@@ -763,15 +791,24 @@ function closeForm() {
 
 let sampleLead = null;
 
+function clearThankYouSample() {
+  sampleLead = null;
+  const mount = document.getElementById("fc-sample");
+  if (!mount) return;
+  delete mount.dataset.sampleBound;
+  mount.replaceChildren();
+}
+
 function rememberSampleLead(result) {
-  const leadId = result && typeof result.lead_id === "string" ? result.lead_id.trim() : "";
-  const caseId = result && typeof result.case_id === "string" ? result.case_id.trim() : "";
-  sampleLead = leadId && caseId ? { lead_id: leadId, case_id: caseId } : null;
+  sampleLead = leadIds(result);
 }
 
 function mountThankYouSample() {
   const mount = document.getElementById("fc-sample");
-  if (!mount || typeof mountSampleOptIn !== "function") return;
+  if (!sampleLead || !mount || typeof mountSampleOptIn !== "function") {
+    clearThankYouSample();
+    return;
+  }
   mountSampleOptIn(mount, {
     pageSource: "free-consult",
     getLead: () => sampleLead,
@@ -793,9 +830,7 @@ function showDone(lead, schedule, result) {
     mountThankYouSample();
     return;
   }
-  sampleLead = null;
-  const mount = document.getElementById("fc-sample");
-  if (mount) mount.replaceChildren();
+  clearThankYouSample();
   heading.tabIndex = -1;
   heading.focus();
 }
